@@ -245,18 +245,29 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         window.scrollTo(0, 0);
 
-        // Capture charter with high resolution scale
+        // Temporarily enable exact A3 Landscape layout (1588px x 1123px)
+        charterSheet.classList.add('a3-export-mode');
+        await new Promise(resolve => setTimeout(resolve, 80));
+
+        // Capture charter with 2x ultra-sharp resolution
         const canvas = await html2canvas(charterSheet, {
-          scale: 2.2, // 2.2x pixel ratio for sharp text and crisp digital ink
+          scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#fdfcf7',
-          logging: false
+          logging: false,
+          width: 1588,
+          height: 1123,
+          windowWidth: 1588,
+          windowHeight: 1123
         });
 
-        const imgData = canvas.toDataURL('image/png', 0.98);
+        // Restore normal screen layout immediately
+        charterSheet.classList.remove('a3-export-mode');
 
-        // Instantiate jsPDF for strict A3 Landscape
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+        // Instantiate jsPDF for strict A3 Landscape (420mm x 297mm)
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
           orientation: 'landscape',
@@ -265,33 +276,16 @@ document.addEventListener('DOMContentLoaded', () => {
           compress: true
         });
 
-        // Exact A3 Landscape: 420mm x 297mm
-        const pageW = 420;
-        const pageH = 297;
-        const margin = 6; // 6mm safe edge margin
-        const availW = pageW - (margin * 2);
-        const availH = pageH - (margin * 2);
-
-        const imgRatio = canvas.width / canvas.height;
-        let finalW = availW;
-        let finalH = finalW / imgRatio;
-
-        if (finalH > availH) {
-          finalH = availH;
-          finalW = finalH * imgRatio;
-        }
-
-        const posX = (pageW - finalW) / 2;
-        const posY = (pageH - finalH) / 2;
-
-        // Render directly onto Page 1 (Never calls addPage -> Strictly 1 page guaranteed)
-        pdf.addImage(imgData, 'PNG', posX, posY, finalW, finalH, undefined, 'FAST');
+        // Fill 100% of the A3 Landscape page (420mm x 297mm) edge-to-edge
+        // Zero wasted empty space outside!
+        pdf.addImage(imgData, 'JPEG', 0, 0, 420, 297, undefined, 'FAST');
 
         // File download with clear naming
         pdf.save('Piagam_Pencanangan_Zona_Integritas_BBPOM_Pangkalpinang_A3.pdf');
 
-        showToast('PDF Berhasil Diunduh', 'Format Resmi A3 Landscape (1 Halaman)');
+        showToast('PDF A3 Berhasil Diunduh', 'Format Penuh A3 Landscape 1 Halaman');
       } catch (err) {
+        charterSheet.classList.remove('a3-export-mode');
         console.error('Error generating A3 PDF:', err);
         alert('Gagal membuat file PDF: ' + err.message);
       } finally {
