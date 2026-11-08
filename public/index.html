@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Piagam Komitmen Bersama Zona Integritas - Balai Besar POM di Pangkalpinang</title>
+  <title>Piagam Komitmen Bersama Zona Integritas - Balai Besar POM di Pangkal Pinang</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/piagam.css">
   <link rel="icon" type="image/svg+xml" href="assets/logo-bpom.svg">
 </head>
+
 <body>
 
   <!-- Top Action Bar (Controls for Operator / Event Host - Screen Only) -->
@@ -23,8 +25,10 @@
     </div>
 
     <div class="action-bar-right">
-      <button type="button" class="btn btn-outline" id="btnShowQrModal" title="Tampilkan QR Code untuk dipindai oleh peserta">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button type="button" class="btn btn-outline" id="btnShowQrModal"
+        title="Tampilkan QR Code untuk dipindai oleh peserta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7"></rect>
           <rect x="14" y="3" width="7" height="7"></rect>
           <rect x="14" y="14" width="7" height="7"></rect>
@@ -33,7 +37,8 @@
         <span>QR Code Peserta</span>
       </button>
 
-      <a href="/qr" target="_blank" class="btn btn-navy" title="Buka Layar Penuh QR Code di tab/layar proyektor terpisah">
+      <a href="/qr" target="_blank" class="btn btn-navy"
+        title="Buka Layar Penuh QR Code di tab/layar proyektor terpisah">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
           <polyline points="15 3 21 3 21 9"></polyline>
@@ -42,18 +47,30 @@
         <span>Layar QR Terpisah</span>
       </a>
 
-      <button type="button" class="btn btn-primary" id="btnPrintCharter" title="Cetak piagam dalam format resmi A3 Landscape">
+      <button type="button" class="btn btn-primary" id="btnDownloadPdf"
+        title="Download piagam resmi dalam file PDF ukuran A3 Landscape (1 Halaman Penuh)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span id="btnDownloadPdfText">Download PDF (A3)</span>
+      </button>
+
+      <button type="button" class="btn btn-navy" id="btnPrintCharter"
+        title="Cetak langsung ke printer atau print-to-PDF format A3 Landscape (1 Halaman)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 6 2 18 2 18 9"></polyline>
           <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
           <rect x="6" y="14" width="12" height="8"></rect>
         </svg>
-        <span>Cetak Piagam (A3)</span>
+        <span>Cetak Piagam</span>
       </button>
 
       <button type="button" class="btn btn-navy" id="btnToggleFullscreen" title="Alihkan mode tampilan layar penuh">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+          </path>
         </svg>
         <span>Layar Penuh</span>
       </button>
@@ -61,7 +78,9 @@
       <button type="button" class="btn btn-navy" id="btnAdminTools" title="Kelola Data (Simulasi Demo / Reset)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
         </svg>
       </button>
     </div>
@@ -70,7 +89,7 @@
   <!-- Main Charter Document Container -->
   <main class="charter-screen-wrapper">
     <div class="charter-sheet" id="charterSheet">
-      
+
       <!-- Ornamental Certificate Borders & Corners -->
       <div class="charter-border-outer"></div>
       <div class="charter-border-inner"></div>
@@ -80,7 +99,7 @@
       <div class="corner-ornament corner-bottom-right"></div>
 
       <div class="charter-content">
-        
+
         <!-- Header: Logos & Formal Headings -->
         <header class="charter-header">
           <div class="header-logo-box">
@@ -90,11 +109,11 @@
           <div class="header-text-center">
             <img src="assets/garuda-gold.svg" alt="Garuda Pancasila" class="garuda-seal-center">
             <h2 class="instansi-title-1">BADAN PENGAWAS OBAT DAN MAKANAN</h2>
-            <h1 class="instansi-title-2">BALAI BESAR PENGAWAS OBAT DAN MAKANAN DI PANGKALPINANG</h1>
+            <h1 class="instansi-title-2">BALAI BESAR PENGAWAS OBAT DAN MAKANAN DI Pangkal Pinang</h1>
             <div class="doc-main-title">PIAGAM KOMITMEN BERSAMA</div>
             <div class="doc-sub-title">
-              PENCANANGAN PEMBANGUNAN ZONA INTEGRITAS MENUJU WILAYAH BEBAS DARI KORUPSI (WBK)<br>
-              DAN WILAYAH BIROKRASI BERSIH DAN MELAYANI (WBBM)
+              PENCANANGAN PEMBANGUNAN ZONA INTEGRITAS MENUJU<br>
+              WILAYAH BIROKRASI BERSIH DAN MELAYANI (WBBM)
             </div>
           </div>
 
@@ -106,14 +125,16 @@
         <!-- Official Declaration Text Box -->
         <section class="declaration-container">
           <p class="declaration-text">
-            &ldquo;Pada hari ini, 20 November 2026, Kami yang bertanda tangan di bawah ini, Pimpinan dan segenap Pegawai Balai Besar POM di Pangkal Pinang, dengan ini menyatakan <strong>BERKOMITMEN SEPENUHNYA</strong> untuk melaksanakan Pembangunan Zona Integritas menuju Wilayah Bebas dari Korupsi (WBK) dan Wilayah Birokrasi Bersih dan Melayani (WBBM).&rdquo;
+            &ldquo;Pada hari ini, 20 November 2026, Kami yang bertanda tangan di bawah ini, Pimpinan dan segenap Pegawai
+            Balai Besar POM di Pangkal Pinang, dengan ini menyatakan <strong>BERKOMITMEN SEPENUHNYA</strong> untuk
+            melaksanakan Pembangunan Zona Integritas menuju Wilayah Birokrasi Bersih dan Melayani (WBBM).&rdquo;
           </p>
         </section>
 
         <!-- Leadership Signatures Row (Kepala: Top-Left, Kabag TU: Top-Right) -->
         <section class="leadership-section">
           <div class="section-label-banner">
-            <span class="section-label-text">PIMPINAN BALAI BESAR POM DI PANGKAL PINANG</span>
+            <span class="section-label-text"></span>
           </div>
           <div class="leadership-grid">
             <!-- Posisi Kiri Atas: Kepala Balai Besar POM di Pangkal Pinang -->
@@ -146,7 +167,7 @@
         <section class="employees-section">
           <div class="section-label-banner">
             <span class="section-label-text">
-              SEGENAP PEGAWAI BALAI BESAR POM DI PANGKAL PINANG 
+              SEGENAP PEGAWAI BALAI BESAR POM DI PANGKAL PINANG
               (<span id="pegawaiCount">0</span> Pegawai)
             </span>
           </div>
@@ -159,11 +180,11 @@
         <!-- Charter Footer -->
         <footer class="charter-footer">
           <div class="charter-footer-location">
-            Ditetapkan di : Pangkalpinang<br>
+            Ditetapkan di : Pangkal Pinang<br>
             Pada tanggal : 20 November 2026
           </div>
           <div style="text-align: right;">
-            Piagam Komitmen Pencanangan Pembangunan Zona Integritas BBPOM di Pangkalpinang<br>
+            Piagam Komitmen Pencanangan Pembangunan Zona Integritas BBPOM di Pangkal Pinang<br>
             <em>Dicetak secara digital melalui Sistem Verifikasi Integritas BBPOM</em>
           </div>
         </footer>
@@ -192,15 +213,20 @@
       </div>
       <div class="modal-body" style="text-align: center;">
         <p style="color: #475569; font-size: 0.92rem; margin-bottom: 16px;">
-          Buka kamera pada ponsel (smartphone) Anda dan arahkan ke QR Code di bawah ini untuk membuka lembar komitmen digital.
+          Buka kamera pada ponsel (smartphone) Anda dan arahkan ke QR Code di bawah ini untuk membuka lembar komitmen
+          digital.
         </p>
 
-        <div style="background: #ffffff; padding: 12px; display: inline-block; border-radius: 12px; border: 2px solid var(--bpom-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-          <img id="modalQrImage" src="" alt="QR Code Peserta" style="width: 260px; height: 260px; display: block; border-radius: 6px;">
+        <div
+          style="background: #ffffff; padding: 12px; display: inline-block; border-radius: 12px; border: 2px solid var(--bpom-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <img id="modalQrImage" src="" alt="QR Code Peserta"
+            style="width: 260px; height: 260px; display: block; border-radius: 6px;">
         </div>
 
-        <div style="margin-top: 16px; background: #f1f5f9; padding: 10px 14px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-          <span id="modalQrUrl" style="font-family: monospace; font-size: 0.88rem; color: #002147; word-break: break-all; text-align: left;">
+        <div
+          style="margin-top: 16px; background: #f1f5f9; padding: 10px 14px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <span id="modalQrUrl"
+            style="font-family: monospace; font-size: 0.88rem; color: #002147; word-break: break-all; text-align: left;">
             Memuat URL...
           </span>
           <button type="button" class="btn btn-navy btn-sm" id="btnCopyUrl" style="flex-shrink: 0;">
@@ -232,7 +258,8 @@
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
             <div style="font-weight: 700; color: #002147; margin-bottom: 4px;">Muat Data Contoh (Gladi Bersih)</div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Mengisi contoh tanda tangan Kepala Balai, Kabag TU, dan 4 pegawai untuk memeriksa tampilan.</div>
+            <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Mengisi contoh tanda tangan Kepala
+              Balai, Kabag TU, dan 4 pegawai untuk memeriksa tampilan.</div>
             <button type="button" class="btn btn-outline btn-sm" id="btnSeedDemo" style="width: 100%;">
               ⚡ Muat Data Simulasi
             </button>
@@ -240,7 +267,8 @@
 
           <div style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 14px;">
             <div style="font-weight: 700; color: #991b1b; margin-bottom: 4px;">Reset Seluruh Piagam</div>
-            <div style="font-size: 0.8rem; color: #7f1d1d; margin-bottom: 10px;">Menghapus semua tanda tangan untuk memulai acara resmi dari awal (kosong).</div>
+            <div style="font-size: 0.8rem; color: #7f1d1d; margin-bottom: 10px;">Menghapus semua tanda tangan untuk
+              memulai acara resmi dari awal (kosong).</div>
             <button type="button" class="btn btn-danger btn-sm" id="btnResetAll" style="width: 100%;">
               🗑️ Reset Data Piagam
             </button>
@@ -250,8 +278,13 @@
     </div>
   </div>
 
+  <!-- PDF & Canvas Export Libraries (Local Bundles for Offline Use) -->
+  <script src="js/libs/html2canvas.min.js"></script>
+  <script src="js/libs/jspdf.umd.min.js"></script>
+
   <!-- Socket.IO Client Library (Bundled with server) -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/piagam.js"></script>
 </body>
+
 </html>

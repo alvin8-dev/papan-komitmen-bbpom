@@ -64,3 +64,4 @@ Aplikasi web full-stack resmi untuk acara Pencanangan Zona Integritas Wilayah Bi
    ```
    http://localhost:3000/qr
    ```
+

@@ -556,22 +556,101 @@
   color: var(--bpom-navy);
 }
 
+/* Grid Density Variations to ensure all signatures fit in 1 page */
+.employees-grid.density-compact {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.employees-grid.density-compact .employee-card {
+  padding: 8px 10px;
+}
+.employees-grid.density-compact .emp-sig-box {
+  height: 48px;
+}
+.employees-grid.density-compact .emp-sig-img {
+  max-height: 44px;
+}
+.employees-grid.density-compact .emp-name {
+  font-size: 0.8rem;
+}
+.employees-grid.density-compact .emp-nip {
+  font-size: 0.68rem;
+}
+.employees-grid.density-compact .emp-jabatan {
+  font-size: 0.68rem;
+}
+
+.employees-grid.density-dense {
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.employees-grid.density-dense .employee-card {
+  padding: 6px 8px;
+}
+.employees-grid.density-dense .emp-sig-box {
+  height: 38px;
+}
+.employees-grid.density-dense .emp-sig-img {
+  max-height: 34px;
+}
+.employees-grid.density-dense .emp-name {
+  font-size: 0.74rem;
+}
+.employees-grid.density-dense .emp-nip {
+  font-size: 0.62rem;
+}
+.employees-grid.density-dense .emp-jabatan {
+  font-size: 0.62rem;
+}
+
+.employees-grid.density-micro {
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 6px;
+}
+.employees-grid.density-micro .employee-card {
+  padding: 4px 6px;
+}
+.employees-grid.density-micro .emp-sig-box {
+  height: 30px;
+}
+.employees-grid.density-micro .emp-sig-img {
+  max-height: 28px;
+}
+.employees-grid.density-micro .emp-name {
+  font-size: 0.68rem;
+}
+.employees-grid.density-micro .emp-nip {
+  font-size: 0.58rem;
+}
+.employees-grid.density-micro .emp-jabatan {
+  font-size: 0.58rem;
+}
+
 /* ==========================================================================
-   PRINT SPECIFICATION: A3 LANDSCAPE FORMAT
+   PRINT SPECIFICATION: STRICT 1 PAGE A3 LANDSCAPE FORMAT
    ========================================================================== */
 @page {
-  size: A3 landscape;
-  margin: 10mm;
+  size: 420mm 297mm;
+  margin: 0mm;
 }
 
 @media print {
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+
   html, body {
     background: #ffffff !important;
     color: #000000 !important;
-    min-height: auto !important;
-    height: auto !important;
-    padding: 0 !important;
+    width: 420mm !important;
+    height: 297mm !important;
+    max-width: 420mm !important;
+    max-height: 297mm !important;
     margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -586,60 +665,214 @@
   .charter-screen-wrapper {
     padding: 0 !important;
     margin: 0 !important;
-    min-height: auto !important;
+    width: 420mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
   }
 
   .charter-sheet {
     box-shadow: none !important;
     border: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 20mm 20mm !important;
+    width: 420mm !important;
+    height: 297mm !important;
+    max-width: 420mm !important;
+    max-height: 297mm !important;
+    padding: 12mm 18mm !important;
     background: #ffffff !important;
-    page-break-after: avoid;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
   }
 
   .charter-border-outer {
-    top: 6mm !important;
-    left: 6mm !important;
-    right: 6mm !important;
-    bottom: 6mm !important;
+    top: 5mm !important;
+    left: 5mm !important;
+    right: 5mm !important;
+    bottom: 5mm !important;
     border-color: #c59b27 !important;
   }
 
   .charter-border-inner {
-    top: 10mm !important;
-    left: 10mm !important;
-    right: 10mm !important;
-    bottom: 10mm !important;
+    top: 8mm !important;
+    left: 8mm !important;
+    right: 8mm !important;
+    bottom: 8mm !important;
     border-color: #c59b27 !important;
   }
 
+  .corner-top-left { top: 4mm !important; left: 4mm !important; width: 42px !important; height: 42px !important; }
+  .corner-top-right { top: 4mm !important; right: 4mm !important; width: 42px !important; height: 42px !important; }
+  .corner-bottom-left { bottom: 4mm !important; left: 4mm !important; width: 42px !important; height: 42px !important; }
+  .corner-bottom-right { bottom: 4mm !important; right: 4mm !important; width: 42px !important; height: 42px !important; }
+
+  .charter-header {
+    margin-bottom: 10px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .header-logo-box {
+    width: 75px !important;
+    height: 75px !important;
+  }
+
+  .header-logo {
+    max-width: 70px !important;
+    max-height: 70px !important;
+  }
+
+  .garuda-seal-center {
+    width: 34px !important;
+    height: 34px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .instansi-title-1 { font-size: 0.95rem !important; }
+  .instansi-title-2 { font-size: 1.15rem !important; }
   .doc-main-title {
+    font-size: 1.35rem !important;
     -webkit-text-fill-color: #002147 !important;
     color: #002147 !important;
+    margin-top: 4px !important;
+  }
+  .doc-sub-title { font-size: 0.8rem !important; }
+
+  .declaration-container {
+    margin: 8px 0 14px !important;
+    padding: 10px 20px !important;
+  }
+
+  .declaration-text {
+    font-size: 0.92rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .leadership-section {
+    margin-bottom: 14px !important;
+  }
+
+  .section-label-banner {
+    margin-bottom: 8px !important;
+  }
+
+  .section-label-text {
+    font-size: 0.78rem !important;
+  }
+
+  .leadership-grid {
+    gap: 18px !important;
+  }
+
+  .leader-card {
+    padding: 8px 14px !important;
+    page-break-inside: avoid !important;
+  }
+
+  .leader-badge-role {
+    font-size: 0.75rem !important;
+    margin-bottom: 4px !important;
+    min-height: auto !important;
+  }
+
+  .leader-sig-box {
+    height: 65px !important;
+    margin: 2px 0 !important;
+  }
+
+  .leader-sig-img {
+    max-height: 60px !important;
+  }
+
+  .sig-placeholder-box {
+    height: 55px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .leader-name {
+    font-size: 0.9rem !important;
+    margin-top: 2px !important;
+  }
+
+  .leader-nip {
+    font-size: 0.75rem !important;
+  }
+
+  .leader-signed-time {
+    display: none !important;
+  }
+
+  .employees-section {
+    margin-top: 10px !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .employees-grid {
     grid-template-columns: repeat(6, 1fr) !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    flex: 1 !important;
+  }
+
+  .employees-grid.density-compact {
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .employees-grid.density-dense {
+    grid-template-columns: repeat(9, 1fr) !important;
+    gap: 5px !important;
+  }
+
+  .employees-grid.density-micro {
+    grid-template-columns: repeat(11, 1fr) !important;
+    gap: 4px !important;
   }
 
   .employee-card {
-    page-break-inside: avoid;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
     border: 1px solid #cbd5e1 !important;
-    padding: 8px !important;
+    padding: 4px 6px !important;
   }
 
   .emp-sig-box {
-    height: 48px !important;
+    height: 38px !important;
+    margin-bottom: 2px !important;
   }
 
   .emp-sig-img {
-    max-height: 44px !important;
+    max-height: 34px !important;
   }
 
-  .leader-card {
-    page-break-inside: avoid;
+  .emp-name {
+    font-size: 0.74rem !important;
+    margin-bottom: 1px !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .emp-nip {
+    font-size: 0.62rem !important;
+    margin-bottom: 1px !important;
+  }
+
+  .emp-jabatan {
+    font-size: 0.62rem !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .charter-footer {
+    margin-top: 10px !important;
+    padding-top: 8px !important;
+    font-size: 0.7rem !important;
   }
 }
+

@@ -11,10 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const kabagTuCard = document.getElementById('leaderKabagTuCard');
   const employeesGrid = document.getElementById('employeesGrid');
   const toastContainer = document.getElementById('toastContainer');
-  
+
   // Action buttons
   const btnPrint = document.getElementById('btnPrintCharter');
+  const btnDownloadPdf = document.getElementById('btnDownloadPdf');
   const btnFullscreen = document.getElementById('btnToggleFullscreen');
+  const charterSheet = document.getElementById('charterSheet');
   const btnQrModal = document.getElementById('btnShowQrModal');
   const btnCloseModal = document.getElementById('btnCloseModal');
   const qrModal = document.getElementById('qrModal');
@@ -98,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="leader-name">${escapeHtml(data.name)}</div>
         <div class="leader-nip">NIP. ${escapeHtml(data.nip)}</div>
-        <div class="leader-signed-time">✓ Ditandatangani ${data.timestampFormatted ? 'pukul ' + data.timestampFormatted : ''}</div>
+        <!-- <div class="leader-signed-time">✓ Ditandatangani ${data.timestampFormatted ? 'pukul ' + data.timestampFormatted : ''}</div> -->
       `;
     } else {
       element.classList.remove('signed');
@@ -120,8 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 3. Render Employee Grid
+  function updateGridDensity(count) {
+    employeesGrid.classList.remove('density-compact', 'density-dense', 'density-micro');
+    if (count > 48) {
+      employeesGrid.classList.add('density-micro');
+    } else if (count > 24) {
+      employeesGrid.classList.add('density-dense');
+    } else if (count > 12) {
+      employeesGrid.classList.add('density-compact');
+    }
+  }
+
   function renderEmployees(pegawaiList, newId = null) {
     if (!pegawaiList || pegawaiList.length === 0) {
+      employeesGrid.classList.remove('density-compact', 'density-dense', 'density-micro');
       employeesGrid.innerHTML = `
         <div class="empty-employees-placeholder">
           <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -137,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    updateGridDensity(pegawaiList.length);
     employeesGrid.innerHTML = '';
     pegawaiList.forEach((emp, index) => {
       const card = document.createElement('div');
@@ -212,7 +227,80 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCounters({ total: 0, pegawaiCount: 0 });
   });
 
-  // 6. Action Bar Controls
+  // 6. Action Bar Controls: Download PDF A3 & Print
+  if (btnDownloadPdf) {
+    btnDownloadPdf.addEventListener('click', async () => {
+      if (typeof window.html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+        alert('Modul PDF sedang diinisialisasi. Silakan klik kembali dalam beberapa detik.');
+        return;
+      }
+
+      const origBtnHtml = btnDownloadPdf.innerHTML;
+      btnDownloadPdf.disabled = true;
+      btnDownloadPdf.innerHTML = `
+        <span class="spinner" style="width: 15px; height: 15px; border-width: 2px;"></span>
+        <span>Membuat PDF A3 (1 Halaman)...</span>
+      `;
+
+      try {
+        window.scrollTo(0, 0);
+
+        // Capture charter with high resolution scale
+        const canvas = await html2canvas(charterSheet, {
+          scale: 2.2, // 2.2x pixel ratio for sharp text and crisp digital ink
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#fdfcf7',
+          logging: false
+        });
+
+        const imgData = canvas.toDataURL('image/png', 0.98);
+
+        // Instantiate jsPDF for strict A3 Landscape
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm',
+          format: 'a3',
+          compress: true
+        });
+
+        // Exact A3 Landscape: 420mm x 297mm
+        const pageW = 420;
+        const pageH = 297;
+        const margin = 6; // 6mm safe edge margin
+        const availW = pageW - (margin * 2);
+        const availH = pageH - (margin * 2);
+
+        const imgRatio = canvas.width / canvas.height;
+        let finalW = availW;
+        let finalH = finalW / imgRatio;
+
+        if (finalH > availH) {
+          finalH = availH;
+          finalW = finalH * imgRatio;
+        }
+
+        const posX = (pageW - finalW) / 2;
+        const posY = (pageH - finalH) / 2;
+
+        // Render directly onto Page 1 (Never calls addPage -> Strictly 1 page guaranteed)
+        pdf.addImage(imgData, 'PNG', posX, posY, finalW, finalH, undefined, 'FAST');
+
+        // File download with clear naming
+        pdf.save('Piagam_Pencanangan_Zona_Integritas_BBPOM_Pangkalpinang_A3.pdf');
+
+        showToast('PDF Berhasil Diunduh', 'Format Resmi A3 Landscape (1 Halaman)');
+      } catch (err) {
+        console.error('Error generating A3 PDF:', err);
+        alert('Gagal membuat file PDF: ' + err.message);
+      } finally {
+        btnDownloadPdf.disabled = false;
+        btnDownloadPdf.innerHTML = origBtnHtml;
+      }
+    });
+  }
+
   btnPrint.addEventListener('click', () => {
     window.print();
   });
