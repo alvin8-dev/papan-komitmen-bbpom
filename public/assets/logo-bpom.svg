@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b4079"/>
+      <stop offset="100%" stop-color="#002147"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7D070"/>
+      <stop offset="50%" stop-color="#C8963E"/>
+      <stop offset="100%" stop-color="#996D1C"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Blue Ring -->
+  <circle cx="150" cy="150" r="140" fill="url(#blueGrad)" stroke="url(#goldGrad)" stroke-width="6"/>
+  <circle cx="150" cy="150" r="128" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="3,3"/>
+  
+  <!-- Inner White Field -->
+  <circle cx="150" cy="150" r="105" fill="#ffffff"/>
+  
+  <!-- Circular Text Path -->
+  <path id="textCircleTop" d="M 40,150 A 110,110 0 0,1 260,150" fill="none"/>
+  <text font-family="'Arial', 'Helvetica', sans-serif" font-size="12" font-weight="900" fill="#ffffff" letter-spacing="2.5">
+    <textPath href="#textCircleTop" startOffset="50%" text-anchor="middle">
+      BADAN PENGAWAS OBAT DAN MAKANAN
+    </textPath>
+  </text>
+  
+  <path id="textCircleBottom" d="M 260,150 A 110,110 0 0,1 40,150" fill="none"/>
+  <text font-family="'Arial', 'Helvetica', sans-serif" font-size="13" font-weight="900" fill="#ffffff" letter-spacing="3.5">
+    <textPath href="#textCircleBottom" startOffset="50%" text-anchor="middle">
+      REPUBLIK INDONESIA
+    </textPath>
+  </text>
+  
+  <!-- Emblem Center Graphic: stylized mortar/pestle, capsule, and leaves -->
+  <!-- Green Leaves (Nature & Herbal Safety) -->
+  <path d="M 150,60 C 130,85 110,110 115,145 C 130,120 150,110 150,60 Z" fill="#008844"/>
+  <path d="M 150,60 C 170,85 190,110 185,145 C 170,120 150,110 150,60 Z" fill="#00AA55"/>
+  <path d="M 150,80 L 150,155" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Medical/Pharma Cross and Shield Base -->
+  <circle cx="150" cy="165" r="48" fill="#0b4079"/>
+  <!-- Gold Shield Rim -->
+  <path d="M 150,135 L 180,145 C 180,180 150,202 150,202 C 150,202 120,180 120,145 Z" fill="#ffffff" stroke="url(#goldGrad)" stroke-width="3"/>
+  
+  <!-- Stylized Capsule & Molecular Spark -->
+  <path d="M 135,160 C 135,152 142,146 150,146 C 158,146 165,152 165,160 L 165,172 L 135,172 Z" fill="#D9222A"/>
+  <path d="M 135,172 L 165,172 L 165,184 C 165,192 158,198 150,198 C 142,198 135,192 135,184 Z" fill="#0b4079"/>
+  <circle cx="150" cy="172" r="4" fill="#ffffff"/>
+
+  <!-- Gold Star at Top -->
+  <polygon points="150,22 154,32 164,33 156,40 158,50 150,44 142,50 144,40 136,33 146,32" fill="url(#goldGrad)"/>
+</svg>

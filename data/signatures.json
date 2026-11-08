@@ -1,0 +1,126 @@
+{
+  "kepala": {
+    "id": "sig_kepala_demo",
+    "name": "Dra. Hermini, Apt., M.Kes.",
+    "nip": "19680715 199403 2 001",
+    "jabatan": "Kepala Balai Besar POM di Pangkal Pinang",
+    "roleType": "KEPALA",
+    "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjUgNTggQyA0MCAxNSwgNjUgMjAsIDgwIDUwIEMgOTUgMzUsIDExNSAyNSwgMTMwIDUyIEMgMTQ1IDM1LCAxNzUgMzAsIDIwNSA0NSBNIDM1IDYyIEwgMjE1IDU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+    "createdAt": "2026-11-08T07:41:08.601Z",
+    "timestampFormatted": "14.41"
+  },
+  "kabag_tu": {
+    "id": "sig_kabag_demo",
+    "name": "Budi Santoso, S.Farm., Apt.",
+    "nip": "19750912 200003 1 002",
+    "jabatan": "Kabag TU Balai Besar POM di Pangkal Pinang",
+    "roleType": "KABAG_TU",
+    "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMzAgNjUgUSA0NSAxMCwgNjAgNTUgVCAxMDAgNTAgUSAxMzAgMjAsIDE2MCA1NSBUIDIxMCA0MCBNIDQ1IDY4IFEgMTIwIDcyLCAyMDUgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMmI1YiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=",
+    "createdAt": "2026-11-08T07:41:08.639Z",
+    "timestampFormatted": "14.41"
+  },
+  "pegawai": [
+    {
+      "id": "sig_peg_1",
+      "name": "Rina Astuti, S.Si., Apt.",
+      "nip": "19840321 200912 2 003",
+      "jabatan": "Ketua Tim Kerja Pengujian",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjUgNTUgUSA1MCAxNSwgODAgNDUgUSAxMTAgMzAsIDE0MCA1MCBUIDIwMCA0NSBNIDM1IDYwIEwgMTk1IDU2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_2",
+      "name": "Ahmad Fauzi, S.Farm.",
+      "nip": "19901104 201503 1 004",
+      "jabatan": "Pengawas Farmasi dan Makanan Ahli Muda",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMzAgNjAgQyA1MCAyMCwgNzAgMzAsIDkwIDU1IEMgMTEwIDQwLCAxMzAgMzUsIDE2MCA1MCBDIDE4MCAzNSwgMTk1IDQwLCAyMTUgNDUgTSAzMCA2NSBMIDIxMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAyYjViIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_3",
+      "name": "Dewi Lestari, S.Farm., Apt.",
+      "nip": "19880520 201212 2 002",
+      "jabatan": "Ketua Tim Kerja Pemeriksaan",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjUgNjUgUSA0MCAxOCwgNjUgNTIgVCAxMTUgNDggUSAxNDUgMjUsIDE3NSA1MiBUIDIxNSA0MiBNIDM1IDY4IEwgMjEwIDYzIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_4",
+      "name": "Hendri Kurniawan, A.Md.",
+      "nip": "19950814 201801 1 001",
+      "jabatan": "Pranata Laboratorium Pengujian",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjggNjIgQyA0NSAyMiwgNzAgMzAsIDk1IDU4IEMgMTIwIDQyLCAxNDAgMzgsIDE3MCA1MiBNIDMwIDY4IEwgMTkwIDYyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    }
+  ],
+  "history": [
+    {
+      "id": "sig_kepala_demo",
+      "name": "Dra. Hermini, Apt., M.Kes.",
+      "nip": "19680715 199403 2 001",
+      "jabatan": "Kepala Balai Besar POM di Pangkal Pinang",
+      "roleType": "KEPALA",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjUgNTggQyA0MCAxNSwgNjUgMjAsIDgwIDUwIEMgOTUgMzUsIDExNSAyNSwgMTMwIDUyIEMgMTQ1IDM1LCAxNzUgMzAsIDIwNSA0NSBNIDM1IDYyIEwgMjE1IDU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.601Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_kabag_demo",
+      "name": "Budi Santoso, S.Farm., Apt.",
+      "nip": "19750912 200003 1 002",
+      "jabatan": "Kabag TU Balai Besar POM di Pangkal Pinang",
+      "roleType": "KABAG_TU",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMzAgNjUgUSA0NSAxMCwgNjAgNTUgVCAxMDAgNTAgUSAxMzAgMjAsIDE2MCA1NSBUIDIxMCA0MCBNIDQ1IDY4IFEgMTIwIDcyLCAyMDUgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMmI1YiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_1",
+      "name": "Rina Astuti, S.Si., Apt.",
+      "nip": "19840321 200912 2 003",
+      "jabatan": "Ketua Tim Kerja Pengujian",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjUgNTUgUSA1MCAxNSwgODAgNDUgUSAxMTAgMzAsIDE0MCA1MCBUIDIwMCA0NSBNIDM1IDYwIEwgMTk1IDU2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_2",
+      "name": "Ahmad Fauzi, S.Farm.",
+      "nip": "19901104 201503 1 004",
+      "jabatan": "Pengawas Farmasi dan Makanan Ahli Muda",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMzAgNjAgQyA1MCAyMCwgNzAgMzAsIDkwIDU1IEMgMTEwIDQwLCAxMzAgMzUsIDE2MCA1MCBDIDE4MCAzNSwgMTk1IDQwLCAyMTUgNDUgTSAzMCA2NSBMIDIxMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAyYjViIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_3",
+      "name": "Dewi Lestari, S.Farm., Apt.",
+      "nip": "19880520 201212 2 002",
+      "jabatan": "Ketua Tim Kerja Pemeriksaan",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjUgNjUgUSA0MCAxOCwgNjUgNTIgVCAxMTUgNDggUSAxNDUgMjUsIDE3NSA1MiBUIDIxNSA0MiBNIDM1IDY4IEwgMjEwIDYzIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    },
+    {
+      "id": "sig_peg_4",
+      "name": "Hendri Kurniawan, A.Md.",
+      "nip": "19950814 201801 1 001",
+      "jabatan": "Pranata Laboratorium Pengujian",
+      "roleType": "PEGAWAI",
+      "signatureDataUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiIHdpZHRoPSIyNDAiIGhlaWdodD0iODAiPjxwYXRoIGQ9Ik0gMjggNjIgQyA0NSAyMiwgNzAgMzAsIDk1IDU4IEMgMTIwIDQyLCAxNDAgMzgsIDE3MCA1MiBNIDMwIDY4IEwgMTkwIDYyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDJiNWIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+",
+      "createdAt": "2026-11-08T07:41:08.639Z",
+      "timestampFormatted": "14.41"
+    }
+  ]
+}

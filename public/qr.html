@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pindai QR Code Komitmen Bersama Zona Integritas - BBPOM di Pangkalpinang</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo-bpom.svg">
+  <style>
+    body {
+      background: radial-gradient(circle at center, #002b5c 0%, #00152e 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .qr-projector-box {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 36px 44px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 0 2px var(--bpom-gold);
+      max-width: 680px;
+      width: 100%;
+      position: relative;
+      color: #0f172a;
+    }
+
+    .qr-projector-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      border-radius: 20px 20px 0 0;
+      background: var(--bpom-gold-gradient);
+    }
+
+    .projector-header-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .projector-logo {
+      height: 68px;
+      object-fit: contain;
+    }
+
+    .projector-title {
+      font-family: var(--font-serif-header);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--bpom-navy-dark);
+      letter-spacing: 1px;
+      line-height: 1.3;
+    }
+
+    .projector-sub {
+      font-size: 1rem;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .qr-frame {
+      display: inline-block;
+      padding: 16px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 3px solid #002b5b;
+      box-shadow: 0 10px 25px rgba(0, 33, 71, 0.12);
+      margin: 24px 0 18px;
+    }
+
+    #projectorQrImage {
+      width: 320px;
+      height: 320px;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .scan-instruction-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fdf5d8;
+      border: 1.5px solid var(--bpom-gold);
+      color: #8c6711;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .projector-url-box {
+      margin-top: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .projector-url-text {
+      font-family: monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--bpom-navy);
+      word-break: break-all;
+    }
+
+    .nav-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="qr-projector-box">
+    
+    <div class="projector-header-logos">
+      <img src="assets/logo-bpom.svg" alt="Badan POM" class="projector-logo">
+      <img src="assets/garuda-gold.svg" alt="Garuda Pancasila" class="projector-logo" style="height: 52px;">
+      <img src="assets/logo-zi.svg" alt="Zona Integritas" class="projector-logo">
+    </div>
+
+    <h1 class="projector-title">PENCANANGAN ZONA INTEGRITAS MENUJU WBBM</h1>
+    <p class="projector-sub">BALAI BESAR PENGAWAS OBAT DAN MAKANAN DI PANGKALPINANG</p>
+
+    <div class="qr-frame">
+      <img id="projectorQrImage" src="" alt="Pindai QR Code Peserta">
+    </div>
+
+    <div>
+      <div class="scan-instruction-badge">
+        📸 Buka Kamera HP Anda &amp; Pindai QR Code Ini
+      </div>
+    </div>
+
+    <div class="projector-url-box">
+      <span class="projector-url-text" id="projectorQrUrl">Memuat URL...</span>
+      <button type="button" class="btn btn-navy btn-sm" id="btnCopyUrl">Salin Link</button>
+    </div>
+
+    <div style="margin-top: 16px; font-size: 0.88rem; color: #64748b;">
+      Total yang telah menandatangani komitmen: <strong id="qrSignedCount" style="color: var(--bpom-navy); font-size: 1.1rem;">0</strong> Peserta
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <a href="/" class="btn btn-primary">
+      📋 Kembali ke Piagam Utama
+    </a>
+    <a href="/sign" target="_blank" class="btn btn-navy">
+      ✍️ Buka Form Tanda Tangan
+    </a>
+    <button type="button" class="btn btn-outline" id="btnToggleFullscreen">
+      🖥️ Layar Penuh
+    </button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/qr.js"></script>
+</body>
+</html>

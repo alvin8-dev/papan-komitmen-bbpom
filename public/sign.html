@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tanda Tangan Komitmen Bersama Zona Integritas - BBPOM di Pangkalpinang</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sign.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo-bpom.svg">
+</head>
+<body class="sign-page">
+
+  <div class="sign-container">
+    <!-- Header Card -->
+    <header class="sign-header-card">
+      <div class="header-logos-row">
+        <img src="assets/logo-bpom.svg" alt="Logo Badan POM" class="header-mini-logo">
+        <img src="assets/garuda-gold.svg" alt="Garuda Pancasila" class="header-mini-logo" style="width: 42px; height: 42px;">
+        <img src="assets/logo-zi.svg" alt="Logo Zona Integritas" class="header-mini-logo">
+      </div>
+      <h1 class="sign-header-title">PENCANANGAN ZONA INTEGRITAS</h1>
+      <p class="sign-header-sub">Menuju Wilayah Bebas dari Korupsi (WBK) &amp; Wilayah Birokrasi Bersih dan Melayani (WBBM)</p>
+      <div class="sign-event-badge">
+        🏛️ Balai Besar POM di Pangkal Pinang &bull; 20 November 2026
+      </div>
+    </header>
+
+    <!-- Main Form Section -->
+    <main class="sign-form-card" id="formSection">
+      <form id="signatureForm" autocomplete="off">
+        
+        <!-- Field 1: Nama Lengkap beserta Gelar -->
+        <div class="form-group">
+          <label for="namaLengkap" class="form-label">
+            Nama Lengkap Beserta Gelar <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="namaLengkap" 
+            name="namaLengkap" 
+            class="form-input" 
+            placeholder="Contoh: Dra. Hj. Hermini, Apt., M.Kes." 
+            required 
+            minlength="3"
+            maxlength="120"
+          >
+          <p class="form-hint">Tuliskan nama lengkap beserta seluruh gelar akademis/profesi.</p>
+        </div>
+
+        <!-- Field 2: NIP -->
+        <div class="form-group">
+          <label for="nip" class="form-label">
+            Nomor Induk Pegawai (NIP) <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="nip" 
+            name="nip" 
+            class="form-input" 
+            placeholder="Contoh: 19780512 200312 1 001 atau -" 
+            required 
+            maxlength="30"
+          >
+          <p class="form-hint">Isi NIP resmi (atau tanda '-' bagi tenaga PPNPN/kontrak).</p>
+        </div>
+
+        <!-- Field 3: Jabatan -->
+        <div class="form-group">
+          <label for="selectJabatan" class="form-label">
+            Jabatan <span class="required">*</span>
+          </label>
+          <select id="selectJabatan" name="jabatan" class="form-select" required>
+            <option value="" disabled selected>-- Pilih Jabatan Anda --</option>
+            <optgroup label="Pimpinan Balai">
+              <option value="Kepala Balai Besar POM di Pangkal Pinang">Kepala Balai Besar POM di Pangkal Pinang</option>
+              <option value="Kabag TU Balai Besar POM di Pangkal Pinang">Kabag TU Balai Besar POM di Pangkal Pinang</option>
+            </optgroup>
+            <optgroup label="Ketua Tim Kerja & Pejabat Fungsional">
+              <option value="Ketua Tim Kerja Pemeriksaan">Ketua Tim Kerja Pemeriksaan</option>
+              <option value="Ketua Tim Kerja Pengujian">Ketua Tim Kerja Pengujian</option>
+              <option value="Ketua Tim Kerja Penindakan">Ketua Tim Kerja Penindakan</option>
+              <option value="Ketua Tim Kerja Informasi dan Komunikasi">Ketua Tim Kerja Informasi dan Komunikasi</option>
+              <option value="Pengawas Farmasi dan Makanan Ahli Madya">Pengawas Farmasi dan Makanan Ahli Madya</option>
+              <option value="Pengawas Farmasi dan Makanan Ahli Muda">Pengawas Farmasi dan Makanan Ahli Muda</option>
+              <option value="Pengawas Farmasi dan Makanan Ahli Pertama">Pengawas Farmasi dan Makanan Ahli Pertama</option>
+              <option value="Pengawas Farmasi dan Makanan Terampil">Pengawas Farmasi dan Makanan Terampil</option>
+              <option value="Pranata Laboratorium Pengujian">Pranata Laboratorium Pengujian</option>
+              <option value="Analis Pengelolaan Keuangan APBN">Analis Pengelolaan Keuangan APBN</option>
+              <option value="Analis SDM Aparatur / Kepegawaian">Analis SDM Aparatur / Kepegawaian</option>
+              <option value="Pranata Komputer">Pranata Komputer</option>
+              <option value="Arsiparis">Arsiparis</option>
+              <option value="Staf Tata Usaha / Pelaksana">Staf Tata Usaha / Pelaksana</option>
+              <option value="PPNPN Balai Besar POM di Pangkal Pinang">PPNPN Balai Besar POM di Pangkal Pinang</option>
+            </optgroup>
+            <option value="__OTHER__">✍️ Jabatan Lainnya (Ketik Manual)...</option>
+          </select>
+        </div>
+
+        <!-- Custom Jabatan Input (shown if __OTHER__ selected) -->
+        <div class="form-group" id="customJabatanGroup" style="display: none;">
+          <label for="customJabatan" class="form-label">
+            Tuliskan Nama Jabatan <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="customJabatan" 
+            class="form-input" 
+            placeholder="Tuliskan nama jabatan Anda secara lengkap"
+            maxlength="120"
+          >
+        </div>
+
+        <!-- Field 4: Digital Signature Pad Canvas -->
+        <div class="form-group">
+          <div class="signature-section-header">
+            <label class="form-label" style="margin-bottom: 0;">
+              Tanda Tangan Digital <span class="required">*</span>
+            </label>
+            <div class="ink-color-picker">
+              <span>Tinta:</span>
+              <div class="color-dot color-navy active" data-color="#002b5b" title="Navy BPOM"></div>
+              <div class="color-dot color-black" data-color="#111827" title="Hitam Resmi"></div>
+              <div class="color-dot color-blue" data-color="#1d4ed8" title="Biru Pena"></div>
+            </div>
+          </div>
+
+          <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="signatureCanvas"></canvas>
+            <div class="canvas-watermark-guide" id="canvasGuide">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              <span>Bubuhkan tanda tangan di sini (layar sentuh / mouse)</span>
+            </div>
+          </div>
+
+          <div class="canvas-controls-row">
+            <p class="form-hint" style="margin-top: 0;">Goreskan tanda tangan dengan jari atau stylus pen.</p>
+            <div class="canvas-btn-group">
+              <button type="button" class="btn btn-secondary btn-sm" id="btnUndo" title="Batalkan goresan terakhir">
+                ↩️ Undo
+              </button>
+              <button type="button" class="btn btn-danger btn-sm" id="btnClear" title="Hapus seluruh tanda tangan">
+                🗑️ Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Commitment Pledge Checkbox -->
+        <div class="commitment-check-box">
+          <input type="checkbox" id="commitmentCheck" required checked>
+          <label for="commitmentCheck">
+            Saya menyatakan <strong>BERKOMITMEN SEPENUHNYA</strong> untuk mewujudkan Zona Integritas menuju WBK dan WBBM pada Balai Besar POM di Pangkal Pinang dengan menjunjung tinggi integritas, kejujuran, dan pelayanan prima tanpa korupsi, kolusi, dan nepotisme.
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary btn-submit-sig" id="btnSubmit">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Kirim Tanda Tangan Komitmen</span>
+        </button>
+      </form>
+    </main>
+
+    <!-- Success Screen (Shown after successful submission) -->
+    <section class="sign-form-card success-screen" id="successScreen">
+      <div class="success-icon-badge">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+
+      <h2 class="success-title">Komitmen Anda Berhasil Tercatat!</h2>
+      <p class="success-desc">
+        Tanda tangan digital Anda telah resmi tersemat pada Piagam Pencanangan Zona Integritas Balai Besar POM di Pangkal Pinang dan langsung tampil di Layar Utama.
+      </p>
+
+      <div class="success-preview-card">
+        <div class="badge badge-gold" style="margin-bottom: 8px;">TERCATAT RESMI</div>
+        <div>
+          <img id="previewSigImg" class="preview-sig-img" alt="Tanda Tangan Anda">
+        </div>
+        <div class="preview-name" id="previewName">Nama Pegawai</div>
+        <div class="preview-nip" id="previewNip">NIP. -</div>
+        <div class="preview-role" id="previewRole">Jabatan</div>
+      </div>
+
+      <button type="button" class="btn btn-navy" id="btnSignAgain" style="width: 100%; padding: 12px;">
+        ✍️ Tanda Tangan untuk Peserta Lain
+      </button>
+
+      <p class="form-hint" style="text-align: center; margin-top: 14px;">
+        Terima kasih atas dedikasi dan komitmen Anda mewujudkan BBPOM di Pangkalpinang yang Bersih dan Melayani.
+      </p>
+    </section>
+  </div>
+
+  <script src="js/sign.js"></script>
+</body>
+</html>
