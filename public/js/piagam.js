@@ -245,27 +245,41 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         window.scrollTo(0, 0);
 
-        // Temporarily enable exact A3 Landscape layout (1588px x 1123px)
-        charterSheet.classList.add('a3-export-mode');
-        await new Promise(resolve => setTimeout(resolve, 80));
+        // Create isolated render sandbox at exact (0, 0) to avoid any viewport/flexbox offset
+        const sandbox = document.createElement('div');
+        sandbox.id = 'pdfExportSandbox';
+        sandbox.style.cssText = 'position:fixed;left:0;top:0;width:1588px;height:1123px;z-index:999999;overflow:hidden;background:#fdfcf7;margin:0;padding:0;';
 
-        // Capture charter with 2x ultra-sharp resolution
-        const canvas = await html2canvas(charterSheet, {
-          scale: 2,
+        // Deep clone charterSheet
+        const clone = charterSheet.cloneNode(true);
+        clone.classList.add('a3-export-mode');
+        clone.style.cssText = 'width:1588px!important;height:1123px!important;position:absolute;left:0;top:0;margin:0!important;box-sizing:border-box!important;';
+
+        sandbox.appendChild(clone);
+        document.body.appendChild(sandbox);
+
+        // Wait for fonts and images paint
+        await new Promise(resolve => setTimeout(resolve, 150));
+
+        // Capture clone at exact coordinates (0, 0)
+        const canvas = await html2canvas(clone, {
+          scale: 2, // 3176 x 2246 ultra-HD
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#fdfcf7',
           logging: false,
           width: 1588,
           height: 1123,
-          windowWidth: 1588,
-          windowHeight: 1123
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0
         });
 
-        // Restore normal screen layout immediately
-        charterSheet.classList.remove('a3-export-mode');
+        // Remove sandbox immediately
+        document.body.removeChild(sandbox);
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const imgData = canvas.toDataURL('image/jpeg', 0.96);
 
         // Instantiate jsPDF for strict A3 Landscape (420mm x 297mm)
         const { jsPDF } = window.jspdf;
@@ -277,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Fill 100% of the A3 Landscape page (420mm x 297mm) edge-to-edge
-        // Zero wasted empty space outside!
+        // Perfectly symmetrical: 0mm wasted space on left, right, top, or bottom!
         pdf.addImage(imgData, 'JPEG', 0, 0, 420, 297, undefined, 'FAST');
 
         // File download with clear naming
@@ -285,7 +299,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showToast('PDF A3 Berhasil Diunduh', 'Format Penuh A3 Landscape 1 Halaman');
       } catch (err) {
-        charterSheet.classList.remove('a3-export-mode');
+        const existingSandbox = document.getElementById('pdfExportSandbox');
+        if (existingSandbox) {
+          existingSandbox.remove();
+        }
         console.error('Error generating A3 PDF:', err);
         alert('Gagal membuat file PDF: ' + err.message);
       } finally {
