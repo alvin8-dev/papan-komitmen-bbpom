@@ -1,0 +1,464 @@
+[
+  {
+    "no": 1,
+    "nama": "Alex Sander, S.Farm., Apt., M.H",
+    "nip": "19791212 200604 1 005",
+    "jabatan": "Kepala Balai Besar POM di Pangkal Pinang",
+    "roleType": "KEPALA"
+  },
+  {
+    "no": 2,
+    "nama": "Mardianto, S.Farm., Apt.",
+    "nip": "19830326 200812 1 001",
+    "jabatan": "Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang",
+    "roleType": "KABAG_TU"
+  },
+  {
+    "no": 3,
+    "nama": "Ria Emeilia, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 4,
+    "nama": "Welinda Syafri, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 5,
+    "nama": "Tri Astuti Rahmawati, S.TP., M.Sc.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 6,
+    "nama": "Sony Lawrensia, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 7,
+    "nama": "Prawita Lintang Larasati, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 8,
+    "nama": "Pratiwi Setianingsih, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 9,
+    "nama": "Puspa Sari Paniti Ratri, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 10,
+    "nama": "Muhammad Herpi Akbar, S.Farm., Apt., M.Farm.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 11,
+    "nama": "Wedita Destriani, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 12,
+    "nama": "Rachmadiniarni, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 13,
+    "nama": "Frenandha Dwi Dharmawan, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 14,
+    "nama": "Atika Melati, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 15,
+    "nama": "Ahmad Burhan Rifa'i, S.TP.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 16,
+    "nama": "Ririn Suprihanti, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 17,
+    "nama": "Marruni Zariah, S.Farm., Apt.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 18,
+    "nama": "Anita Indriyastuti, S.M.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 19,
+    "nama": "Lia Tri Wahyuni, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 20,
+    "nama": "Indita Tiara Puspa, S.T.P.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 21,
+    "nama": "Riantika Kurniati, S.Farm.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 22,
+    "nama": "Priya Tri Nanda, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 23,
+    "nama": "Ika Kartika, S.T.P.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 24,
+    "nama": "Kafidul Ulum, S.TP.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 25,
+    "nama": "Rizki Afriyanti, ST.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 26,
+    "nama": "Nungki Nuari Dewi, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 27,
+    "nama": "apt. Rizky Rahmadhani Muslim, S.Farm.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 28,
+    "nama": "Hudana Alam Putra, S.Sos.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 29,
+    "nama": "apt. Tiara Rani, S.Farm.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 30,
+    "nama": "apt. Angela Marselly Br Barus, S.Farm.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 31,
+    "nama": "Veni Oktivia, SE.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 32,
+    "nama": "Ade Yan Emerson, S.Kom.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 33,
+    "nama": "Fatrisia Ratnasari, SE.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 34,
+    "nama": "Frans Eryxon Ambarita, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 35,
+    "nama": "Muhammad Apriadi, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 36,
+    "nama": "Hana Mardiah, S.E.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 37,
+    "nama": "Netty Desi Margaretta Manullang, S.E.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 38,
+    "nama": "Rizky Wirani, S.T.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 39,
+    "nama": "Riska Widiyana, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 40,
+    "nama": "Ina Miranti, S.Si.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 41,
+    "nama": "Septo Dwi Yan Purnomo, S.T.P.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 42,
+    "nama": "Talia Lucluba Madina, S.T.P.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 43,
+    "nama": "Alvindra Pratama, S.T.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 44,
+    "nama": "Yogi Hasudungan, S.Kom.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 45,
+    "nama": "Lukman Hakim Rachmawan, S.M.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 46,
+    "nama": "Al Ihya Yunus Putri, S.Sos.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 47,
+    "nama": "Nabila Mukhriza, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 48,
+    "nama": "Tio Lestarina M Hutajulu, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 49,
+    "nama": "Muchtar Ghanda Taruna, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 50,
+    "nama": "Dani Pena Prianto, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 51,
+    "nama": "Donny Tua Hamonangan, S.H.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 52,
+    "nama": "Atik Riwati, S.I.Kom.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 53,
+    "nama": "Syahri Syarif, S.P.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 54,
+    "nama": "Dedi Afriyansyah, S.Kom.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 55,
+    "nama": "M. Rusdi, A.Md.",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PEGAWAI"
+  },
+  {
+    "no": 56,
+    "nama": "Agus Setiawan",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 57,
+    "nama": "Jefri Yanto",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 58,
+    "nama": "Idris",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 59,
+    "nama": "Rudi Alamsyah",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 60,
+    "nama": "Robiansyah",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 61,
+    "nama": "Danil Arifin",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 62,
+    "nama": "Ery Saputra",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 63,
+    "nama": "Sapta Putra",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 64,
+    "nama": "Rifky Agusta",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 65,
+    "nama": "Sindy Aulia Putri, S.Si",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  },
+  {
+    "no": 66,
+    "nama": "Yulistya Gustriani, S.Si",
+    "nip": "",
+    "jabatan": "",
+    "roleType": "PPNPN"
+  }
+]

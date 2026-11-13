@@ -85,28 +85,31 @@ function getLocalNetworkIP() {
   return 'localhost';
 }
 
-// Classify role based on jabatan string
-function determineRoleType(jabatan = '') {
-  const clean = jabatan.trim().toLowerCase();
+// Classify role based on jabatan string and/or person name
+function determineRoleType(jabatan = '', name = '') {
+  const cleanJabatan = (jabatan || '').trim().toLowerCase();
+  const cleanName = (name || '').trim().toLowerCase();
   
-  // Kepala Balai check
-  const isKepala = clean.includes('kepala balai besar') || 
-                  clean.includes('kepala bbpom') ||
-                  (clean.startsWith('kepala balai') && !clean.includes('bagian') && !clean.includes('tu')) ||
-                  clean === 'kepala balai besar pom di pangkal pinang' ||
-                  clean === 'kepala balai besar pom di pangkalpinang';
+  // Kepala Balai check (by official name or official role)
+  const isKepala = cleanName.includes('alex sander') ||
+                  cleanJabatan.includes('kepala balai besar') || 
+                  cleanJabatan.includes('kepala bbpom') ||
+                  (cleanJabatan.startsWith('kepala balai') && !cleanJabatan.includes('bagian') && !cleanJabatan.includes('tu')) ||
+                  cleanJabatan === 'kepala balai besar pom di pangkal pinang' ||
+                  cleanJabatan === 'kepala balai besar pom di pangkalpinang';
 
   if (isKepala) {
     return 'KEPALA';
   }
 
-  // Kabag TU check
-  const isKabagTU = clean.includes('kabag tu') ||
-                    clean.includes('kabag tata usaha') ||
-                    (clean.includes('tata usaha') && clean.includes('kepala bagian')) ||
-                    clean.includes('kepala bagian tu') ||
-                    clean === 'kabag tu balai besar pom di pangkal pinang' ||
-                    clean === 'kepala bagian tata usaha balai besar pom di pangkal pinang';
+  // Kabag TU check (by official name or official role)
+  const isKabagTU = cleanName.includes('mardianto') ||
+                    cleanJabatan.includes('kabag tu') ||
+                    cleanJabatan.includes('kabag tata usaha') ||
+                    (cleanJabatan.includes('tata usaha') && cleanJabatan.includes('kepala bagian')) ||
+                    cleanJabatan.includes('kepala bagian tu') ||
+                    cleanJabatan === 'kabag tu balai besar pom di pangkal pinang' ||
+                    cleanJabatan === 'kepala bagian tata usaha balai besar pom di pangkal pinang';
 
   if (isKabagTU) {
     return 'KABAG_TU';
@@ -145,6 +148,20 @@ app.get('/api/info', async (req, res) => {
   });
 });
 
+// 3b. API - Get Nominatif Pegawai List from Excel/JSON
+app.get('/api/pegawai', (req, res) => {
+  try {
+    const filePath = path.join(DATA_DIR, 'pegawai_nominatif.json');
+    if (fs.existsSync(filePath)) {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      return res.json({ success: true, count: data.length, data });
+    }
+    return res.json({ success: true, count: 0, data: [] });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Gagal membaca data pegawai nominatif.', error: err.message });
+  }
+});
+
 // 4. API - Dynamic QR Code Generator for mobile URL
 app.get('/api/qr-image', async (req, res) => {
   try {
@@ -170,6 +187,7 @@ app.get('/api/qr-image', async (req, res) => {
 
 // 5. API - GET all signatures
 app.get('/api/signatures', (req, res) => {
+  signaturesData = loadSignatures();
   const totalCount = (signaturesData.kepala ? 1 : 0) +
                      (signaturesData.kabag_tu ? 1 : 0) +
                      signaturesData.pegawai.length;
@@ -199,20 +217,26 @@ app.post('/api/signatures', (req, res) => {
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, message: 'Nama lengkap beserta gelar wajib diisi.' });
     }
-    if (!nip || !nip.trim()) {
-      return res.status(400).json({ success: false, message: 'NIP wajib diisi.' });
-    }
-    if (!jabatan || !jabatan.trim()) {
-      return res.status(400).json({ success: false, message: 'Jabatan wajib diisi.' });
-    }
     if (!signatureDataUrl || !signatureDataUrl.startsWith('data:image/')) {
       return res.status(400).json({ success: false, message: 'Tanda tangan digital wajib digambar.' });
     }
 
     const trimmedName = name.trim();
-    const trimmedNip = nip.trim();
-    const trimmedJabatan = jabatan.trim();
-    const roleType = determineRoleType(trimmedJabatan);
+    let trimmedNip = (nip || '').trim();
+    let trimmedJabatan = (jabatan || '').trim();
+    const roleType = determineRoleType(trimmedJabatan, trimmedName);
+
+    // Auto-fill official NIP & Jabatan for Leadership if omitted
+    if (roleType === 'KEPALA') {
+      trimmedNip = trimmedNip && trimmedNip !== '-' ? trimmedNip : '19791212 200604 1 005';
+      trimmedJabatan = trimmedJabatan && trimmedJabatan !== '-' ? trimmedJabatan : 'Kepala Balai Besar POM di Pangkal Pinang';
+    } else if (roleType === 'KABAG_TU') {
+      trimmedNip = trimmedNip && trimmedNip !== '-' ? trimmedNip : '19830326 200812 1 001';
+      trimmedJabatan = trimmedJabatan && trimmedJabatan !== '-' ? trimmedJabatan : 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
+    } else {
+      trimmedNip = trimmedNip || '-';
+      trimmedJabatan = trimmedJabatan || '';
+    }
 
     const newRecord = {
       id: 'sig_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
@@ -231,7 +255,15 @@ app.post('/api/signatures', (req, res) => {
     } else if (roleType === 'KABAG_TU') {
       signaturesData.kabag_tu = newRecord;
     } else {
-      signaturesData.pegawai.push(newRecord);
+      // If employee with same name already signed, update their signature; otherwise push new
+      const existingIdx = signaturesData.pegawai.findIndex(
+        p => p.name.trim().toLowerCase() === trimmedName.toLowerCase()
+      );
+      if (existingIdx !== -1) {
+        signaturesData.pegawai[existingIdx] = newRecord;
+      } else {
+        signaturesData.pegawai.push(newRecord);
+      }
     }
 
     // Keep in full audit history
@@ -326,8 +358,8 @@ app.post('/api/seed', (req, res) => {
 
   const sampleKepala = {
     id: 'sig_kepala_demo',
-    name: 'Dra. Hermini, Apt., M.Kes.',
-    nip: '19680715 199403 2 001',
+    name: 'Alex Sander, S.Farm., Apt., M.H',
+    nip: '19791212 200604 1 005',
     jabatan: 'Kepala Balai Besar POM di Pangkal Pinang',
     roleType: 'KEPALA',
     signatureDataUrl: makeSvgSig('M 25 58 C 40 15, 65 20, 80 50 C 95 35, 115 25, 130 52 C 145 35, 175 30, 205 45 M 35 62 L 215 58'),
@@ -337,9 +369,9 @@ app.post('/api/seed', (req, res) => {
 
   const sampleKabagTU = {
     id: 'sig_kabag_demo',
-    name: 'Budi Santoso, S.Farm., Apt.',
-    nip: '19750912 200003 1 002',
-    jabatan: 'Kabag TU Balai Besar POM di Pangkal Pinang',
+    name: 'Mardianto, S.Farm., Apt.',
+    nip: '19830326 200812 1 001',
+    jabatan: 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang',
     roleType: 'KABAG_TU',
     signatureDataUrl: makeSvgSig('M 30 65 Q 45 10, 60 55 T 100 50 Q 130 20, 160 55 T 210 40 M 45 68 Q 120 72, 205 60'),
     createdAt: new Date().toISOString(),
@@ -349,8 +381,8 @@ app.post('/api/seed', (req, res) => {
   const samplePegawai = [
     {
       id: 'sig_peg_1',
-      name: 'Rina Astuti, S.Si., Apt.',
-      nip: '19840321 200912 2 003',
+      name: 'Ria Emeilia, S.Farm., Apt.',
+      nip: '-',
       jabatan: 'Ketua Tim Kerja Pengujian',
       roleType: 'PEGAWAI',
       signatureDataUrl: makeSvgSig('M 25 55 Q 50 15, 80 45 Q 110 30, 140 50 T 200 45 M 35 60 L 195 56'),
@@ -359,9 +391,9 @@ app.post('/api/seed', (req, res) => {
     },
     {
       id: 'sig_peg_2',
-      name: 'Ahmad Fauzi, S.Farm.',
-      nip: '19901104 201503 1 004',
-      jabatan: 'Pengawas Farmasi dan Makanan Ahli Muda',
+      name: 'Welinda Syafri, S.Farm., Apt.',
+      nip: '-',
+      jabatan: 'Ketua Tim Kerja Pemeriksaan',
       roleType: 'PEGAWAI',
       signatureDataUrl: makeSvgSig('M 30 60 C 50 20, 70 30, 90 55 C 110 40, 130 35, 160 50 C 180 35, 195 40, 215 45 M 30 65 L 210 60'),
       createdAt: new Date().toISOString(),
@@ -369,9 +401,9 @@ app.post('/api/seed', (req, res) => {
     },
     {
       id: 'sig_peg_3',
-      name: 'Dewi Lestari, S.Farm., Apt.',
-      nip: '19880520 201212 2 002',
-      jabatan: 'Ketua Tim Kerja Pemeriksaan',
+      name: 'Tri Astuti Rahmawati, S.TP., M.Sc.',
+      nip: '-',
+      jabatan: 'Ketua Tim Kerja Penindakan',
       roleType: 'PEGAWAI',
       signatureDataUrl: makeSvgSig('M 25 65 Q 40 18, 65 52 T 115 48 Q 145 25, 175 52 T 215 42 M 35 68 L 210 63'),
       createdAt: new Date().toISOString(),
@@ -379,9 +411,9 @@ app.post('/api/seed', (req, res) => {
     },
     {
       id: 'sig_peg_4',
-      name: 'Hendri Kurniawan, A.Md.',
-      nip: '19950814 201801 1 001',
-      jabatan: 'Pranata Laboratorium Pengujian',
+      name: 'Sony Lawrensia, S.Farm., Apt.',
+      nip: '-',
+      jabatan: 'Ketua Tim Kerja Informasi dan Komunikasi',
       roleType: 'PEGAWAI',
       signatureDataUrl: makeSvgSig('M 28 62 C 45 22, 70 30, 95 58 C 120 42, 140 38, 170 52 M 30 68 L 190 62'),
       createdAt: new Date().toISOString(),
@@ -424,6 +456,7 @@ app.post('/api/seed', (req, res) => {
 
 // Socket.IO events
 io.on('connection', (socket) => {
+  signaturesData = loadSignatures();
   // Send current state immediately on connect
   socket.emit('initial_data', {
     kepala: signaturesData.kepala,

@@ -54,91 +54,6 @@
   gap: 12px;
 }
 
-/* ==========================================================================
-   FULLSCREEN MODE STYLING
-   Only show certificate sheet, hide all navigation except exit fullscreen
-   ========================================================================== */
-body.is-fullscreen {
-  overflow: hidden !important;
-}
-
-body.is-fullscreen .top-action-bar {
-  position: fixed !important;
-  top: 14px !important;
-  right: 18px !important;
-  left: auto !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  z-index: 99999 !important;
-}
-
-/* Hide all navigation options in fullscreen except the Exit Fullscreen button */
-body.is-fullscreen .action-bar-left,
-body.is-fullscreen #btnShowQrModal,
-body.is-fullscreen a[href="/qr"],
-body.is-fullscreen #btnDownloadPdf,
-body.is-fullscreen #btnPrintCharter,
-body.is-fullscreen #btnAdminTools {
-  display: none !important;
-}
-
-/* Floating Exit Fullscreen Button */
-body.is-fullscreen #btnToggleFullscreen {
-  background: rgba(0, 33, 71, 0.88) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1.5px solid var(--bpom-gold) !important;
-  color: #f7df94 !important;
-  padding: 8px 18px !important;
-  border-radius: var(--radius-full) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
-  font-weight: 700 !important;
-  font-size: 0.88rem !important;
-  transition: all 0.25s ease !important;
-  opacity: 0.85;
-}
-
-body.is-fullscreen #btnToggleFullscreen:hover {
-  opacity: 1 !important;
-  transform: scale(1.05) !important;
-  box-shadow: 0 8px 25px rgba(197, 155, 39, 0.45) !important;
-}
-
-body.is-fullscreen .charter-screen-wrapper {
-  padding: 12px 16px !important;
-  margin: 0 !important;
-  height: 100vh !important;
-  min-height: 100vh !important;
-  width: 100vw !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  background: #0b1a2d !important;
-}
-
-body.is-fullscreen .charter-sheet {
-  height: calc(100vh - 24px) !important;
-  max-height: calc(100vh - 24px) !important;
-  width: auto !important;
-  max-width: 98vw !important;
-  aspect-ratio: 1.414 / 1 !important;
-  margin: auto !important;
-  padding: 24px 40px !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7) !important;
-}
-
-body.is-fullscreen .charter-sheet .employees-section {
-  flex: 1 !important;
-  min-height: 220px !important;
-}
-
-body.is-fullscreen .charter-sheet .employees-grid {
-  flex: 1 !important;
-}
-
 /* Outer Wrapper */
 .charter-screen-wrapper {
   padding: 24px;
@@ -175,7 +90,7 @@ body.is-fullscreen .charter-sheet .employees-grid {
   transform: translate(-50%, -50%);
   width: 600px;
   height: 600px;
-  background-image: url('../assets/logo-bpom.svg');
+  background-image: url('../assets/Logo-Badan-POM.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -548,10 +463,12 @@ body.is-fullscreen .charter-sheet .employees-grid {
     box-shadow: 0 0 0 4px rgba(197, 155, 39, 0.8), 0 8px 24px rgba(197, 155, 39, 0.4);
     transform: scale(1.05);
   }
+
   70% {
     box-shadow: 0 0 0 2px rgba(197, 155, 39, 0.4), 0 4px 12px rgba(197, 155, 39, 0.2);
     transform: scale(1.01);
   }
+
   100% {
     box-shadow: var(--shadow-sm);
     transform: scale(1);
@@ -656,21 +573,27 @@ body.is-fullscreen .charter-sheet .employees-grid {
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px;
 }
+
 .employees-grid.density-compact .employee-card {
   padding: 8px 10px;
 }
+
 .employees-grid.density-compact .emp-sig-box {
   height: 48px;
 }
+
 .employees-grid.density-compact .emp-sig-img {
   max-height: 44px;
 }
+
 .employees-grid.density-compact .emp-name {
   font-size: 0.8rem;
 }
+
 .employees-grid.density-compact .emp-nip {
   font-size: 0.68rem;
 }
+
 .employees-grid.density-compact .emp-jabatan {
   font-size: 0.68rem;
 }
@@ -679,21 +602,27 @@ body.is-fullscreen .charter-sheet .employees-grid {
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 8px;
 }
+
 .employees-grid.density-dense .employee-card {
   padding: 6px 8px;
 }
+
 .employees-grid.density-dense .emp-sig-box {
   height: 38px;
 }
+
 .employees-grid.density-dense .emp-sig-img {
   max-height: 34px;
 }
+
 .employees-grid.density-dense .emp-name {
   font-size: 0.74rem;
 }
+
 .employees-grid.density-dense .emp-nip {
   font-size: 0.62rem;
 }
+
 .employees-grid.density-dense .emp-jabatan {
   font-size: 0.62rem;
 }
@@ -702,21 +631,27 @@ body.is-fullscreen .charter-sheet .employees-grid {
   grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
   gap: 6px;
 }
+
 .employees-grid.density-micro .employee-card {
   padding: 4px 6px;
 }
+
 .employees-grid.density-micro .emp-sig-box {
   height: 30px;
 }
+
 .employees-grid.density-micro .emp-sig-img {
   max-height: 28px;
 }
+
 .employees-grid.density-micro .emp-name {
   font-size: 0.68rem;
 }
+
 .employees-grid.density-micro .emp-nip {
   font-size: 0.58rem;
 }
+
 .employees-grid.density-micro .emp-jabatan {
   font-size: 0.58rem;
 }
@@ -730,11 +665,15 @@ body.is-fullscreen .charter-sheet .employees-grid {
 }
 
 @media print {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box !important;
   }
 
-  html, body {
+  html,
+  body {
     background: #ffffff !important;
     color: #000000 !important;
     width: 420mm !important;
@@ -804,10 +743,33 @@ body.is-fullscreen .charter-sheet .employees-grid {
     border-color: #c59b27 !important;
   }
 
-  .corner-top-left { top: 4mm !important; left: 4mm !important; width: 42px !important; height: 42px !important; }
-  .corner-top-right { top: 4mm !important; right: 4mm !important; width: 42px !important; height: 42px !important; }
-  .corner-bottom-left { bottom: 4mm !important; left: 4mm !important; width: 42px !important; height: 42px !important; }
-  .corner-bottom-right { bottom: 4mm !important; right: 4mm !important; width: 42px !important; height: 42px !important; }
+  .corner-top-left {
+    top: 4mm !important;
+    left: 4mm !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .corner-top-right {
+    top: 4mm !important;
+    right: 4mm !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .corner-bottom-left {
+    bottom: 4mm !important;
+    left: 4mm !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .corner-bottom-right {
+    bottom: 4mm !important;
+    right: 4mm !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
 
   .charter-header {
     margin-bottom: 10px !important;
@@ -834,8 +796,14 @@ body.is-fullscreen .charter-sheet .employees-grid {
     margin-bottom: 4px !important;
   }
 
-  .instansi-title-1 { font-size: 0.95rem !important; }
-  .instansi-title-2 { font-size: 1.15rem !important; }
+  .instansi-title-1 {
+    font-size: 0.95rem !important;
+  }
+
+  .instansi-title-2 {
+    font-size: 1.15rem !important;
+  }
+
   .doc-main-title {
     font-size: 1.35rem !important;
     color: #946d14 !important;
@@ -843,7 +811,10 @@ body.is-fullscreen .charter-sheet .employees-grid {
     -webkit-text-fill-color: initial !important;
     margin-top: 4px !important;
   }
-  .doc-sub-title { font-size: 0.8rem !important; }
+
+  .doc-sub-title {
+    font-size: 0.8rem !important;
+  }
 
   .declaration-container {
     margin: 8px 0 14px !important;
@@ -1013,10 +984,33 @@ body.is-fullscreen .charter-sheet .employees-grid {
   border: 1.5px solid rgba(197, 155, 39, 0.45) !important;
 }
 
-.charter-sheet.a3-export-mode .corner-top-left { top: 10px !important; left: 10px !important; width: 55px !important; height: 55px !important; }
-.charter-sheet.a3-export-mode .corner-top-right { top: 10px !important; right: 10px !important; width: 55px !important; height: 55px !important; }
-.charter-sheet.a3-export-mode .corner-bottom-left { bottom: 10px !important; left: 10px !important; width: 55px !important; height: 55px !important; }
-.charter-sheet.a3-export-mode .corner-bottom-right { bottom: 10px !important; right: 10px !important; width: 55px !important; height: 55px !important; }
+.charter-sheet.a3-export-mode .corner-top-left {
+  top: 10px !important;
+  left: 10px !important;
+  width: 55px !important;
+  height: 55px !important;
+}
+
+.charter-sheet.a3-export-mode .corner-top-right {
+  top: 10px !important;
+  right: 10px !important;
+  width: 55px !important;
+  height: 55px !important;
+}
+
+.charter-sheet.a3-export-mode .corner-bottom-left {
+  bottom: 10px !important;
+  left: 10px !important;
+  width: 55px !important;
+  height: 55px !important;
+}
+
+.charter-sheet.a3-export-mode .corner-bottom-right {
+  bottom: 10px !important;
+  right: 10px !important;
+  width: 55px !important;
+  height: 55px !important;
+}
 
 .charter-sheet.a3-export-mode .charter-content {
   display: flex !important;
@@ -1140,3 +1134,28 @@ body.is-fullscreen .charter-sheet .employees-grid {
   font-size: 0.85rem !important;
 }
 
+/* ==========================================================================
+   FULLSCREEN MODE STYLING
+   Hides all action bar elements except the exit fullscreen button
+   ========================================================================== */
+body.is-fullscreen .action-bar-left,
+body.is-fullscreen .action-bar-right> :not(#btnToggleFullscreen) {
+  display: none !important;
+}
+
+body.is-fullscreen .action-bar {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+  position: fixed !important;
+  top: 14px !important;
+  right: 18px !important;
+  z-index: 9999 !important;
+  width: auto !important;
+  padding: 0 !important;
+}
+
+body.is-fullscreen .charter-screen-wrapper {
+  padding: 12px !important;
+  min-height: 100vh !important;
+}

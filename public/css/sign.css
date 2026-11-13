@@ -372,3 +372,273 @@ body.sign-page {
   to { transform: rotate(360deg); }
 }
 
+/* ==========================================================================
+   NOMINATIF PEGAWAI SELECTION & AUTO-FILL STYLES
+   ========================================================================== */
+
+.selection-type-toggle {
+  display: flex;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-full);
+  padding: 4px;
+  margin-bottom: 20px;
+  gap: 4px;
+}
+
+.btn-toggle-type {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-toggle-type.active {
+  background: var(--bpom-navy);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 33, 71, 0.25);
+}
+
+.search-pegawai-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.search-pegawai-box .search-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.search-pegawai-box .search-input {
+  padding-left: 38px;
+  padding-right: 36px;
+  font-size: 0.88rem;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.search-pegawai-box .search-input:focus {
+  background: #ffffff;
+}
+
+.btn-clear-search {
+  position: absolute;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: none;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-clear-search:hover {
+  background: #cbd5e1;
+  color: #1e293b;
+}
+
+.select-nominatif {
+  font-weight: 600;
+  font-size: 0.92rem;
+  background-color: #ffffff;
+}
+
+/* Already signed alert */
+.alert-signed-warning {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #92400e;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  animation: fadeIn 0.3s ease;
+}
+
+.alert-signed-warning .warning-icon {
+  font-size: 1.1rem;
+}
+
+/* Pegawai detail auto-filled card */
+.pegawai-detail-card {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-top: 3px solid var(--bpom-navy);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 14px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #cbd5e1;
+  margin-bottom: 10px;
+}
+
+.detail-nama-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #10b981;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.detail-nama-text {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--bpom-navy-dark);
+}
+
+.detail-role-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: #e2e8f0;
+  color: #334155;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.detail-role-badge.role-kepala {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.detail-role-badge.role-kabag {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #0284c7;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.detail-col {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+
+.detail-val {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #1e293b;
+  word-break: break-word;
+}
+
+/* Leadership notice box */
+.leadership-badge-box {
+  margin-top: 10px;
+  background: linear-gradient(135deg, rgba(247, 223, 148, 0.25), rgba(197, 155, 39, 0.15));
+  border: 1px solid var(--bpom-gold);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #78350f;
+}
+
+.optional-edit-row {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.btn-link-edit {
+  background: none;
+  border: none;
+  color: var(--bpom-navy);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-link-edit:hover {
+  color: var(--bpom-navy-dark);
+}
+
+.optional-fields-box {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.form-input-sm,
+.form-select-sm {
+  padding: 7px 10px;
+  font-size: 0.85rem;
+}
+

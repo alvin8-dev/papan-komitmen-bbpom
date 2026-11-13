@@ -1,24 +1,67 @@
 /**
  * Participant Digital Signature Pad - Balai Besar POM di Pangkalpinang
+ * Streamlined selection for 55 officers:
+ * - Direct dropdown without search filter or extra labels
+ * - Only Kepala Balai and Kabag TU show official NIP & Jabatan cards
+ * - Regular staff (53 officers) proceed directly to signature without NIP or Jabatan clutter
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Canvas Elements
   const canvas = document.getElementById('signatureCanvas');
   const canvasWrapper = document.getElementById('canvasWrapper');
   const ctx = canvas.getContext('2d');
-  
+
   const btnClear = document.getElementById('btnClear');
   const btnUndo = document.getElementById('btnUndo');
   const form = document.getElementById('signatureForm');
   const btnSubmit = document.getElementById('btnSubmit');
-  const selectJabatan = document.getElementById('selectJabatan');
-  const customJabatanGroup = document.getElementById('customJabatanGroup');
-  const inputCustomJabatan = document.getElementById('customJabatan');
-
-  const successScreen = document.getElementById('successScreen');
-  const formSection = document.getElementById('formSection');
-  const btnSignAgain = document.getElementById('btnSignAgain');
   const colorDots = document.querySelectorAll('.color-dot');
+  const commitmentCheck = document.getElementById('commitmentCheck');
+
+  // Mode Selection Elements
+  const btnModeNominatif = document.getElementById('btnModeNominatif');
+  const btnModeManual = document.getElementById('btnModeManual');
+  const sectionNominatif = document.getElementById('sectionNominatif');
+  const sectionManual = document.getElementById('sectionManual');
+
+  // Nominatif Selection Elements
+  const selectPegawai = document.getElementById('selectPegawai');
+  const alertAlreadySigned = document.getElementById('alertAlreadySigned');
+
+  // Leadership Detail Card (Only visible for Kepala & Kabag TU)
+  const pegawaiDetailCard = document.getElementById('pegawaiDetailCard');
+  const dispNama = document.getElementById('dispNama');
+  const dispRoleBadge = document.getElementById('dispRoleBadge');
+  const dispNip = document.getElementById('dispNip');
+  const dispJabatan = document.getElementById('dispJabatan');
+  const dispLeaderBox = document.getElementById('dispLeaderBox');
+  const dispLeaderText = document.getElementById('dispLeaderText');
+
+  // Manual Input Elements
+  const manualNamaLengkap = document.getElementById('manualNamaLengkap');
+  const manualNip = document.getElementById('manualNip');
+  const manualJabatan = document.getElementById('manualJabatan');
+
+  // Hidden Final Inputs
+  const finalNama = document.getElementById('finalNama');
+  const finalNip = document.getElementById('finalNip');
+  const finalJabatan = document.getElementById('finalJabatan');
+
+  // Screens
+  const formSection = document.getElementById('formSection');
+  const successScreen = document.getElementById('successScreen');
+  const btnSignAgain = document.getElementById('btnSignAgain');
+  const previewSigImg = document.getElementById('previewSigImg');
+  const previewName = document.getElementById('previewName');
+  const previewNip = document.getElementById('previewNip');
+  const previewRole = document.getElementById('previewRole');
+
+  // Application State
+  let currentMode = 'nominatif'; // 'nominatif' or 'manual'
+  let pegawaiList = [];
+  let existingSignatures = [];
+  let selectedPegawaiData = null;
 
   // Drawing state
   let isDrawing = false;
@@ -27,17 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentStroke = [];
   let hasDrawn = false;
 
-  // 1. Setup Canvas with Device Pixel Ratio for Retina/Crispness
+  // 1. Setup Canvas with Device Pixel Ratio for Crisp Retina Display
   function setupCanvas() {
     const rect = canvasWrapper.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
-    
-    // Save previous drawing if any
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.drawImage(canvas, 0, 0);
 
     canvas.width = rect.width * dpr;
     canvas.height = 200 * dpr;
@@ -47,14 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.scale(dpr, dpr);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.lineWidth = 2.8;
+    ctx.lineWidth = 5.0;
     ctx.strokeStyle = currentColor;
 
-    // Restore strokes
     redrawAllStrokes();
   }
 
-  // Initial setup & resize observer
   setupCanvas();
   window.addEventListener('resize', () => {
     setupCanvas();
@@ -70,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2. Pointer & Touch Drawing Logic
+  // 2. Pointer Drawing Logic (Smooth, Bold Executive Pen)
   function getCoordinates(e) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -82,14 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
   function startDrawing(e) {
     e.preventDefault();
     isDrawing = true;
-    canvas.setPointerCapture(e.pointerId);
-    
+    try {
+      canvas.setPointerCapture(e.pointerId);
+    } catch (err) { }
+
     const pos = getCoordinates(e);
     currentStroke = [{ x: pos.x, y: pos.y, color: currentColor }];
 
+    ctx.lineWidth = 5.0;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = currentColor;
+
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
-    // Draw dot for single tap
     ctx.lineTo(pos.x + 0.1, pos.y + 0.1);
     ctx.stroke();
 
@@ -104,18 +144,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const pos = getCoordinates(e);
     currentStroke.push({ x: pos.x, y: pos.y, color: currentColor });
 
-    if (currentStroke.length > 2) {
-      const p1 = currentStroke[currentStroke.length - 2];
-      const p2 = currentStroke[currentStroke.length - 1];
-      const xc = (p1.x + p2.x) / 2;
-      const yc = (p1.y + p2.y) / 2;
+    ctx.lineWidth = 5.0;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = currentColor;
+
+    const len = currentStroke.length;
+    if (len >= 3) {
+      const p0 = currentStroke[len - 3];
+      const p1 = currentStroke[len - 2];
+      const p2 = currentStroke[len - 1];
+
+      const m1x = (p0.x + p1.x) / 2;
+      const m1y = (p0.y + p1.y) / 2;
+      const m2x = (p1.x + p2.x) / 2;
+      const m2y = (p1.y + p2.y) / 2;
 
       ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.quadraticCurveTo(p1.x, p1.y, xc, yc);
+      ctx.moveTo(m1x, m1y);
+      ctx.quadraticCurveTo(p1.x, p1.y, m2x, m2y);
       ctx.stroke();
-    } else {
-      ctx.lineTo(pos.x, pos.y);
+    } else if (len === 2) {
+      ctx.beginPath();
+      ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+      ctx.lineTo(currentStroke[1].x, currentStroke[1].y);
       ctx.stroke();
     }
   }
@@ -125,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     isDrawing = false;
     try {
       canvas.releasePointerCapture(e.pointerId);
-    } catch(err) {}
+    } catch (err) { }
 
     if (currentStroke.length > 0) {
       strokeHistory.push([...currentStroke]);
@@ -138,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
   canvas.addEventListener('pointerup', stopDrawing);
   canvas.addEventListener('pointercancel', stopDrawing);
 
-  // Redraw all strokes from history
   function redrawAllStrokes() {
     const rect = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, rect.width, rect.height);
@@ -152,6 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
     hasDrawn = true;
     canvasWrapper.classList.add('has-signature');
 
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 5.0;
+
     strokeHistory.forEach(stroke => {
       if (stroke.length === 0) return;
       ctx.strokeStyle = stroke[0].color || currentColor;
@@ -160,6 +215,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (stroke.length === 1) {
         ctx.lineTo(stroke[0].x + 0.1, stroke[0].y + 0.1);
+        ctx.stroke();
+        return;
+      }
+
+      if (stroke.length === 2) {
+        ctx.lineTo(stroke[1].x, stroke[1].y);
         ctx.stroke();
         return;
       }
@@ -176,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.strokeStyle = currentColor;
   }
 
-  // Clear Canvas
   btnClear.addEventListener('click', () => {
     strokeHistory = [];
     currentStroke = [];
@@ -186,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     canvasWrapper.classList.remove('has-signature');
   });
 
-  // Undo Stroke
   btnUndo.addEventListener('click', () => {
     if (strokeHistory.length > 0) {
       strokeHistory.pop();
@@ -194,99 +253,309 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 3. Jabatan Select Handling
-  selectJabatan.addEventListener('change', () => {
-    if (selectJabatan.value === '__OTHER__') {
-      customJabatanGroup.style.display = 'block';
-      inputCustomJabatan.required = true;
-      inputCustomJabatan.focus();
-    } else {
-      customJabatanGroup.style.display = 'none';
-      inputCustomJabatan.required = false;
-    }
-  });
+  // 3. Convert Drawn Strokes into High-Definition Vector SVG Data URL (Garis Tegas)
+  function convertStrokesToSvgDataUrl(strokes, color = '#002b5b') {
+    if (!strokes || strokes.length === 0) return null;
 
-  // 4. Crop whitespace around signature for optimal display
-  function getTrimmedSignatureDataUrl() {
-    const dpr = window.devicePixelRatio || 1;
-    const w = canvas.width;
-    const h = canvas.height;
-    const imgData = ctx.getImageData(0, 0, w, h);
-    const data = imgData.data;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    strokes.forEach(s => s.forEach(p => {
+      if (p.x < minX) minX = p.x;
+      if (p.y < minY) minY = p.y;
+      if (p.x > maxX) maxX = p.x;
+      if (p.y > maxY) maxY = p.y;
+    }));
 
-    let minX = w, minY = h, maxX = 0, maxY = 0;
-    let found = false;
+    if (!isFinite(minX)) return null;
 
-    for (let y = 0; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        const alpha = data[(y * w + x) * 4 + 3];
-        if (alpha > 10) {
-          found = true;
-          if (x < minX) minX = x;
-          if (x > maxX) maxX = x;
-          if (y < minY) minY = y;
-          if (y > maxY) maxY = y;
-        }
+    const pad = 12;
+    const rawW = maxX - minX;
+    const rawH = maxY - minY;
+    const w = Math.max(rawW + pad * 2, 70);
+    const h = Math.max(rawH + pad * 2, 35);
+    const offsetX = minX - pad;
+    const offsetY = minY - pad;
+
+    let d = '';
+    strokes.forEach(stroke => {
+      if (!stroke || stroke.length === 0) return;
+      if (stroke.length === 1) {
+        const p = stroke[0];
+        const x = (p.x - offsetX).toFixed(1);
+        const y = (p.y - offsetY).toFixed(1);
+        d += ` M ${x} ${y} l 0.1 0.1`;
+        return;
       }
+      if (stroke.length === 2) {
+        const p0 = stroke[0], p1 = stroke[1];
+        d += ` M ${(p0.x - offsetX).toFixed(1)} ${(p0.y - offsetY).toFixed(1)} L ${(p1.x - offsetX).toFixed(1)} ${(p1.y - offsetY).toFixed(1)}`;
+        return;
+      }
+      const p0 = stroke[0];
+      d += ` M ${(p0.x - offsetX).toFixed(1)} ${(p0.y - offsetY).toFixed(1)}`;
+      for (let i = 1; i < stroke.length - 1; i++) {
+        const p1 = stroke[i];
+        const p2 = stroke[i + 1];
+        const xc = ((p1.x + p2.x) / 2 - offsetX).toFixed(1);
+        const yc = ((p1.y + p2.y) / 2 - offsetY).toFixed(1);
+        d += ` Q ${(p1.x - offsetX).toFixed(1)} ${(p1.y - offsetY).toFixed(1)}, ${xc} ${yc}`;
+      }
+      const last = stroke[stroke.length - 1];
+      d += ` L ${(last.x - offsetX).toFixed(1)} ${(last.y - offsetY).toFixed(1)}`;
+    });
+
+    const strokeCol = color || '#002b5b';
+    const strokeWidth = Math.max(3.8, h * 0.046).toFixed(1);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w.toFixed(1)} ${h.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"><path d="${d.trim()}" fill="none" stroke="${strokeCol}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+    try {
+      const base64 = btoa(unescape(encodeURIComponent(svg)));
+      return `data:image/svg+xml;base64,${base64}`;
+    } catch (err) {
+      return null;
     }
-
-    if (!found) return null;
-
-    // Add safe padding
-    const padding = 16 * dpr;
-    minX = Math.max(0, minX - padding);
-    minY = Math.max(0, minY - padding);
-    maxX = Math.min(w, maxX + padding);
-    maxY = Math.min(h, maxY + padding);
-
-    const cropW = maxX - minX;
-    const cropH = maxY - minY;
-
-    const trimmedCanvas = document.createElement('canvas');
-    trimmedCanvas.width = cropW;
-    trimmedCanvas.height = cropH;
-    const tCtx = trimmedCanvas.getContext('2d');
-    tCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
-
-    return trimmedCanvas.toDataURL('image/png');
   }
 
-  // 5. Form Submit Handler
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // 4. Fetch Pegawai List and Existing Signatures
+  async function loadData() {
+    try {
+      const [resPegawai, resSignatures] = await Promise.all([
+        fetch('/api/pegawai').then(r => r.json()).catch(() => ({ data: [] })),
+        fetch('/api/signatures').then(r => r.json()).catch(() => ({ data: {} }))
+      ]);
 
-    const name = document.getElementById('namaLengkap').value.trim();
-    const nip = document.getElementById('nip').value.trim();
-    
-    let jabatan = selectJabatan.value;
-    if (jabatan === '__OTHER__') {
-      jabatan = inputCustomJabatan.value.trim();
+      if (Array.isArray(resPegawai)) {
+        pegawaiList = resPegawai;
+      } else if (resPegawai && Array.isArray(resPegawai.data)) {
+        pegawaiList = resPegawai.data;
+      } else {
+        pegawaiList = [];
+      }
+
+      existingSignatures = [];
+      if (resSignatures && resSignatures.data) {
+        if (resSignatures.data.kepala) existingSignatures.push(resSignatures.data.kepala);
+        if (resSignatures.data.kabag_tu) existingSignatures.push(resSignatures.data.kabag_tu);
+        if (Array.isArray(resSignatures.data.pegawai)) {
+          existingSignatures.push(...resSignatures.data.pegawai);
+        }
+      } else if (Array.isArray(resSignatures)) {
+        existingSignatures = resSignatures;
+      }
+
+      renderPegawaiDropdown();
+    } catch (err) {
+      console.error('Error loading data:', err);
+      selectPegawai.innerHTML = `<option value="" disabled selected>-- Gagal memuat daftar, gunakan Mode Input Manual --</option>`;
+    }
+  }
+
+  function isPegawaiSigned(nama) {
+    if (!nama) return false;
+    const clean = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const target = clean(nama);
+    return existingSignatures.some(sig => clean(sig.name) === target);
+  }
+
+  function renderPegawaiDropdown() {
+    const prevSelectedNo = selectedPegawaiData ? selectedPegawaiData.no : null;
+
+    selectPegawai.innerHTML = '';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Pilih Nama Pegawai';
+    defaultOption.disabled = true;
+    defaultOption.selected = !prevSelectedNo;
+    selectPegawai.appendChild(defaultOption);
+
+    // Split into Leadership and Staff
+    const leaders = pegawaiList.filter(p => p.roleType === 'KEPALA' || p.roleType === 'KABAG_TU');
+    const staff = pegawaiList.filter(p => p.roleType !== 'KEPALA' && p.roleType !== 'KABAG_TU');
+
+    if (leaders.length > 0) {
+      const optGroupLeaders = document.createElement('optgroup');
+      optGroupLeaders.label = '⭐ PIMPINAN BALAI BESAR POM DI PANGKAL PINANG';
+      leaders.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.no;
+        const signedMark = isPegawaiSigned(p.nama) ? '✓ [Sudah TTD] ' : '';
+        const roleLabel = p.roleType === 'KEPALA' ? ' (Kepala Balai)' : ' (Kabag TU)';
+        opt.textContent = `${signedMark}${p.nama}${roleLabel}`;
+        if (prevSelectedNo === p.no) opt.selected = true;
+        optGroupLeaders.appendChild(opt);
+      });
+      selectPegawai.appendChild(optGroupLeaders);
     }
 
-    if (!jabatan) {
-      alert('Silakan pilih atau isi Jabatan Anda.');
-      selectJabatan.focus();
+    if (staff.length > 0) {
+      const optGroupStaff = document.createElement('optgroup');
+      optGroupStaff.label = `👥 SEGENAP PEGAWAI (${staff.length} Pegawai)`;
+      staff.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.no;
+        const signedMark = isPegawaiSigned(p.nama) ? '✓ [Sudah TTD] ' : '';
+        opt.textContent = `${signedMark}${p.nama}`;
+        if (prevSelectedNo === p.no) opt.selected = true;
+        optGroupStaff.appendChild(opt);
+      });
+      selectPegawai.appendChild(optGroupStaff);
+    }
+
+    if (prevSelectedNo && pegawaiList.some(p => p.no === prevSelectedNo)) {
+      selectPegawai.value = prevSelectedNo;
+    }
+  }
+
+  // Handle Pegawai Selection
+  function onPegawaiSelected(pegawai) {
+    if (!pegawai) {
+      selectedPegawaiData = null;
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
+      if (alertAlreadySigned) alertAlreadySigned.style.display = 'none';
+      finalNama.value = '';
+      finalNip.value = '';
+      finalJabatan.value = '';
       return;
     }
 
+    selectedPegawaiData = pegawai;
+
+    // Check signed status
+    const alreadySigned = isPegawaiSigned(pegawai.nama);
+    if (alertAlreadySigned) alertAlreadySigned.style.display = alreadySigned ? 'flex' : 'none';
+
+    // Show NIP & Jabatan card ONLY for Kepala Balai and Kabag TU
+    if (pegawai.roleType === 'KEPALA') {
+      // Alex Sander
+      if (dispRoleBadge) {
+        dispRoleBadge.textContent = 'KEPALA BALAI';
+        dispRoleBadge.className = 'detail-role-badge badge-pimpinan';
+      }
+      if (dispNama) dispNama.textContent = pegawai.nama;
+      if (dispNip) dispNip.textContent = pegawai.nip || '19791212 200604 1 005';
+      if (dispJabatan) dispJabatan.textContent = pegawai.jabatan || 'Kepala Balai Besar POM di Pangkal Pinang';
+
+      if (dispLeaderBox) {
+        dispLeaderBox.style.display = 'flex';
+        if (dispLeaderText) dispLeaderText.textContent = 'Posisi tanda tangan: Pimpinan Utama (Kiri Atas Piagam)';
+      }
+
+      finalNama.value = pegawai.nama;
+      finalNip.value = '19791212 200604 1 005';
+      finalJabatan.value = 'Kepala Balai Besar POM di Pangkal Pinang';
+
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
+
+    } else if (pegawai.roleType === 'KABAG_TU') {
+      // Mardianto
+      if (dispRoleBadge) {
+        dispRoleBadge.textContent = 'KABAG TATA USAHA';
+        dispRoleBadge.className = 'detail-role-badge badge-kabag';
+      }
+      if (dispNama) dispNama.textContent = pegawai.nama;
+      if (dispNip) dispNip.textContent = pegawai.nip || '19830326 200812 1 001';
+      if (dispJabatan) dispJabatan.textContent = pegawai.jabatan || 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
+
+      if (dispLeaderBox) {
+        dispLeaderBox.style.display = 'flex';
+        if (dispLeaderText) dispLeaderText.textContent = 'Posisi tanda tangan: Sebelah Kanan Kepala Balai (Kanan Atas)';
+      }
+
+      finalNama.value = pegawai.nama;
+      finalNip.value = '19830326 200812 1 001';
+      finalJabatan.value = 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
+
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
+
+    } else {
+      // Segenap Pegawai: TIDAK menampilkan box NIP dan TIDAK menampilkan/diberi keterangan jabatan
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
+
+      finalNama.value = pegawai.nama;
+      finalNip.value = '-';
+      finalJabatan.value = '';
+    }
+  }
+
+  // Dropdown Change Event
+  selectPegawai.addEventListener('change', () => {
+    const val = parseInt(selectPegawai.value, 10);
+    const found = pegawaiList.find(p => p.no === val);
+    onPegawaiSelected(found);
+  });
+
+  // 5. Mode Switcher (Nominatif vs Manual)
+  btnModeNominatif.addEventListener('click', () => {
+    currentMode = 'nominatif';
+    btnModeNominatif.classList.add('active');
+    btnModeManual.classList.remove('active');
+    sectionNominatif.style.display = 'block';
+    sectionManual.style.display = 'none';
+    selectPegawai.required = true;
+    manualNamaLengkap.required = false;
+    manualJabatan.required = false;
+  });
+
+  btnModeManual.addEventListener('click', () => {
+    currentMode = 'manual';
+    btnModeManual.classList.add('active');
+    btnModeNominatif.classList.remove('active');
+    sectionNominatif.style.display = 'none';
+    sectionManual.style.display = 'block';
+    selectPegawai.required = false;
+    manualNamaLengkap.required = true;
+    manualJabatan.required = false;
+  });
+
+  // 6. Form Submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    let submitName = '';
+    let submitNip = '';
+    let submitJabatan = '';
+
+    if (currentMode === 'nominatif') {
+      if (!selectedPegawaiData) {
+        alert('Silakan pilih nama pegawai dari daftar terlebih dahulu sebelum menandatangani.');
+        selectPegawai.focus();
+        return;
+      }
+      submitName = finalNama.value.trim() || selectedPegawaiData.nama;
+      submitNip = finalNip.value.trim() || '-';
+      submitJabatan = finalJabatan.value.trim() || '';
+    } else {
+      // Manual mode
+      submitName = manualNamaLengkap.value.trim();
+      submitNip = manualNip.value.trim() || '-';
+      submitJabatan = manualJabatan.value.trim() || '';
+
+      if (!submitName) {
+        alert('Silakan isi Nama Lengkap Anda.');
+        manualNamaLengkap.focus();
+        return;
+      }
+    }
+
     if (!hasDrawn || strokeHistory.length === 0) {
-      alert('Silakan bubuhkan tanda tangan digital Anda pada kotak tanda tangan di atas.');
+      alert('Silakan bubuhkan tanda tangan digital Anda pada kotak tanda tangan.');
       canvasWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
-    const commitmentChecked = document.getElementById('commitmentCheck').checked;
-    if (!commitmentChecked) {
-      alert('Harap centang persetujuan komitmen.');
+    if (!commitmentCheck.checked) {
+      alert('Harap centang persetujuan komitmen Zona Integritas.');
+      commitmentCheck.focus();
       return;
     }
 
-    const signatureDataUrl = getTrimmedSignatureDataUrl() || canvas.toDataURL('image/png');
+    // High definition vector SVG signature with bold lines (garis tegas)
+    const signatureDataUrl = convertStrokesToSvgDataUrl(strokeHistory, currentColor) || canvas.toDataURL('image/png');
 
     // UI Loading state
     btnSubmit.disabled = true;
     const originalBtnContent = btnSubmit.innerHTML;
-    btnSubmit.innerHTML = `<span class="spinner"></span> <span>Mengirimkan Komitmen...</span>`;
+    btnSubmit.innerHTML = `<span class="spinner"></span> <span>Menyimpan Komitmen...</span>`;
 
     try {
       const response = await fetch('/api/signatures', {
@@ -295,9 +564,9 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name,
-          nip,
-          jabatan,
+          name: submitName,
+          nip: submitNip,
+          jabatan: submitJabatan,
           signatureDataUrl
         })
       });
@@ -305,15 +574,45 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Show success screen
-        document.getElementById('previewSigImg').src = signatureDataUrl;
-        document.getElementById('previewName').textContent = name;
-        document.getElementById('previewNip').textContent = `NIP. ${nip}`;
-        document.getElementById('previewRole').textContent = jabatan;
+        // Success screen display
+        previewSigImg.src = signatureDataUrl;
+        previewName.textContent = submitName;
+
+        if (submitNip && submitNip !== '-') {
+          previewNip.textContent = `NIP. ${submitNip}`;
+          previewNip.style.display = 'block';
+        } else {
+          previewNip.textContent = '';
+          previewNip.style.display = 'none';
+        }
+
+        if (submitJabatan && submitJabatan !== '-') {
+          previewRole.textContent = submitJabatan;
+          previewRole.style.display = 'block';
+        } else {
+          previewRole.textContent = '';
+          previewRole.style.display = 'none';
+        }
 
         formSection.style.display = 'none';
         successScreen.style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Refresh existing signatures list so status is up-to-date
+        fetch('/api/signatures')
+          .then(r => r.json())
+          .then(res => {
+            const list = [];
+            if (res && res.data) {
+              if (res.data.kepala) list.push(res.data.kepala);
+              if (res.data.kabag_tu) list.push(res.data.kabag_tu);
+              if (Array.isArray(res.data.pegawai)) list.push(...res.data.pegawai);
+            } else if (Array.isArray(res)) {
+              list.push(...res);
+            }
+            existingSignatures = list;
+          })
+          .catch(() => { });
       } else {
         alert(result.message || 'Gagal menyimpan tanda tangan. Silakan coba kembali.');
       }
@@ -326,13 +625,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6. Sign Again (Reset form for next officer)
+  // 7. Sign Again (Reset form for next participant)
   btnSignAgain.addEventListener('click', () => {
     form.reset();
-    selectJabatan.value = '';
-    customJabatanGroup.style.display = 'none';
-    inputCustomJabatan.value = '';
+    selectedPegawaiData = null;
+    if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
+    if (alertAlreadySigned) alertAlreadySigned.style.display = 'none';
 
+    // Reset mode to nominatif
+    btnModeNominatif.click();
+    renderPegawaiDropdown();
+
+    // Clear signature canvas
     strokeHistory = [];
     currentStroke = [];
     const rect = canvas.getBoundingClientRect();
@@ -344,5 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formSection.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-});
 
+  // Initial Data Load
+  loadData();
+});

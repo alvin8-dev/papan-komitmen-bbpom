@@ -7,7 +7,7 @@
   <title>Piagam Komitmen Bersama Zona Integritas - Balai Besar POM di Pangkal Pinang</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/piagam.css">
-  <link rel="icon" type="image/svg+xml" href="assets/logo-bpom.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/Logo-Badan-POM.png">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="action-bar-right">
-      <button type="button" class="btn btn-outline" id="btnShowQrModal"
+      <!-- <button type="button" class="btn btn-outline" id="btnShowQrModal"
         title="Tampilkan QR Code untuk dipindai oleh peserta">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
@@ -35,54 +35,54 @@
           <rect x="3" y="14" width="7" height="7"></rect>
         </svg>
         <span>QR Code Peserta</span>
-      </button>
+      </button> -->
 
-      <a href="/qr" target="_blank" class="btn btn-navy"
-        title="Buka Layar Penuh QR Code di tab/layar proyektor terpisah">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="10" y1="14" x2="21" y2="3"></line>
-        </svg>
-        <span>Layar QR Terpisah</span>
-      </a>
+    <a href="/qr" target="_blank" class="btn btn-navy" title="Buka Layar Penuh QR Code di tab/layar proyektor terpisah">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <line x1="10" y1="14" x2="21" y2="3"></line>
+      </svg>
+      <span>Layar QR Terpisah</span>
+    </a>
 
-      <button type="button" class="btn btn-primary" id="btnDownloadPdf"
-        title="Download piagam resmi dalam file PDF ukuran A3 Landscape (1 Halaman Penuh)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        <span id="btnDownloadPdfText">Download PDF (A3)</span>
-      </button>
+    <button type="button" class="btn btn-primary" id="btnDownloadPdf"
+      title="Download piagam resmi dalam file PDF ukuran A3 Landscape (1 Halaman Penuh)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span id="btnDownloadPdfText">Download PDF (A3)</span>
+    </button>
 
-      <button type="button" class="btn btn-navy" id="btnPrintCharter"
-        title="Cetak langsung ke printer atau print-to-PDF format A3 Landscape (1 Halaman)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>
-        <span>Cetak Piagam</span>
-      </button>
+    <!--<button type="button" class="btn btn-navy" id="btnPrintCharter"
+      title="Cetak langsung ke printer atau print-to-PDF format A3 Landscape (1 Halaman)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      <span>Cetak Piagam</span>
+    </button>-->
 
-      <button type="button" class="btn btn-navy" id="btnToggleFullscreen" title="Alihkan mode tampilan layar penuh">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-          </path>
-        </svg>
-        <span>Layar Penuh</span>
-      </button>
+    <button type="button" class="btn btn-navy" id="btnToggleFullscreen" title="Alihkan mode tampilan layar penuh">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+        </path>
+      </svg>
+      <span>Layar Penuh</span>
+    </button>
 
-      <button type="button" class="btn btn-navy" id="btnAdminTools" title="Kelola Data (Simulasi Demo / Reset)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-          </path>
-        </svg>
-      </button>
+    <button type="button" class="btn btn-navy" id="btnAdminTools" title="Kelola Data (Simulasi Demo / Reset)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path
+          d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+        </path>
+      </svg>
+    </button>
     </div>
   </header>
 
@@ -103,22 +103,21 @@
         <!-- Header: Logos & Formal Headings -->
         <header class="charter-header">
           <div class="header-logo-box">
-            <img src="assets/logo-bpom.svg" alt="Logo Badan POM RI" class="header-logo">
+            <img src="assets/Logo-Badan-POM.png" alt="Logo Badan POM RI" class="header-logo">
           </div>
 
           <div class="header-text-center">
-            <img src="assets/garuda-gold.svg" alt="Garuda Pancasila" class="garuda-seal-center">
+            <!-- <img src="assets/garuda-gold.svg" alt="Garuda Pancasila" class="garuda-seal-center"> -->
             <h2 class="instansi-title-1">BADAN PENGAWAS OBAT DAN MAKANAN</h2>
             <h1 class="instansi-title-2">BALAI BESAR PENGAWAS OBAT DAN MAKANAN DI Pangkal Pinang</h1>
             <div class="doc-main-title">PIAGAM KOMITMEN BERSAMA</div>
             <div class="doc-sub-title">
-              PENCANANGAN PEMBANGUNAN ZONA INTEGRITAS MENUJU WILAYAH BEBAS DARI KORUPSI (WBK)<br>
-              DAN WILAYAH BIROKRASI BERSIH DAN MELAYANI (WBBM)
+              PENCANANGAN PEMBANGUNAN ZONA INTEGRITAS MENUJU WILAYAH BIROKRASI BERSIH DAN MELAYANI (WBBM)
             </div>
           </div>
 
           <div class="header-logo-box">
-            <img src="assets/logo-zi.svg" alt="Logo Zona Integritas WBK WBBM" class="header-logo">
+            <!-- <img src="assets/logo-zi.svg" alt="Logo Zona Integritas WBK WBBM" class="header-logo"> -->
           </div>
         </header>
 
@@ -127,7 +126,7 @@
           <p class="declaration-text">
             &ldquo;Pada hari ini, 20 November 2026, Kami yang bertanda tangan di bawah ini, Pimpinan dan segenap Pegawai
             Balai Besar POM di Pangkal Pinang, dengan ini menyatakan <strong>BERKOMITMEN SEPENUHNYA</strong> untuk
-            melaksanakan Pembangunan Zona Integritas menuju Wilayah Bebas dari Korupsi (WBK) dan Wilayah Birokrasi Bersih dan Melayani (WBBM).&rdquo;
+            melaksanakan Pembangunan Zona Integritas menuju Wilayah Birokrasi Bersih dan Melayani (WBBM).&rdquo;
           </p>
         </section>
 
@@ -183,10 +182,9 @@
             Ditetapkan di : Pangkal Pinang<br>
             Pada tanggal : 20 November 2026
           </div>
-          <div style="text-align: right;">
-            Piagam Komitmen Pencanangan Pembangunan Zona Integritas BBPOM di Pangkal Pinang<br>
-            <em>Dicetak secara digital melalui Sistem Verifikasi Integritas BBPOM</em>
-          </div>
+          <!-- <div style="text-align: right;">
+            Pada tanggal : 20 November 2026<br>
+            </div> -->
         </footer>
 
       </div>

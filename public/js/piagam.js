@@ -89,8 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return div.innerHTML;
   }
 
+  const DEFAULT_KEPALA_NAME = 'Alex Sander, S.Farm., Apt., M.H';
+  const DEFAULT_KEPALA_NIP = '19791212 200604 1 005';
+  const DEFAULT_KABAG_NAME = 'Mardianto, S.Farm., Apt.';
+  const DEFAULT_KABAG_NIP = '19830326 200812 1 001';
+
   // 2. Render Leader Cards (Kepala & Kabag TU)
-  function renderLeader(element, data, defaultTitle, defaultSub) {
+  function renderLeader(element, data, defaultTitle, expectedName = '', expectedNip = '') {
     if (data && data.signatureDataUrl) {
       element.classList.add('signed');
       element.innerHTML = `
@@ -99,8 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="${data.signatureDataUrl}" class="leader-sig-img" alt="Tanda Tangan ${escapeHtml(data.name)}">
         </div>
         <div class="leader-name">${escapeHtml(data.name)}</div>
-        <div class="leader-nip">NIP. ${escapeHtml(data.nip)}</div>
-        <!-- <div class="leader-signed-time">✓ Ditandatangani ${data.timestampFormatted ? 'pukul ' + data.timestampFormatted : ''}</div> -->
+        <div class="leader-nip">${data.nip && data.nip !== '-' ? 'NIP. ' + escapeHtml(data.nip) : '-'}</div>
       `;
     } else {
       element.classList.remove('signed');
@@ -115,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <span>Menunggu Tanda Tangan</span>
           </div>
         </div>
-        <div class="leader-name" style="text-decoration: none; color: #94a3b8; font-weight: normal;">( ................................................................ )</div>
-        <div class="leader-nip">NIP. ........................................................</div>
+        <div class="leader-name">${expectedName ? escapeHtml(expectedName) : '( ................................................................ )'}</div>
+        <div class="leader-nip">${expectedNip ? 'NIP. ' + escapeHtml(expectedNip) : 'NIP. ........................................................'}</div>
       `;
     }
   }
@@ -160,14 +164,21 @@ document.addEventListener('DOMContentLoaded', () => {
         card.classList.add('new-entry-highlight');
       }
 
+      const nipHtml = (emp.nip && emp.nip !== '-')
+        ? `<div class="emp-nip">NIP. ${escapeHtml(emp.nip)}</div>`
+        : '';
+      const jabatanHtml = (emp.jabatan && emp.jabatan !== '-' && emp.jabatan !== 'Pegawai Balai Besar POM di Pangkal Pinang')
+        ? `<div class="emp-jabatan" title="${escapeHtml(emp.jabatan)}">${escapeHtml(emp.jabatan)}</div>`
+        : '';
+
       card.innerHTML = `
         <span class="emp-seq-badge">#${index + 1}</span>
         <div class="emp-sig-box">
           <img src="${emp.signatureDataUrl}" class="emp-sig-img" alt="TTD ${escapeHtml(emp.name)}" loading="lazy">
         </div>
         <div class="emp-name" title="${escapeHtml(emp.name)}">${escapeHtml(emp.name)}</div>
-        <div class="emp-nip">NIP. ${escapeHtml(emp.nip)}</div>
-        <div class="emp-jabatan" title="${escapeHtml(emp.jabatan)}">${escapeHtml(emp.jabatan)}</div>
+        ${nipHtml}
+        ${jabatanHtml}
       `;
       employeesGrid.appendChild(card);
     });
@@ -190,8 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('initial_data', (payload) => {
-    renderLeader(kepalaCard, payload.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG');
-    renderLeader(kabagTuCard, payload.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG');
+    renderLeader(kepalaCard, payload.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
+    renderLeader(kabagTuCard, payload.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
     renderEmployees(payload.pegawai);
     updateCounters(payload.meta);
   });
@@ -204,15 +215,15 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(record.name, record.jabatan, isLeader);
 
     // Update views
-    renderLeader(kepalaCard, state.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG');
-    renderLeader(kabagTuCard, state.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG');
+    renderLeader(kepalaCard, state.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
+    renderLeader(kabagTuCard, state.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
     renderEmployees(state.pegawai, record.id);
     updateCounters(meta);
   });
 
   socket.on('signature_deleted', (payload) => {
-    renderLeader(kepalaCard, payload.state.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG');
-    renderLeader(kabagTuCard, payload.state.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG');
+    renderLeader(kepalaCard, payload.state.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
+    renderLeader(kabagTuCard, payload.state.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
     renderEmployees(payload.state.pegawai);
     updateCounters({
       total: (payload.state.kepala ? 1 : 0) + (payload.state.kabag_tu ? 1 : 0) + payload.state.pegawai.length,
@@ -221,8 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('data_reset', () => {
-    renderLeader(kepalaCard, null, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG');
-    renderLeader(kabagTuCard, null, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG');
+    renderLeader(kepalaCard, null, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
+    renderLeader(kabagTuCard, null, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
     renderEmployees([]);
     updateCounters({ total: 0, pegawaiCount: 0 });
   });
@@ -312,48 +323,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  btnPrint.addEventListener('click', () => {
-    window.print();
-  });
-
-  // Fullscreen UI Synchronizer (syncs button and body class with native fullscreen state)
-  function syncFullscreenState() {
-    const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    if (isFull) {
-      document.body.classList.add('is-fullscreen');
-      btnFullscreen.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-        <span>Keluar Layar Penuh</span>
-      `;
-    } else {
-      document.body.classList.remove('is-fullscreen');
-      btnFullscreen.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-        <span>Layar Penuh</span>
-      `;
-    }
+  if (btnPrint) {
+    btnPrint.addEventListener('click', () => {
+      window.print();
+    });
   }
 
-  document.addEventListener('fullscreenchange', syncFullscreenState);
-  document.addEventListener('webkitfullscreenchange', syncFullscreenState);
-
-  btnFullscreen.addEventListener('click', () => {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(err => {
-          alert(`Error mengaktifkan layar penuh: ${err.message}`);
-        });
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
+  if (btnFullscreen) {
+    function updateFullscreenUi(isFullscreen) {
+      if (isFullscreen) {
+        document.body.classList.add('is-fullscreen');
+        btnFullscreen.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+          <span>Keluar Fullscreen</span>
+        `;
+        btnFullscreen.classList.add('btn-primary');
+        btnFullscreen.classList.remove('btn-navy');
+      } else {
+        document.body.classList.remove('is-fullscreen');
+        btnFullscreen.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          <span>Layar Penuh</span>
+        `;
+        btnFullscreen.classList.remove('btn-primary');
+        btnFullscreen.classList.add('btn-navy');
       }
     }
-  });
+
+    btnFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(() => {
+          updateFullscreenUi(true);
+        }).catch(err => {
+          console.warn('Fullscreen request failed:', err);
+          updateFullscreenUi(!document.body.classList.contains('is-fullscreen'));
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().then(() => {
+            updateFullscreenUi(false);
+          }).catch(() => {
+            updateFullscreenUi(false);
+          });
+        } else {
+          updateFullscreenUi(false);
+        }
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      updateFullscreenUi(!!document.fullscreenElement);
+    });
+  }
 
   // 7. QR Code Modal Handlers
   let cachedSignUrl = '';
@@ -362,39 +383,47 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/info');
       const info = await res.json();
       cachedSignUrl = info.mobileSignUrl;
-      qrUrlText.textContent = info.mobileSignUrl;
-      qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(info.mobileSignUrl)}`;
+      if (qrUrlText) qrUrlText.textContent = info.mobileSignUrl;
+      if (qrImageEl) qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(info.mobileSignUrl)}`;
     } catch (e) {
       console.error('Failed to load QR info:', e);
-      qrUrlText.textContent = `${window.location.origin}/sign`;
-      qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(window.location.origin + '/sign')}`;
+      if (qrUrlText) qrUrlText.textContent = `${window.location.origin}/sign`;
+      if (qrImageEl) qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(window.location.origin + '/sign')}`;
     }
   }
 
-  btnQrModal.addEventListener('click', () => {
-    loadQrInfo();
-    qrModal.classList.add('active');
-  });
-
-  btnCloseModal.addEventListener('click', () => {
-    qrModal.classList.remove('active');
-  });
-
-  qrModal.addEventListener('click', (e) => {
-    if (e.target === qrModal) {
-      qrModal.classList.remove('active');
-    }
-  });
-
-  btnCopyUrl.addEventListener('click', () => {
-    navigator.clipboard.writeText(cachedSignUrl || qrUrlText.textContent).then(() => {
-      const originalText = btnCopyUrl.innerHTML;
-      btnCopyUrl.innerHTML = `✓ Tersalin!`;
-      setTimeout(() => {
-        btnCopyUrl.innerHTML = originalText;
-      }, 2000);
+  if (btnQrModal && qrModal) {
+    btnQrModal.addEventListener('click', () => {
+      loadQrInfo();
+      qrModal.classList.add('active');
     });
-  });
+  }
+
+  if (btnCloseModal && qrModal) {
+    btnCloseModal.addEventListener('click', () => {
+      qrModal.classList.remove('active');
+    });
+  }
+
+  if (qrModal) {
+    qrModal.addEventListener('click', (e) => {
+      if (e.target === qrModal) {
+        qrModal.classList.remove('active');
+      }
+    });
+  }
+
+  if (btnCopyUrl) {
+    btnCopyUrl.addEventListener('click', () => {
+      navigator.clipboard.writeText(cachedSignUrl || (qrUrlText ? qrUrlText.textContent : '')).then(() => {
+        const originalText = btnCopyUrl.innerHTML;
+        btnCopyUrl.innerHTML = `✓ Tersalin!`;
+        setTimeout(() => {
+          btnCopyUrl.innerHTML = originalText;
+        }, 2000);
+      });
+    });
+  }
 
   // 8. Admin / Demo Tools Handlers
   const btnAdminTools = document.getElementById('btnAdminTools');
@@ -408,9 +437,11 @@ document.addEventListener('DOMContentLoaded', () => {
       adminModal.classList.add('active');
     });
 
-    btnCloseAdminModal.addEventListener('click', () => {
-      adminModal.classList.remove('active');
-    });
+    if (btnCloseAdminModal) {
+      btnCloseAdminModal.addEventListener('click', () => {
+        adminModal.classList.remove('active');
+      });
+    }
 
     adminModal.addEventListener('click', (e) => {
       if (e.target === adminModal) {
@@ -418,33 +449,37 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    btnSeedDemo.addEventListener('click', async () => {
-      try {
-        const res = await fetch('/api/seed', { method: 'POST' });
-        const data = await res.json();
-        if (data.success) {
-          adminModal.classList.remove('active');
-          showToast('Data Simulasi Berhasil Dimuat', '6 Tanda Tangan Contoh');
-        }
-      } catch (err) {
-        alert('Gagal memuat data simulasi');
-      }
-    });
-
-    btnResetAll.addEventListener('click', async () => {
-      if (confirm('Apakah Anda yakin ingin MENGHAPUS SEMUA tanda tangan untuk memulai piagam baru yang bersih?')) {
+    if (btnSeedDemo) {
+      btnSeedDemo.addEventListener('click', async () => {
         try {
-          const res = await fetch('/api/reset', { method: 'POST' });
+          const res = await fetch('/api/seed', { method: 'POST' });
           const data = await res.json();
           if (data.success) {
             adminModal.classList.remove('active');
-            showToast('Piagam Telah Direset', 'Kesiapan Acara Bersih');
+            showToast('Data Simulasi Berhasil Dimuat', '6 Tanda Tangan Contoh');
           }
         } catch (err) {
-          alert('Gagal mereset data');
+          alert('Gagal memuat data simulasi');
         }
-      }
-    });
+      });
+    }
+
+    if (btnResetAll) {
+      btnResetAll.addEventListener('click', async () => {
+        if (confirm('Apakah Anda yakin ingin MENGHAPUS SEMUA tanda tangan untuk memulai piagam baru yang bersih?')) {
+          try {
+            const res = await fetch('/api/reset', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+              adminModal.classList.remove('active');
+              showToast('Piagam Telah Direset', 'Kesiapan Acara Bersih');
+            }
+          } catch (err) {
+            alert('Gagal mereset data');
+          }
+        }
+      });
+    }
   }
 
   // Load QR info once in background
