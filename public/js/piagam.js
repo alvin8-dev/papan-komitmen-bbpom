@@ -127,12 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Render Employee Grid
   function updateGridDensity(count) {
-    employeesGrid.classList.remove('density-compact', 'density-dense', 'density-micro');
-    if (count > 48) {
+    employeesGrid.classList.remove('density-compact', 'density-dense', 'density-micro', 'density-ultra');
+    if (count > 80) {
+      employeesGrid.classList.add('density-ultra');
+    } else if (count > 60) {
       employeesGrid.classList.add('density-micro');
-    } else if (count > 24) {
+    } else if (count > 40) {
       employeesGrid.classList.add('density-dense');
-    } else if (count > 12) {
+    } else if (count > 20) {
       employeesGrid.classList.add('density-compact');
     }
   }
@@ -265,6 +267,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const clone = charterSheet.cloneNode(true);
         clone.classList.add('a3-export-mode');
         clone.style.cssText = 'width:1588px!important;height:1123px!important;position:absolute;left:0;top:0;margin:0!important;box-sizing:border-box!important;';
+
+        // Calculate participant count and apply the exact optimal density tier for A3
+        const empCards = clone.querySelectorAll('.employee-card');
+        const count = empCards.length;
+        const cloneGrid = clone.querySelector('#employeesGrid');
+
+        if (cloneGrid) {
+          cloneGrid.classList.remove(
+            'density-compact', 'density-dense', 'density-micro', 'density-ultra',
+            'a3-density-1', 'a3-density-2', 'a3-density-3', 'a3-density-4', 'a3-density-5'
+          );
+          if (count > 85) {
+            cloneGrid.classList.add('a3-density-5'); // 11 columns (> 85 people)
+          } else if (count > 65) {
+            cloneGrid.classList.add('a3-density-4'); // 10 columns (Target: 70 - 80 people, perfectly fits in 1 page!)
+          } else if (count > 45) {
+            cloneGrid.classList.add('a3-density-3'); // 9 columns (46 - 65 people)
+          } else if (count > 24) {
+            cloneGrid.classList.add('a3-density-2'); // 8 columns (25 - 45 people)
+          } else {
+            cloneGrid.classList.add('a3-density-1'); // 7 columns (1 - 24 people)
+          }
+        }
 
         sandbox.appendChild(clone);
         document.body.appendChild(sandbox);

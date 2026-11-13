@@ -656,6 +656,35 @@
   font-size: 0.58rem;
 }
 
+.employees-grid.density-ultra {
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 4px;
+}
+
+.employees-grid.density-ultra .employee-card {
+  padding: 3px 4px;
+}
+
+.employees-grid.density-ultra .emp-sig-box {
+  height: 26px;
+}
+
+.employees-grid.density-ultra .emp-sig-img {
+  max-height: 24px;
+}
+
+.employees-grid.density-ultra .emp-name {
+  font-size: 0.62rem;
+}
+
+.employees-grid.density-ultra .emp-nip {
+  font-size: 0.50rem;
+}
+
+.employees-grid.density-ultra .emp-jabatan {
+  font-size: 0.50rem;
+}
+
 /* ==========================================================================
    PRINT SPECIFICATION: STRICT 1 PAGE A3 LANDSCAPE FORMAT
    ========================================================================== */
@@ -1012,126 +1041,341 @@
   height: 55px !important;
 }
 
+.charter-sheet.a3-export-mode {
+  width: 1588px !important;
+  height: 1123px !important;
+  max-height: 1123px !important;
+  box-sizing: border-box !important;
+  padding: 20px 32px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #fdfcf7 !important;
+}
+
 .charter-sheet.a3-export-mode .charter-content {
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
   height: 100% !important;
+  max-height: 100% !important;
   flex: 1 !important;
+  overflow: hidden !important;
 }
 
+/* Compact Kop / Header */
 .charter-sheet.a3-export-mode .charter-header {
-  margin-bottom: 14px !important;
-  padding-bottom: 12px !important;
+  margin-bottom: 6px !important;
+  padding-bottom: 6px !important;
+  border-bottom: 2px solid var(--bpom-gold) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 .charter-sheet.a3-export-mode .header-logo-box {
-  width: 90px !important;
-  height: 90px !important;
-  padding: 4px !important;
-  margin: 0 20px !important;
-  overflow: visible !important;
+  width: 65px !important;
+  height: 65px !important;
+  padding: 2px !important;
+  margin: 0 14px !important;
 }
 
 .charter-sheet.a3-export-mode .header-logo {
-  width: 82px !important;
-  height: 82px !important;
-  max-width: 82px !important;
-  max-height: 82px !important;
+  width: 60px !important;
+  height: 60px !important;
+  max-width: 60px !important;
+  max-height: 60px !important;
   object-fit: contain !important;
 }
 
 .charter-sheet.a3-export-mode .garuda-seal-center {
-  width: 52px !important;
-  height: 52px !important;
+  width: 36px !important;
+  height: 36px !important;
+  margin-bottom: 2px !important;
 }
 
 .charter-sheet.a3-export-mode .instansi-title-1 {
-  font-size: 1.25rem !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 1.5px !important;
+  line-height: 1.2 !important;
 }
 
 .charter-sheet.a3-export-mode .instansi-title-2 {
-  font-size: 1.45rem !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 2px !important;
+  line-height: 1.2 !important;
+  margin-top: 1px !important;
 }
 
 .charter-sheet.a3-export-mode .doc-main-title {
-  font-size: 1.85rem !important;
+  font-size: 1.40rem !important;
+  letter-spacing: 2.5px !important;
   color: #946d14 !important;
+  margin-top: 2px !important;
 }
 
 .charter-sheet.a3-export-mode .doc-sub-title {
-  font-size: 1rem !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 1.2px !important;
+  margin-top: 2px !important;
 }
 
+/* Compact Declaration */
 .charter-sheet.a3-export-mode .declaration-container {
-  margin: 10px 0 16px !important;
-  padding: 14px 28px !important;
+  margin: 4px 0 8px !important;
+  padding: 6px 18px !important;
+  border-left-width: 4px !important;
+  border-right-width: 4px !important;
 }
 
 .charter-sheet.a3-export-mode .declaration-text {
-  font-size: 1.15rem !important;
-  line-height: 1.65 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.35 !important;
 }
 
+/* Compact Leadership (Pimpinan) */
 .charter-sheet.a3-export-mode .leadership-section {
-  margin-bottom: 16px !important;
+  margin-bottom: 6px !important;
+}
+
+.charter-sheet.a3-export-mode .section-label-banner {
+  margin-bottom: 4px !important;
+}
+
+.charter-sheet.a3-export-mode .section-label-text {
+  font-size: 0.78rem !important;
+  letter-spacing: 1.5px !important;
+  padding: 0 10px !important;
+}
+
+.charter-sheet.a3-export-mode .leadership-grid {
+  gap: 16px !important;
 }
 
 .charter-sheet.a3-export-mode .leader-card {
-  padding: 12px 20px !important;
+  padding: 6px 14px !important;
+  border-top-width: 3px !important;
+}
+
+.charter-sheet.a3-export-mode .leader-badge-role {
+  font-size: 0.74rem !important;
+  letter-spacing: 1px !important;
+  min-height: 1.2em !important;
+  margin-bottom: 2px !important;
 }
 
 .charter-sheet.a3-export-mode .leader-sig-box {
-  height: 95px !important;
+  height: 52px !important;
+  margin: 2px 0 !important;
 }
 
 .charter-sheet.a3-export-mode .leader-sig-img {
-  max-height: 90px !important;
+  max-height: 48px !important;
+  max-width: 85% !important;
 }
 
 .charter-sheet.a3-export-mode .leader-name {
-  font-size: 1.1rem !important;
+  font-size: 0.95rem !important;
+  margin-top: 2px !important;
 }
 
+.charter-sheet.a3-export-mode .leader-nip {
+  font-size: 0.74rem !important;
+}
+
+/* Employee Section */
 .charter-sheet.a3-export-mode .employees-section {
   flex: 1 !important;
+  min-height: 0 !important;
+  margin-top: 2px !important;
   display: flex !important;
   flex-direction: column !important;
-  margin-top: 10px !important;
-  min-height: 320px !important;
+  overflow: hidden !important;
 }
 
 .charter-sheet.a3-export-mode .employees-grid {
   flex: 1 !important;
+  min-height: 0 !important;
   display: grid !important;
   align-content: start !important;
-  gap: 12px !important;
 }
 
-.charter-sheet.a3-export-mode .employees-grid:not(.density-compact):not(.density-dense):not(.density-micro) {
-  grid-template-columns: repeat(6, 1fr) !important;
+/* Tier 1: 1 - 24 Employees (e.g. 7 columns) */
+.charter-sheet.a3-export-mode .employees-grid.a3-density-1,
+.charter-sheet.a3-export-mode .employees-grid:not([class*="a3-density-"]) {
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 8px 10px !important;
 }
 
-.charter-sheet.a3-export-mode .employee-card {
-  padding: 10px 12px !important;
+.charter-sheet.a3-export-mode .employees-grid.a3-density-1 .employee-card,
+.charter-sheet.a3-export-mode .employees-grid:not([class*="a3-density-"]) .employee-card {
+  padding: 6px 8px !important;
 }
 
-.charter-sheet.a3-export-mode .emp-sig-box {
-  height: 55px !important;
+.charter-sheet.a3-export-mode .employees-grid.a3-density-1 .emp-sig-box,
+.charter-sheet.a3-export-mode .employees-grid:not([class*="a3-density-"]) .emp-sig-box {
+  height: 48px !important;
 }
 
-.charter-sheet.a3-export-mode .emp-sig-img {
-  max-height: 50px !important;
+.charter-sheet.a3-export-mode .employees-grid.a3-density-1 .emp-sig-img,
+.charter-sheet.a3-export-mode .employees-grid:not([class*="a3-density-"]) .emp-sig-img {
+  max-height: 44px !important;
 }
 
-.charter-sheet.a3-export-mode .emp-name {
-  font-size: 0.92rem !important;
+.charter-sheet.a3-export-mode .employees-grid.a3-density-1 .emp-name,
+.charter-sheet.a3-export-mode .employees-grid:not([class*="a3-density-"]) .emp-name {
+  font-size: 0.82rem !important;
 }
 
+/* Tier 2: 25 - 45 Employees (8 columns) */
+.charter-sheet.a3-export-mode .employees-grid.a3-density-2 {
+  grid-template-columns: repeat(8, 1fr) !important;
+  gap: 6px 8px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-2 .employee-card {
+  padding: 5px 6px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-2 .emp-sig-box {
+  height: 44px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-2 .emp-sig-img {
+  max-height: 40px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-2 .emp-name {
+  font-size: 0.76rem !important;
+}
+
+/* Tier 3: 46 - 65 Employees (9 columns) */
+.charter-sheet.a3-export-mode .employees-grid.a3-density-3 {
+  grid-template-columns: repeat(9, 1fr) !important;
+  gap: 5px 6px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-3 .employee-card {
+  padding: 4px 5px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-3 .emp-sig-box {
+  height: 40px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-3 .emp-sig-img {
+  max-height: 36px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-3 .emp-name {
+  font-size: 0.70rem !important;
+}
+
+/* Tier 4: 66 - 85 Employees (10 columns, tailored for 70 - 80 participants!) */
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 {
+  grid-template-columns: repeat(10, 1fr) !important;
+  gap: 4px 6px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .employee-card {
+  padding: 3px 5px !important;
+  border-radius: 3px !important;
+  box-shadow: none !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .emp-sig-box {
+  height: 38px !important;
+  margin-bottom: 2px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .emp-sig-img {
+  max-height: 35px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .emp-name {
+  font-size: 0.65rem !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  margin-bottom: 1px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .emp-nip {
+  font-size: 0.52rem !important;
+  margin-bottom: 1px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .emp-jabatan {
+  font-size: 0.52rem !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-4 .emp-seq-badge {
+  font-size: 0.52rem !important;
+  top: 2px !important;
+  right: 2px !important;
+  padding: 1px 2px !important;
+}
+
+/* Tier 5: > 85 Employees (11 columns) */
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 {
+  grid-template-columns: repeat(11, 1fr) !important;
+  gap: 3px 4px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .employee-card {
+  padding: 2px 4px !important;
+  border-radius: 2px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .emp-sig-box {
+  height: 32px !important;
+  margin-bottom: 1px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .emp-sig-img {
+  max-height: 30px !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .emp-name {
+  font-size: 0.58rem !important;
+  line-height: 1.1 !important;
+  font-weight: 700 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .emp-nip {
+  font-size: 0.48rem !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .emp-jabatan {
+  font-size: 0.48rem !important;
+}
+
+.charter-sheet.a3-export-mode .employees-grid.a3-density-5 .emp-seq-badge {
+  font-size: 0.48rem !important;
+  top: 1px !important;
+  right: 1px !important;
+}
+
+/* Footer: fixed compact at bottom */
 .charter-sheet.a3-export-mode .charter-footer {
-  margin-top: 14px !important;
-  padding-top: 10px !important;
-  font-size: 0.85rem !important;
+  margin-top: 6px !important;
+  padding-top: 4px !important;
+  font-size: 0.74rem !important;
+  border-top: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-shrink: 0 !important;
 }
 
 /* ==========================================================================
