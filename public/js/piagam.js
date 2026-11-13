@@ -404,16 +404,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // 7. QR Code Modal Handlers
   let cachedSignUrl = '';
   async function loadQrInfo() {
+    const browserOrigin = window.location.origin;
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
     try {
       const res = await fetch('/api/info');
       const info = await res.json();
-      cachedSignUrl = info.mobileSignUrl;
-      if (qrUrlText) qrUrlText.textContent = info.mobileSignUrl;
-      if (qrImageEl) qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(info.mobileSignUrl)}`;
+      
+      // When hosted on Render / Cloud, ALWAYS use public domain URL
+      if (!isLocalhost) {
+        cachedSignUrl = `${browserOrigin}/sign`;
+      } else if (info && info.mobileSignUrl) {
+        cachedSignUrl = info.mobileSignUrl;
+      } else {
+        cachedSignUrl = `${browserOrigin}/sign`;
+      }
+
+      if (qrUrlText) qrUrlText.textContent = cachedSignUrl;
+      if (qrImageEl) qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(cachedSignUrl)}`;
     } catch (e) {
       console.error('Failed to load QR info:', e);
-      if (qrUrlText) qrUrlText.textContent = `${window.location.origin}/sign`;
-      if (qrImageEl) qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(window.location.origin + '/sign')}`;
+      cachedSignUrl = `${browserOrigin}/sign`;
+      if (qrUrlText) qrUrlText.textContent = cachedSignUrl;
+      if (qrImageEl) qrImageEl.src = `/api/qr-image?url=${encodeURIComponent(cachedSignUrl)}`;
     }
   }
 

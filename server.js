@@ -129,21 +129,37 @@ app.get('/qr', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'qr.html'));
 });
 
-// 3. API - Server & Network Info
+// 3. API - Server & Network Info (Supports Localhost, Wi-Fi LAN, and Cloud Platforms like Render)
 app.get('/api/info', async (req, res) => {
   const localIP = getLocalNetworkIP();
-  const protocol = req.protocol;
-  const host = req.get('host');
+  const forwardedProto = req.headers['x-forwarded-proto'];
+  const protocol = forwardedProto ? forwardedProto.split(',')[0].trim() : req.protocol;
+  const host = req.headers['x-forwarded-host'] || req.get('host') || '';
   
-  // Best URL for mobile scanning on the same Wi-Fi
-  const mobileSignUrl = `http://${localIP}:${PORT}/sign`;
-  const currentSignUrl = `${protocol}://${host}/sign`;
+  // Check if running on Render / Cloud public domain
+  const isCloudHost = !!(
+    process.env.RENDER || 
+    process.env.RENDER_EXTERNAL_URL || 
+    (host && !host.includes('localhost') && !host.includes('127.0.0.1') && !host.startsWith('192.168.') && !host.startsWith('172.16.'))
+  );
+
+  let mobileSignUrl = '';
+  if (process.env.RENDER_EXTERNAL_URL) {
+    const renderUrl = process.env.RENDER_EXTERNAL_URL.replace(/\/$/, '');
+    mobileSignUrl = `${renderUrl}/sign`;
+  } else if (isCloudHost && host) {
+    mobileSignUrl = `${protocol}://${host}/sign`;
+  } else {
+    // Local development on Wi-Fi
+    mobileSignUrl = `http://${localIP}:${PORT}/sign`;
+  }
 
   res.json({
     localIP,
     port: PORT,
+    isCloudHost,
     mobileSignUrl,
-    currentSignUrl,
+    currentSignUrl: `${protocol}://${host}/sign`,
     timestamp: new Date().toISOString()
   });
 });
@@ -166,10 +182,23 @@ app.get('/api/pegawai', (req, res) => {
 app.get('/api/qr-image', async (req, res) => {
   try {
     const localIP = getLocalNetworkIP();
-    const targetUrl = req.query.url || `http://${localIP}:${PORT}/sign`;
+    const forwardedProto = req.headers['x-forwarded-proto'];
+    const protocol = forwardedProto ? forwardedProto.split(',')[0].trim() : req.protocol;
+    const host = req.headers['x-forwarded-host'] || req.get('host') || '';
+    
+    let defaultUrl = '';
+    if (process.env.RENDER_EXTERNAL_URL) {
+      defaultUrl = `${process.env.RENDER_EXTERNAL_URL.replace(/\/$/, '')}/sign`;
+    } else if (host && !host.includes('localhost') && !host.includes('127.0.0.1') && !host.startsWith('192.168.') && !host.startsWith('172.16.')) {
+      defaultUrl = `${protocol}://${host}/sign`;
+    } else {
+      defaultUrl = `http://${localIP}:${PORT}/sign`;
+    }
+
+    const targetUrl = req.query.url || defaultUrl;
     
     res.setHeader('Content-Type', 'image/png');
-    const qrStream = QRCode.toFileStream(res, targetUrl, {
+    QRCode.toFileStream(res, targetUrl, {
       errorCorrectionLevel: 'H',
       type: 'png',
       quality: 0.95,

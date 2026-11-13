@@ -9,20 +9,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnToggleFull = document.getElementById('btnToggleFullscreen');
   const btnCopy = document.getElementById('btnCopyUrl');
 
-  let currentUrl = '';
+  const browserOrigin = window.location.origin;
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  let currentUrl = `${browserOrigin}/sign`;
 
   try {
     const res = await fetch('/api/info');
     const info = await res.json();
-    currentUrl = info.mobileSignUrl;
-    qrUrl.textContent = info.mobileSignUrl;
-    qrImage.src = `/api/qr-image?url=${encodeURIComponent(info.mobileSignUrl)}`;
+    
+    // When opened on Render or any public cloud domain, ALWAYS use the public URL
+    // so participants on HP (cellular data or Wi-Fi) can open it directly!
+    if (!isLocalhost) {
+      currentUrl = `${browserOrigin}/sign`;
+    } else if (info && info.mobileSignUrl) {
+      currentUrl = info.mobileSignUrl;
+    }
   } catch (err) {
-    console.error('Error fetching info:', err);
-    currentUrl = `${window.location.origin}/sign`;
-    qrUrl.textContent = currentUrl;
-    qrImage.src = `/api/qr-image?url=${encodeURIComponent(currentUrl)}`;
+    console.warn('Fallback to browser origin URL:', err);
+    currentUrl = `${browserOrigin}/sign`;
   }
+
+  qrUrl.textContent = currentUrl;
+  qrImage.src = `/api/qr-image?url=${encodeURIComponent(currentUrl)}`;
 
   // Socket.IO for live participant count
   const socket = io();
