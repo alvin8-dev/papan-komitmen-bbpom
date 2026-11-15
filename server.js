@@ -6,6 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const QRCode = require('qrcode');
+const ws = require('ws');
+global.WebSocket = ws;
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
@@ -104,12 +106,41 @@ async function syncSignaturesFromSupabase() {
       return signaturesData;
     }
 
+    // Auto-migrate: If Supabase table is empty but local storage has data, populate Supabase!
+    if ((!data || data.length === 0) && signaturesData) {
+      const localRows = [];
+      if (signaturesData.kepala) localRows.push(signaturesData.kepala);
+      if (signaturesData.kabag_tu) localRows.push(signaturesData.kabag_tu);
+      if (Array.isArray(signaturesData.pegawai)) localRows.push(...signaturesData.pegawai);
+
+      if (localRows.length > 0) {
+        console.log(`[Supabase] Auto-migrating ${localRows.length} local signatures into Supabase...`);
+        const payload = localRows.map(r => ({
+          id: r.id,
+          name: r.name,
+          nip: r.nip || '-',
+          jabatan: r.jabatan || '',
+          role_type: r.roleType || 'PEGAWAI',
+          signature_data_url: r.signatureDataUrl,
+          created_at: r.createdAt || new Date().toISOString(),
+          timestamp_formatted: r.timestampFormatted || ''
+        }));
+        const { error: migErr } = await supabase.from('signatures').upsert(payload, { onConflict: 'id' });
+        if (migErr) {
+          console.error('[Supabase] Failed auto-migrating to Supabase:', migErr.message);
+        } else {
+          console.log(`[Supabase] Successfully auto-migrated ${localRows.length} signatures to Supabase!`);
+        }
+        return signaturesData;
+      }
+    }
+
     let kepala = null;
     let kabag_tu = null;
     const pegawai = [];
     const history = [];
 
-    if (Array.isArray(data)) {
+    if (Array.isArray(data) && data.length > 0) {
       for (const row of data) {
         const item = {
           id: row.id,
@@ -138,17 +169,18 @@ async function syncSignaturesFromSupabase() {
           }
         }
       }
+
+      signaturesData = {
+        kepala,
+        kabag_tu,
+        pegawai,
+        history
+      };
+
+      // Mirror to local JSON as fallback
+      saveSignatures(signaturesData);
     }
 
-    signaturesData = {
-      kepala,
-      kabag_tu,
-      pegawai,
-      history
-    };
-
-    // Mirror to local JSON as fallback
-    saveSignatures(signaturesData);
     return signaturesData;
   } catch (err) {
     console.error('[Supabase] Unexpected error syncing data:', err);
@@ -304,6 +336,71 @@ app.get('/api/qr-image', async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: 'Failed to generate QR code', details: err.message });
+  }
+});
+
+// 4b. Diagnostic API - Check Supabase Connection & Table Status
+app.get('/api/db-status', async (req, res) => {
+  if (!supabase) {
+    return res.json({
+      connected: false,
+      hasUrl: !!SUPABASE_URL,
+      hasKey: !!SUPABASE_KEY,
+      keyPrefix: SUPABASE_KEY ? SUPABASE_KEY.substring(0, 15) : '',
+      keyLength: SUPABASE_KEY ? SUPABASE_KEY.length : 0,
+      message: 'Supabase client is not initialized.'
+    });
+  }
+  try {
+    const { data, error, count } = await supabase.from('signatures').select('*', { count: 'exact' });
+    if (error) {
+      return res.json({
+        connected: false,
+        keyPrefix: SUPABASE_KEY ? SUPABASE_KEY.substring(0, 15) : '',
+        keyLength: SUPABASE_KEY ? SUPABASE_KEY.length : 0,
+        error: { message: error.message, details: error.details, hint: error.hint, code: error.code }
+      });
+    }
+    return res.json({
+      connected: true,
+      keyPrefix: SUPABASE_KEY ? SUPABASE_KEY.substring(0, 15) : '',
+      count: data ? data.length : 0,
+      records: (data || []).map(r => ({ id: r.id, name: r.name, role: r.role_type }))
+    });
+  } catch (err) {
+    return res.status(500).json({ connected: false, error: err.message, stack: err.stack });
+  }
+});
+
+// 4c. Diagnostic API - Manually push all current local signatures to Supabase
+app.get('/api/migrate-to-supabase', async (req, res) => {
+  if (!supabase) {
+    return res.status(400).json({ success: false, message: 'Supabase not configured' });
+  }
+  try {
+    const localRows = [];
+    if (signaturesData.kepala) localRows.push(signaturesData.kepala);
+    if (signaturesData.kabag_tu) localRows.push(signaturesData.kabag_tu);
+    if (Array.isArray(signaturesData.pegawai)) localRows.push(...signaturesData.pegawai);
+
+    const payload = localRows.map(r => ({
+      id: r.id,
+      name: r.name,
+      nip: r.nip || '-',
+      jabatan: r.jabatan || '',
+      role_type: r.roleType || 'PEGAWAI',
+      signature_data_url: r.signatureDataUrl,
+      created_at: r.createdAt || new Date().toISOString(),
+      timestamp_formatted: r.timestampFormatted || ''
+    }));
+
+    const { data, error } = await supabase.from('signatures').upsert(payload, { onConflict: 'id' });
+    if (error) {
+      return res.status(500).json({ success: false, error });
+    }
+    return res.json({ success: true, count: payload.length, message: `Migrated ${payload.length} signatures to Supabase` });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
   }
 });
 
