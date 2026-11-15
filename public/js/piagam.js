@@ -463,61 +463,482 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Admin / Demo Tools Handlers
+  // 8. Superuser Login & Admin Dashboard Controller
   const btnAdminTools = document.getElementById('btnAdminTools');
-  const adminModal = document.getElementById('adminModal');
-  const btnCloseAdminModal = document.getElementById('btnCloseAdminModal');
+  const adminLoginModal = document.getElementById('adminLoginModal');
+  const adminPanelModal = document.getElementById('adminPanelModal');
+  const btnCloseLoginModal = document.getElementById('btnCloseLoginModal');
+  const btnClosePanelModal = document.getElementById('btnClosePanelModal');
+  const btnAdminLogout = document.getElementById('btnAdminLogout');
+  const formAdminLogin = document.getElementById('formAdminLogin');
+  const inputAdminUser = document.getElementById('inputAdminUser');
+  const inputAdminPass = document.getElementById('inputAdminPass');
+  const loginErrorAlert = document.getElementById('loginErrorAlert');
+
+  // Pegawai tab elements
+  const formAddPegawai = document.getElementById('formAddPegawai');
+  const addPegawaiNama = document.getElementById('addPegawaiNama');
+  const addPegawaiNip = document.getElementById('addPegawaiNip');
+  const addPegawaiInstansi = document.getElementById('addPegawaiInstansi');
+  const addPegawaiJabatan = document.getElementById('addPegawaiJabatan');
+  const tbodyPegawaiList = document.getElementById('tbodyPegawaiList');
+  const countPegawaiTotal = document.getElementById('countPegawaiTotal');
+  const searchPegawaiAdmin = document.getElementById('searchPegawaiAdmin');
+
+  // Signatures reorder elements
+  const countSignaturesAdmin = document.getElementById('countSignaturesAdmin');
+  const reorderListBox = document.getElementById('reorderListBox');
+  const btnSaveReorder = document.getElementById('btnSaveReorder');
+
+  // Quick Ops
   const btnSeedDemo = document.getElementById('btnSeedDemo');
   const btnResetAll = document.getElementById('btnResetAll');
 
-  if (btnAdminTools && adminModal) {
-    btnAdminTools.addEventListener('click', () => {
-      adminModal.classList.add('active');
-    });
+  // Admin In-Memory Data
+  let adminPegawaiData = [];
+  let adminSignaturesList = []; // Array of employee signatures currently displayed
 
-    if (btnCloseAdminModal) {
-      btnCloseAdminModal.addEventListener('click', () => {
-        adminModal.classList.remove('active');
+  function isAdminAuthenticated() {
+    return sessionStorage.getItem('bpom_admin_auth') === 'true';
+  }
+
+  function openAdmin() {
+    if (isAdminAuthenticated()) {
+      adminPanelModal.classList.add('active');
+      loadAdminPegawai();
+      loadAdminSignatures();
+    } else {
+      if (inputAdminUser) inputAdminUser.value = '';
+      if (inputAdminPass) inputAdminPass.value = '';
+      if (loginErrorAlert) loginErrorAlert.style.display = 'none';
+      adminLoginModal.classList.add('active');
+    }
+  }
+
+  if (btnAdminTools) {
+    btnAdminTools.addEventListener('click', openAdmin);
+  }
+
+  if (btnCloseLoginModal) {
+    btnCloseLoginModal.addEventListener('click', () => {
+      adminLoginModal.classList.remove('active');
+    });
+  }
+
+  if (btnClosePanelModal) {
+    btnClosePanelModal.addEventListener('click', () => {
+      adminPanelModal.classList.remove('active');
+    });
+  }
+
+  if (btnAdminLogout) {
+    btnAdminLogout.addEventListener('click', () => {
+      sessionStorage.removeItem('bpom_admin_auth');
+      adminPanelModal.classList.remove('active');
+      showToast('Logout Berhasil', 'Anda telah keluar dari mode Superuser');
+    });
+  }
+
+  // Click outside to close modals
+  [adminLoginModal, adminPanelModal].forEach(modal => {
+    if (!modal) return;
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+  });
+
+  // Login form handler
+  if (formAdminLogin) {
+    formAdminLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = (inputAdminUser.value || '').trim();
+      const password = (inputAdminPass.value || '').trim();
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem('bpom_admin_auth', 'true');
+          adminLoginModal.classList.remove('active');
+          adminPanelModal.classList.add('active');
+          showToast('Selamat Datang, Superuser!', 'Akses Kontrol Penuh Diaktifkan');
+          loadAdminPegawai();
+          loadAdminSignatures();
+        } else {
+          loginErrorAlert.textContent = data.message || 'Username atau password salah!';
+          loginErrorAlert.style.display = 'block';
+        }
+      } catch (err) {
+        loginErrorAlert.textContent = 'Gagal terhubung ke server.';
+        loginErrorAlert.style.display = 'block';
+      }
+    });
+  }
+
+  // Tab switching
+  const tabButtons = document.querySelectorAll('.admin-tab-btn');
+  const tabPanes = document.querySelectorAll('.admin-tab-pane');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.getAttribute('data-tab');
+      tabButtons.forEach(b => b.classList.remove('active'));
+      tabPanes.forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      const pane = document.getElementById(targetTab);
+      if (pane) pane.classList.add('active');
+
+      if (targetTab === 'tabPegawai') loadAdminPegawai();
+      if (targetTab === 'tabSignatures') loadAdminSignatures();
+    });
+  });
+
+  // Load Pegawai List
+  async function loadAdminPegawai() {
+    try {
+      const res = await fetch('/api/pegawai');
+      const json = await res.json();
+      adminPegawaiData = json.data || [];
+      renderPegawaiList(adminPegawaiData);
+    } catch (err) {
+      console.error('Error fetching admin pegawai:', err);
+      if (tbodyPegawaiList) {
+        tbodyPegawaiList.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat daftar pegawai.</td></tr>`;
+      }
+    }
+  }
+
+  function renderPegawaiList(list) {
+    if (!tbodyPegawaiList) return;
+    if (countPegawaiTotal) countPegawaiTotal.textContent = list.length;
+
+    if (list.length === 0) {
+      tbodyPegawaiList.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 20px;">Tidak ada pegawai ditemukan.</td></tr>`;
+      return;
+    }
+
+    tbodyPegawaiList.innerHTML = list.map((p, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 600; color: #64748b;">${p.no || idx + 1}</td>
+        <td>
+          <div style="font-weight: 600; color: #002b5b;">${p.nama}</div>
+          ${p.roleType === 'KEPALA' || p.roleType === 'KABAG_TU' ? `<span style="font-size: 0.7rem; background: #e0f2fe; color: #0369a1; padding: 1px 6px; border-radius: 4px; font-weight: 700;">${p.roleType}</span>` : ''}
+        </td>
+        <td style="font-family: monospace; font-size: 0.78rem;">${p.nip || '-'}</td>
+        <td style="font-size: 0.78rem; color: #475569;">${p.instansi || '-'}</td>
+        <td style="font-size: 0.78rem; color: #475569;">${p.jabatan || '-'}</td>
+        <td style="text-align: center;">
+          <button type="button" class="btn-admin-del" data-id="${p.id || p.no}" data-nama="${p.nama}">
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    // Attach delete listeners
+    tbodyPegawaiList.querySelectorAll('.btn-admin-del').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const nama = btn.getAttribute('data-nama');
+        if (confirm(`Apakah Anda yakin ingin menghapus pegawai "${nama}" dari database?`)) {
+          try {
+            const res = await fetch(`/api/admin/pegawai/${id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              showToast('Pegawai Dihapus', nama);
+              loadAdminPegawai();
+            } else {
+              alert(data.message || 'Gagal menghapus pegawai');
+            }
+          } catch (err) {
+            alert('Terjadi kesalahan jaringan.');
+          }
+        }
+      });
+    });
+  }
+
+  // Pegawai search filter
+  if (searchPegawaiAdmin) {
+    searchPegawaiAdmin.addEventListener('input', () => {
+      const q = searchPegawaiAdmin.value.toLowerCase().trim();
+      if (!q) {
+        renderPegawaiList(adminPegawaiData);
+        return;
+      }
+      const filtered = adminPegawaiData.filter(p =>
+        (p.nama || '').toLowerCase().includes(q) ||
+        (p.nip || '').toLowerCase().includes(q) ||
+        (p.jabatan || '').toLowerCase().includes(q) ||
+        (p.instansi || '').toLowerCase().includes(q)
+      );
+      renderPegawaiList(filtered);
+    });
+  }
+
+  // Form add pegawai
+  if (formAddPegawai) {
+    formAddPegawai.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nama = addPegawaiNama.value.trim();
+      const nip = addPegawaiNip.value.trim();
+      const instansi = addPegawaiInstansi.value.trim();
+      const jabatan = addPegawaiJabatan.value.trim();
+
+      if (!nama) {
+        alert('Nama lengkap pegawai wajib diisi.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/pegawai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nama, nip, instansi, jabatan })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Pegawai Berhasil Ditambahkan', nama);
+          addPegawaiNama.value = '';
+          addPegawaiNip.value = '';
+          addPegawaiJabatan.value = '';
+          loadAdminPegawai();
+        } else {
+          alert(data.message || 'Gagal menambahkan pegawai.');
+        }
+      } catch (err) {
+        alert('Gagal menghubungi server.');
+      }
+    });
+  }
+
+  // Load Signatures for Reorder & Delete
+  async function loadAdminSignatures() {
+    try {
+      const res = await fetch('/api/signatures');
+      const json = await res.json();
+      const data = json.data || {};
+
+      adminSignaturesList = Array.isArray(data.pegawai) ? [...data.pegawai] : [];
+      if (countSignaturesAdmin) {
+        const total = (data.kepala ? 1 : 0) + (data.kabag_tu ? 1 : 0) + adminSignaturesList.length;
+        countSignaturesAdmin.textContent = `${total} Peserta (${adminSignaturesList.length} Pegawai)`;
+      }
+
+      renderReorderList(adminSignaturesList, data.kepala, data.kabag_tu);
+    } catch (err) {
+      console.error('Error fetching admin signatures:', err);
+      if (reorderListBox) {
+        reorderListBox.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat tanda tangan.</div>`;
+      }
+    }
+  }
+
+  function renderReorderList(pegawaiList, kepala, kabag_tu) {
+    if (!reorderListBox) return;
+
+    let html = '';
+
+    // Show Leadership Cards as fixed top items
+    if (kepala) {
+      html += `
+        <div class="reorder-item-row" style="background: #fffbeb; border-color: #fde68a;">
+          <div class="reorder-item-left">
+            <span class="reorder-badge-num" style="background: #fef3c7; color: #92400e;">⭐ 1</span>
+            <div>
+              <div class="reorder-name-text">${kepala.name}</div>
+              <div class="reorder-sub-text">Pimpinan: Kepala Balai (Kiri Atas - Terkunci)</div>
+            </div>
+            ${kepala.signatureDataUrl ? `<img src="${kepala.signatureDataUrl}" class="reorder-sig-preview" alt="TTD">` : ''}
+          </div>
+          <button type="button" class="btn-admin-del btn-del-sig" data-id="${kepala.id}" data-name="${kepala.name}">
+            Hapus
+          </button>
+        </div>
+      `;
+    }
+
+    if (kabag_tu) {
+      html += `
+        <div class="reorder-item-row" style="background: #fffbeb; border-color: #fde68a;">
+          <div class="reorder-item-left">
+            <span class="reorder-badge-num" style="background: #fef3c7; color: #92400e;">⭐ 2</span>
+            <div>
+              <div class="reorder-name-text">${kabag_tu.name}</div>
+              <div class="reorder-sub-text">Pimpinan: Kabag TU (Kanan Atas - Terkunci)</div>
+            </div>
+            ${kabag_tu.signatureDataUrl ? `<img src="${kabag_tu.signatureDataUrl}" class="reorder-sig-preview" alt="TTD">` : ''}
+          </div>
+          <button type="button" class="btn-admin-del btn-del-sig" data-id="${kabag_tu.id}" data-name="${kabag_tu.name}">
+            Hapus
+          </button>
+        </div>
+      `;
+    }
+
+    if (pegawaiList.length === 0) {
+      html += `<div style="text-align: center; color: #64748b; padding: 24px;">Belum ada pegawai yang menandatangani komitmen.</div>`;
+    } else {
+      pegawaiList.forEach((p, idx) => {
+        html += `
+          <div class="reorder-item-row" data-id="${p.id}">
+            <div class="reorder-item-left">
+              <span class="reorder-badge-num">#${idx + 1}</span>
+              <div>
+                <div class="reorder-name-text">${p.name}</div>
+                <div class="reorder-sub-text">${p.timestampFormatted || p.createdAt || '-'}</div>
+              </div>
+              ${p.signatureDataUrl ? `<img src="${p.signatureDataUrl}" class="reorder-sig-preview" alt="TTD">` : ''}
+            </div>
+
+            <div class="reorder-actions">
+              <button type="button" class="btn-arrow-move btn-move-up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''} title="Pindahkan ke atas">▲</button>
+              <button type="button" class="btn-arrow-move btn-move-down" data-idx="${idx}" ${idx === pegawaiList.length - 1 ? 'disabled' : ''} title="Pindahkan ke bawah">▼</button>
+              <button type="button" class="btn-admin-del btn-del-sig" data-id="${p.id}" data-name="${p.name}">
+                Hapus
+              </button>
+            </div>
+          </div>
+        `;
       });
     }
 
-    adminModal.addEventListener('click', (e) => {
-      if (e.target === adminModal) {
-        adminModal.classList.remove('active');
-      }
+    reorderListBox.innerHTML = html;
+
+    // Attach Move Up / Down listeners
+    reorderListBox.querySelectorAll('.btn-move-up').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        if (idx > 0) {
+          const temp = adminSignaturesList[idx];
+          adminSignaturesList[idx] = adminSignaturesList[idx - 1];
+          adminSignaturesList[idx - 1] = temp;
+          renderReorderList(adminSignaturesList, kepala, kabag_tu);
+        }
+      });
     });
 
-    if (btnSeedDemo) {
-      btnSeedDemo.addEventListener('click', async () => {
+    reorderListBox.querySelectorAll('.btn-move-down').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        if (idx < adminSignaturesList.length - 1) {
+          const temp = adminSignaturesList[idx];
+          adminSignaturesList[idx] = adminSignaturesList[idx + 1];
+          adminSignaturesList[idx + 1] = temp;
+          renderReorderList(adminSignaturesList, kepala, kabag_tu);
+        }
+      });
+    });
+
+    // Attach Delete Single Signature listeners
+    reorderListBox.querySelectorAll('.btn-del-sig').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const name = btn.getAttribute('data-name');
+        if (confirm(`Apakah Anda yakin ingin menghapus tanda tangan dari "${name}"?`)) {
+          try {
+            const res = await fetch(`/api/signatures/${id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              showToast('Tanda Tangan Dihapus', name);
+              loadAdminSignatures();
+            } else {
+              alert(data.message || 'Gagal menghapus tanda tangan');
+            }
+          } catch (err) {
+            alert('Gagal menghubungi server.');
+          }
+        }
+      });
+    });
+  }
+
+  // Save Reordered Signatures
+  if (btnSaveReorder) {
+    btnSaveReorder.addEventListener('click', async () => {
+      const orderedIds = adminSignaturesList.map(p => p.id);
+      try {
+        btnSaveReorder.disabled = true;
+        btnSaveReorder.innerHTML = '<span>⏳ Menyimpan...</span>';
+
+        const res = await fetch('/api/signatures/reorder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderedIds })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Urutan Berhasil Disimpan', 'Posisi tanda tangan piagam diperbarui');
+        } else {
+          alert(data.message || 'Gagal menyimpan urutan');
+        }
+      } catch (err) {
+        alert('Gagal menghubungi server.');
+      } finally {
+        btnSaveReorder.disabled = false;
+        btnSaveReorder.innerHTML = '<span>💾 Simpan Urutan ke Supabase</span>';
+      }
+    });
+  }
+
+  // Quick Ops: Seed Simulation Data
+  if (btnSeedDemo) {
+    btnSeedDemo.addEventListener('click', async () => {
+      if (confirm('Apakah Anda ingin memuat data simulasi tanda tangan (6 peserta)? Data lama akan ditimpa contoh.')) {
         try {
           const res = await fetch('/api/seed', { method: 'POST' });
           const data = await res.json();
           if (data.success) {
-            adminModal.classList.remove('active');
             showToast('Data Simulasi Berhasil Dimuat', '6 Tanda Tangan Contoh');
+            loadAdminSignatures();
           }
         } catch (err) {
           alert('Gagal memuat data simulasi');
         }
-      });
-    }
+      }
+    });
+  }
 
-    if (btnResetAll) {
-      btnResetAll.addEventListener('click', async () => {
-        if (confirm('Apakah Anda yakin ingin MENGHAPUS SEMUA tanda tangan untuk memulai piagam baru yang bersih?')) {
+  // Quick Ops: Reset All
+  if (btnResetAll) {
+    btnResetAll.addEventListener('click', async () => {
+      if (confirm('⚠️ PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA tanda tangan di dashboard dan Supabase?')) {
+        if (confirm('Konfirmasi Terakhir: Seluruh tanda tangan akan dikosongkan. Lanjutkan?')) {
           try {
             const res = await fetch('/api/reset', { method: 'POST' });
             const data = await res.json();
             if (data.success) {
-              adminModal.classList.remove('active');
-              showToast('Piagam Telah Direset', 'Kesiapan Acara Bersih');
+              showToast('Piagam Telah Direset', 'Semua tanda tangan dikosongkan');
+              loadAdminSignatures();
             }
           } catch (err) {
             alert('Gagal mereset data');
           }
         }
-      });
-    }
+      }
+    });
+  }
+
+  // Socket listener for real-time pegawai updates
+  if (typeof io !== 'undefined') {
+    socket.on('pegawai_updated', (payload) => {
+      if (payload && payload.data) {
+        adminPegawaiData = payload.data;
+        if (adminPanelModal && adminPanelModal.classList.contains('active')) {
+          renderPegawaiList(adminPegawaiData);
+        }
+      }
+    });
   }
 
   // Load QR info once in background

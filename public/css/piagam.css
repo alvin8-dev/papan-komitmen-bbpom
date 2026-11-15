@@ -1403,3 +1403,248 @@ body.is-fullscreen .charter-screen-wrapper {
   padding: 12px !important;
   min-height: 100vh !important;
 }
+
+/* ==========================================================================
+   SUPERUSER ADMIN DASHBOARD & LOGIN MODAL STYLING
+   ========================================================================== */
+.modal-card-admin {
+  width: 95% !important;
+  max-width: 920px !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.modal-body-scrollable {
+  overflow-y: auto !important;
+  max-height: calc(90vh - 75px) !important;
+  padding: 20px 24px !important;
+}
+
+.admin-tabs-nav {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 18px;
+  padding-bottom: 4px;
+}
+
+.admin-tab-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-tab-btn:hover {
+  background: #e2e8f0;
+}
+
+.admin-tab-btn.active {
+  background: #002b5b;
+  color: #ffffff;
+  border-color: #002b5b;
+  box-shadow: 0 2px 6px rgba(0, 43, 91, 0.25);
+}
+
+.admin-tab-pane {
+  display: none;
+}
+
+.admin-tab-pane.active {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-form-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-form-box-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #002b5b;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .admin-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-table-container {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #002b5b;
+  color: #ffffff;
+  padding: 10px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  font-weight: 600;
+}
+
+.admin-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.admin-table tr:hover {
+  background: #f8fafc;
+}
+
+.btn-admin-del {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.btn-admin-del:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.reorder-list-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.reorder-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.15s;
+}
+
+.reorder-item-row:hover {
+  border-color: #002b5b;
+  box-shadow: 0 2px 8px rgba(0, 43, 91, 0.08);
+}
+
+.reorder-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.reorder-badge-num {
+  background: #e2e8f0;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  min-width: 34px;
+  text-align: center;
+}
+
+.reorder-name-text {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.86rem;
+}
+
+.reorder-sub-text {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.reorder-sig-preview {
+  height: 32px;
+  max-width: 100px;
+  object-fit: contain;
+  background: #f8fafc;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.reorder-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-arrow-move {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.btn-arrow-move:hover:not(:disabled) {
+  background: #002b5b;
+  color: #ffffff;
+  border-color: #002b5b;
+}
+
+.btn-arrow-move:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

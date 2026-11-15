@@ -29,20 +29,10 @@
     <main class="sign-form-card" id="formSection">
       <form id="signatureForm" autocomplete="off">
 
-        <!-- Mode Switch: Pilih dari Daftar Pegawai vs Input Manual -->
-        <div class="selection-type-toggle">
-          <button type="button" class="btn-toggle-type active" id="btnModeNominatif">
-            <span>📋 Pilih dari Daftar Pegawai</span>
-          </button>
-          <button type="button" class="btn-toggle-type" id="btnModeManual">
-            <span>✍️ Input Manual</span>
-          </button>
-        </div>
-
-        <!-- Section A: Mode Nominatif (Pilih Nama dari Daftar Excel) -->
+        <!-- Section Nominatif: Pilih Nama dari Daftar Pegawai -->
         <div id="sectionNominatif" class="form-section-nominatif">
           <div class="form-group" style="margin-bottom: 12px;">
-            <!-- Pegawai Select Dropdown Langsung Tanpa Label & Tanpa Search Box -->
+            <!-- Pegawai Select Dropdown Langsung -->
             <select id="selectPegawai" class="form-select select-nominatif" required>
               <option value="" disabled selected>Pilih Nama Pegawai</option>
             </select>
@@ -87,41 +77,12 @@
           </div>
         </div>
 
-        <!-- Section B: Mode Manual (Jika memilih input manual) -->
-        <div id="sectionManual" class="form-section-manual" style="display: none;">
-          <div class="form-group">
-            <label for="manualNamaLengkap" class="form-label">
-              Nama Lengkap Beserta Gelar <span class="required">*</span>
-            </label>
-            <input type="text" id="manualNamaLengkap" class="form-input" placeholder="Contoh: Nama Saya, Gelar."
-              minlength="3" maxlength="120">
-            <p class="form-hint">Tuliskan nama lengkap beserta seluruh gelar akademis/profesi.</p>
-          </div>
-
-          <div class="form-group">
-            <label for="manualNip" class="form-label">
-              Nomor Induk Pegawai (NIP) <span class="required">*</span>
-            </label>
-            <input type="text" id="manualNip" class="form-input" placeholder="Contoh: 12345678 901234 5 678 atau -"
-              maxlength="30">
-            <p class="form-hint">Isi NIP resmi (atau tanda '-' bagi tenaga PPNPN/kontrak/tamu).</p>
-          </div>
-
-          <div class="form-group">
-            <label for="manualJabatan" class="form-label">
-              Jabatan <span class="required">*</span>
-            </label>
-            <input type="text" id="manualJabatan" class="form-input"
-              placeholder="Contoh: Pengawas Farmasi dan Makanan Ahli Pertama" maxlength="120">
-          </div>
-        </div>
-
         <!-- Hidden values that will be submitted to the server -->
         <input type="hidden" id="finalNama" name="name">
         <input type="hidden" id="finalNip" name="nip">
         <input type="hidden" id="finalJabatan" name="jabatan">
 
-        <!-- Field 4: Digital Signature Pad Canvas -->
+        <!-- Field: Digital Signature Pad Canvas -->
         <div class="form-group">
           <div class="signature-section-header">
             <label class="form-label" style="margin-bottom: 0;">
@@ -217,6 +178,7 @@
     </section>
   </div>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script src="js/sign.js"></script>
 </body>
 

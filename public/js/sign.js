@@ -484,28 +484,28 @@ document.addEventListener('DOMContentLoaded', () => {
     onPegawaiSelected(found);
   });
 
-  // 5. Mode Switcher (Nominatif vs Manual)
-  btnModeNominatif.addEventListener('click', () => {
-    currentMode = 'nominatif';
-    btnModeNominatif.classList.add('active');
-    btnModeManual.classList.remove('active');
-    sectionNominatif.style.display = 'block';
-    sectionManual.style.display = 'none';
-    selectPegawai.required = true;
-    manualNamaLengkap.required = false;
-    manualJabatan.required = false;
-  });
+  // Mode Switcher (Guarded)
+  if (btnModeNominatif) {
+    btnModeNominatif.addEventListener('click', () => {
+      currentMode = 'nominatif';
+      btnModeNominatif.classList.add('active');
+      if (btnModeManual) btnModeManual.classList.remove('active');
+      if (sectionNominatif) sectionNominatif.style.display = 'block';
+      if (sectionManual) sectionManual.style.display = 'none';
+      if (selectPegawai) selectPegawai.required = true;
+    });
+  }
 
-  btnModeManual.addEventListener('click', () => {
-    currentMode = 'manual';
-    btnModeManual.classList.add('active');
-    btnModeNominatif.classList.remove('active');
-    sectionNominatif.style.display = 'none';
-    sectionManual.style.display = 'block';
-    selectPegawai.required = false;
-    manualNamaLengkap.required = true;
-    manualJabatan.required = false;
-  });
+  if (btnModeManual) {
+    btnModeManual.addEventListener('click', () => {
+      currentMode = 'manual';
+      btnModeManual.classList.add('active');
+      if (btnModeNominatif) btnModeNominatif.classList.remove('active');
+      if (sectionNominatif) sectionNominatif.style.display = 'none';
+      if (sectionManual) sectionManual.style.display = 'block';
+      if (selectPegawai) selectPegawai.required = false;
+    });
+  }
 
   // 6. Form Submission
   form.addEventListener('submit', async (e) => {
@@ -633,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (alertAlreadySigned) alertAlreadySigned.style.display = 'none';
 
     // Reset mode to nominatif
-    btnModeNominatif.click();
+    if (btnModeNominatif) btnModeNominatif.click();
     renderPegawaiDropdown();
 
     // Clear signature canvas
@@ -648,6 +648,26 @@ document.addEventListener('DOMContentLoaded', () => {
     formSection.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // Real-time socket sync
+  if (typeof io !== 'undefined') {
+    const socket = io();
+    socket.on('pegawai_updated', (payload) => {
+      if (payload && payload.data) {
+        pegawaiList = payload.data;
+        renderPegawaiDropdown();
+      }
+    });
+    socket.on('new_signature', () => {
+      loadData();
+    });
+    socket.on('signature_deleted', () => {
+      loadData();
+    });
+    socket.on('data_reset', () => {
+      loadData();
+    });
+  }
 
   // Initial Data Load
   loadData();

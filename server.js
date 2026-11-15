@@ -92,6 +92,87 @@ function saveSignatures(data) {
 // In-memory cache
 let signaturesData = loadSignatures();
 
+// Pegawai Nominatif Database Setup
+const PEGAWAI_FILE = path.join(DATA_DIR, 'pegawai_nominatif.json');
+
+function loadPegawai() {
+  try {
+    if (fs.existsSync(PEGAWAI_FILE)) {
+      const parsed = JSON.parse(fs.readFileSync(PEGAWAI_FILE, 'utf8'));
+      return Array.isArray(parsed) ? parsed : [];
+    }
+  } catch (err) {
+    console.error('Error reading pegawai data:', err);
+  }
+  return [];
+}
+
+function savePegawai(data) {
+  try {
+    fs.writeFileSync(PEGAWAI_FILE, JSON.stringify(data, null, 2), 'utf8');
+    return true;
+  } catch (err) {
+    console.error('Error saving pegawai data:', err);
+    return false;
+  }
+}
+
+let pegawaiData = loadPegawai();
+
+// Helper to sync pegawai from Supabase
+async function syncPegawaiFromSupabase() {
+  if (!supabase) return pegawaiData;
+  try {
+    const { data, error } = await supabase
+      .from('pegawai')
+      .select('*')
+      .order('no', { ascending: true });
+
+    if (error) {
+      console.warn('[Supabase] Catatan: tabel pegawai belum tersedia atau belum diberi izin:', error.message);
+      return pegawaiData;
+    }
+
+    if (Array.isArray(data) && data.length > 0) {
+      pegawaiData = data.map((item, idx) => ({
+        id: item.id || `peg_${item.no || idx + 1}`,
+        no: typeof item.no === 'number' ? item.no : idx + 1,
+        nama: item.nama,
+        nip: item.nip || '-',
+        instansi: item.instansi || 'Balai Besar POM di Pangkal Pinang',
+        jabatan: item.jabatan || '',
+        roleType: item.role_type || determineRoleType(item.jabatan, item.nama)
+      }));
+      savePegawai(pegawaiData);
+      return pegawaiData;
+    }
+
+    // Auto-migrate local pegawai to Supabase if Supabase table is empty
+    if ((!data || data.length === 0) && pegawaiData.length > 0) {
+      console.log(`[Supabase] Auto-migrating ${pegawaiData.length} pegawai ke Supabase...`);
+      const payload = pegawaiData.map((p, idx) => ({
+        id: p.id || `peg_${p.no || idx + 1}`,
+        no: p.no || idx + 1,
+        nama: p.nama,
+        nip: p.nip || '-',
+        instansi: p.instansi || 'Balai Besar POM di Pangkal Pinang',
+        jabatan: p.jabatan || '',
+        role_type: p.roleType || determineRoleType(p.jabatan, p.nama)
+      }));
+      const { error: migErr } = await supabase.from('pegawai').insert(payload);
+      if (migErr) {
+        console.warn('[Supabase] Gagal migrasi data pegawai ke cloud:', migErr.message);
+      } else {
+        console.log(`[Supabase] Sukses migrasi ${payload.length} pegawai ke Supabase!`);
+      }
+    }
+    return pegawaiData;
+  } catch (err) {
+    console.warn('[Supabase] Warning saat sync pegawai:', err.message);
+    return pegawaiData;
+  }
+}
+
 // Helper to sync latest data from Supabase
 async function syncSignaturesFromSupabase() {
   if (!supabase) return signaturesData;
@@ -115,13 +196,14 @@ async function syncSignaturesFromSupabase() {
 
       if (localRows.length > 0) {
         console.log(`[Supabase] Auto-migrating ${localRows.length} local signatures into Supabase...`);
-        const payload = localRows.map(r => ({
+        const payload = localRows.map((r, idx) => ({
           id: r.id,
           name: r.name,
           nip: r.nip || '-',
           jabatan: r.jabatan || '',
           role_type: r.roleType || 'PEGAWAI',
           signature_data_url: r.signatureDataUrl,
+          sort_order: typeof r.sortOrder === 'number' ? r.sortOrder : idx,
           created_at: r.createdAt || new Date().toISOString(),
           timestamp_formatted: r.timestampFormatted || ''
         }));
@@ -149,6 +231,7 @@ async function syncSignaturesFromSupabase() {
           jabatan: row.jabatan || '',
           roleType: row.role_type || 'PEGAWAI',
           signatureDataUrl: row.signature_data_url,
+          sortOrder: typeof row.sort_order === 'number' ? row.sort_order : 99999,
           createdAt: row.created_at,
           timestampFormatted: row.timestamp_formatted || ''
         };
@@ -169,6 +252,12 @@ async function syncSignaturesFromSupabase() {
           }
         }
       }
+
+      // Respect sortOrder if defined
+      pegawai.sort((a, b) => {
+        if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+        return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+      });
 
       signaturesData = {
         kepala,
@@ -193,6 +282,9 @@ if (supabase) {
   syncSignaturesFromSupabase().then(() => {
     const count = (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + signaturesData.pegawai.length;
     console.log(`[Supabase] Initial sync complete. Loaded ${count} signatures.`);
+  });
+  syncPegawaiFromSupabase().then(() => {
+    console.log(`[Supabase] Initial sync complete. Loaded ${pegawaiData.length} pegawai.`);
   });
 }
 
@@ -289,17 +381,179 @@ app.get('/api/info', async (req, res) => {
   });
 });
 
-// 3b. API - Get Nominatif Pegawai List from Excel/JSON
-app.get('/api/pegawai', (req, res) => {
+// 3b. API - Get Nominatif Pegawai List from Database / File
+app.get('/api/pegawai', async (req, res) => {
   try {
-    const filePath = path.join(DATA_DIR, 'pegawai_nominatif.json');
-    if (fs.existsSync(filePath)) {
-      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      return res.json({ success: true, count: data.length, data });
+    if (supabase) {
+      await syncPegawaiFromSupabase();
+    } else if (pegawaiData.length === 0) {
+      pegawaiData = loadPegawai();
     }
-    return res.json({ success: true, count: 0, data: [] });
+    return res.json({ success: true, count: pegawaiData.length, data: pegawaiData });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Gagal membaca data pegawai nominatif.', error: err.message });
+  }
+});
+
+// Admin Auth Login
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'Superuser' && password === 'Admin123') {
+    return res.json({
+      success: true,
+      message: 'Login Superuser berhasil!',
+      token: 'admin_token_' + Date.now()
+    });
+  }
+  return res.status(401).json({ success: false, message: 'Username atau Password salah!' });
+});
+
+// Admin - Add new pegawai
+app.post('/api/admin/pegawai', async (req, res) => {
+  try {
+    const { nama, nip, instansi, jabatan } = req.body;
+    if (!nama || !nama.trim()) {
+      return res.status(400).json({ success: false, message: 'Nama pegawai wajib diisi.' });
+    }
+
+    const trimmedNama = nama.trim();
+    const trimmedNip = (nip || '').trim() || '-';
+    const trimmedInstansi = (instansi || '').trim() || 'Balai Besar POM di Pangkal Pinang';
+    const trimmedJabatan = (jabatan || '').trim();
+    const roleType = determineRoleType(trimmedJabatan, trimmedNama);
+
+    const maxNo = pegawaiData.reduce((max, p) => Math.max(max, p.no || 0), 0);
+    const newPegawai = {
+      id: 'peg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      no: maxNo + 1,
+      nama: trimmedNama,
+      nip: trimmedNip,
+      instansi: trimmedInstansi,
+      jabatan: trimmedJabatan,
+      roleType
+    };
+
+    pegawaiData.push(newPegawai);
+    savePegawai(pegawaiData);
+
+    if (supabase) {
+      try {
+        await supabase.from('pegawai').insert({
+          id: newPegawai.id,
+          no: newPegawai.no,
+          nama: newPegawai.nama,
+          nip: newPegawai.nip,
+          instansi: newPegawai.instansi,
+          jabatan: newPegawai.jabatan,
+          role_type: newPegawai.roleType
+        });
+      } catch (dbErr) {
+        console.warn('[Supabase] Warning saat simpan pegawai baru:', dbErr.message);
+      }
+    }
+
+    io.emit('pegawai_updated', { data: pegawaiData });
+
+    return res.status(201).json({
+      success: true,
+      message: `Pegawai "${newPegawai.nama}" berhasil ditambahkan.`,
+      data: newPegawai
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Admin - Delete pegawai
+app.delete('/api/admin/pegawai/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const idx = pegawaiData.findIndex(p => p.id === id || String(p.no) === id);
+    if (idx === -1) {
+      return res.status(404).json({ success: false, message: 'Data pegawai tidak ditemukan.' });
+    }
+
+    const removed = pegawaiData.splice(idx, 1)[0];
+    savePegawai(pegawaiData);
+
+    if (supabase) {
+      try {
+        await supabase.from('pegawai').delete().or(`id.eq.${removed.id || id},no.eq.${removed.no}`);
+      } catch (dbErr) {
+        console.warn('[Supabase] Warning saat hapus pegawai:', dbErr.message);
+      }
+    }
+
+    io.emit('pegawai_updated', { data: pegawaiData });
+
+    return res.json({
+      success: true,
+      message: `Pegawai "${removed.nama}" berhasil dihapus.`
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Admin - Reorder Signatures
+app.post('/api/signatures/reorder', async (req, res) => {
+  try {
+    const { orderedIds } = req.body;
+    if (!Array.isArray(orderedIds)) {
+      return res.status(400).json({ success: false, message: 'orderedIds harus berupa array string ID.' });
+    }
+
+    // Map existing pegawai signatures
+    const currentPegawaiMap = new Map();
+    signaturesData.pegawai.forEach(p => currentPegawaiMap.set(p.id, p));
+
+    const reorderedPegawai = [];
+    orderedIds.forEach((id, idx) => {
+      if (currentPegawaiMap.has(id)) {
+        const item = currentPegawaiMap.get(id);
+        item.sortOrder = idx;
+        reorderedPegawai.push(item);
+        currentPegawaiMap.delete(id);
+      }
+    });
+
+    // Add any remaining
+    currentPegawaiMap.forEach(item => {
+      item.sortOrder = reorderedPegawai.length;
+      reorderedPegawai.push(item);
+    });
+
+    signaturesData.pegawai = reorderedPegawai;
+    saveSignatures(signaturesData);
+
+    if (supabase) {
+      try {
+        await Promise.all(
+          reorderedPegawai.map((p, idx) =>
+            supabase.from('signatures').update({ sort_order: idx }).eq('id', p.id)
+          )
+        );
+      } catch (dbErr) {
+        console.warn('[Supabase] Warning update sort_order:', dbErr.message);
+      }
+    }
+
+    // Broadcast to update piagam in real-time
+    io.emit('initial_data', {
+      kepala: signaturesData.kepala,
+      kabag_tu: signaturesData.kabag_tu,
+      pegawai: signaturesData.pegawai,
+      meta: {
+        total: (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + signaturesData.pegawai.length,
+        kepalaSigned: !!signaturesData.kepala,
+        kabagTuSigned: !!signaturesData.kabag_tu,
+        pegawaiCount: signaturesData.pegawai.length
+      }
+    });
+
+    return res.json({ success: true, message: 'Urutan tanda tangan berhasil diperbarui.' });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
   }
 });
 

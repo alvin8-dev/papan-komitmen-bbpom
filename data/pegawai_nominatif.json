@@ -4,461 +4,593 @@
     "nama": "Alex Sander, S.Farm., Apt., M.H",
     "nip": "19791212 200604 1 005",
     "jabatan": "Kepala Balai Besar POM di Pangkal Pinang",
-    "roleType": "KEPALA"
+    "roleType": "KEPALA",
+    "id": "peg_1",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 2,
     "nama": "Mardianto, S.Farm., Apt.",
     "nip": "19830326 200812 1 001",
     "jabatan": "Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang",
-    "roleType": "KABAG_TU"
+    "roleType": "KABAG_TU",
+    "id": "peg_2",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 3,
     "nama": "Ria Emeilia, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_3",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 4,
     "nama": "Welinda Syafri, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_4",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 5,
     "nama": "Tri Astuti Rahmawati, S.TP., M.Sc.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_5",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 6,
     "nama": "Sony Lawrensia, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_6",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 7,
     "nama": "Prawita Lintang Larasati, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_7",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 8,
     "nama": "Pratiwi Setianingsih, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_8",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 9,
     "nama": "Puspa Sari Paniti Ratri, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_9",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 10,
     "nama": "Muhammad Herpi Akbar, S.Farm., Apt., M.Farm.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_10",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 11,
     "nama": "Wedita Destriani, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_11",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 12,
     "nama": "Rachmadiniarni, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_12",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 13,
     "nama": "Frenandha Dwi Dharmawan, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_13",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 14,
     "nama": "Atika Melati, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_14",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 15,
     "nama": "Ahmad Burhan Rifa'i, S.TP.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_15",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 16,
     "nama": "Ririn Suprihanti, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_16",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 17,
     "nama": "Marruni Zariah, S.Farm., Apt.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_17",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 18,
     "nama": "Anita Indriyastuti, S.M.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_18",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 19,
     "nama": "Lia Tri Wahyuni, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_19",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 20,
     "nama": "Indita Tiara Puspa, S.T.P.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_20",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 21,
     "nama": "Riantika Kurniati, S.Farm.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_21",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 22,
     "nama": "Priya Tri Nanda, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_22",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 23,
     "nama": "Ika Kartika, S.T.P.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_23",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 24,
     "nama": "Kafidul Ulum, S.TP.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_24",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 25,
     "nama": "Rizki Afriyanti, ST.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_25",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 26,
     "nama": "Nungki Nuari Dewi, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_26",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 27,
     "nama": "apt. Rizky Rahmadhani Muslim, S.Farm.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_27",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 28,
     "nama": "Hudana Alam Putra, S.Sos.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_28",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 29,
     "nama": "apt. Tiara Rani, S.Farm.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_29",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 30,
     "nama": "apt. Angela Marselly Br Barus, S.Farm.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_30",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 31,
     "nama": "Veni Oktivia, SE.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_31",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 32,
     "nama": "Ade Yan Emerson, S.Kom.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_32",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 33,
     "nama": "Fatrisia Ratnasari, SE.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_33",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 34,
     "nama": "Frans Eryxon Ambarita, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_34",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 35,
     "nama": "Muhammad Apriadi, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_35",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 36,
     "nama": "Hana Mardiah, S.E.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_36",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 37,
     "nama": "Netty Desi Margaretta Manullang, S.E.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_37",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 38,
     "nama": "Rizky Wirani, S.T.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_38",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 39,
     "nama": "Riska Widiyana, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_39",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 40,
     "nama": "Ina Miranti, S.Si.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_40",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 41,
     "nama": "Septo Dwi Yan Purnomo, S.T.P.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_41",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 42,
     "nama": "Talia Lucluba Madina, S.T.P.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_42",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 43,
     "nama": "Alvindra Pratama, S.T.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_43",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 44,
     "nama": "Yogi Hasudungan, S.Kom.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_44",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 45,
     "nama": "Lukman Hakim Rachmawan, S.M.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_45",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 46,
     "nama": "Al Ihya Yunus Putri, S.Sos.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_46",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 47,
     "nama": "Nabila Mukhriza, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_47",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 48,
     "nama": "Tio Lestarina M Hutajulu, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_48",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 49,
     "nama": "Muchtar Ghanda Taruna, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_49",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 50,
     "nama": "Dani Pena Prianto, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_50",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 51,
     "nama": "Donny Tua Hamonangan, S.H.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_51",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 52,
     "nama": "Atik Riwati, S.I.Kom.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_52",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 53,
     "nama": "Syahri Syarif, S.P.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_53",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 54,
     "nama": "Dedi Afriyansyah, S.Kom.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_54",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 55,
     "nama": "M. Rusdi, A.Md.",
     "nip": "",
     "jabatan": "",
-    "roleType": "PEGAWAI"
+    "roleType": "PEGAWAI",
+    "id": "peg_55",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 56,
     "nama": "Agus Setiawan",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_56",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 57,
     "nama": "Jefri Yanto",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_57",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 58,
     "nama": "Idris",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_58",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 59,
     "nama": "Rudi Alamsyah",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_59",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 60,
     "nama": "Robiansyah",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_60",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 61,
     "nama": "Danil Arifin",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_61",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 62,
     "nama": "Ery Saputra",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_62",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 63,
     "nama": "Sapta Putra",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_63",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 64,
     "nama": "Rifky Agusta",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_64",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 65,
     "nama": "Sindy Aulia Putri, S.Si",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_65",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 66,
     "nama": "Yulistya Gustriani, S.Si",
     "nip": "",
     "jabatan": "",
-    "roleType": "PPNPN"
+    "roleType": "PPNPN",
+    "id": "peg_66",
+    "instansi": "Balai Besar POM di Pangkal Pinang"
   }
 ]

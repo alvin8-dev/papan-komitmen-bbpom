@@ -239,37 +239,176 @@
     </div>
   </div>
 
-  <!-- Admin Tools Modal -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-card">
+  <!-- Superuser Login Modal -->
+  <div class="modal-overlay" id="adminLoginModal">
+    <div class="modal-card" style="max-width: 420px;">
       <div class="modal-header">
         <div class="modal-title">
-          <span>⚙️ Pengaturan &amp; Simulasi Piagam</span>
+          <span>🔐 Login Superuser</span>
         </div>
-        <button type="button" class="modal-close" id="btnCloseAdminModal">&times;</button>
+        <button type="button" class="modal-close" id="btnCloseLoginModal">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="color: #475569; font-size: 0.92rem; margin-bottom: 20px;">
-          Gunakan fitur ini untuk uji coba tampilan (gladi bersih) atau mereset data sebelum acara resmi dimulai.
+        <p style="color: #475569; font-size: 0.88rem; margin-bottom: 16px;">
+          Masukkan kredensial pengelola untuk mengelola pegawai, tanda tangan, dan urutan piagam.
         </p>
 
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-            <div style="font-weight: 700; color: #002147; margin-bottom: 4px;">Muat Data Contoh (Gladi Bersih)</div>
-            <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Mengisi contoh tanda tangan Kepala
-              Balai, Kabag TU, dan 4 pegawai untuk memeriksa tampilan.</div>
-            <button type="button" class="btn btn-outline btn-sm" id="btnSeedDemo" style="width: 100%;">
-              ⚡ Muat Data Simulasi
+        <form id="formAdminLogin" autocomplete="off">
+          <div style="margin-bottom: 12px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #002b5b; margin-bottom: 4px;">Username</label>
+            <input type="text" id="inputAdminUser" class="form-input" placeholder="Masukkan Username" required autofocus>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #002b5b; margin-bottom: 4px;">Password</label>
+            <input type="password" id="inputAdminPass" class="form-input" placeholder="Masukkan Password" required>
+          </div>
+
+          <div id="loginErrorAlert" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 14px;">
+            Username atau password salah!
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;">
+            <span>Masuk ke Panel Superuser</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Superuser Admin Dashboard Modal -->
+  <div class="modal-overlay" id="adminPanelModal">
+    <div class="modal-card modal-card-admin">
+      <div class="modal-header">
+        <div class="modal-title" style="gap: 10px;">
+          <span>⚙️ Panel Superuser</span>
+          <span style="background: #eab308; color: #002b5b; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 800;">SUPERUSER</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="btn btn-outline btn-sm" id="btnAdminLogout" style="color: #ffffff; border-color: rgba(255,255,255,0.4);">
+            Logout
+          </button>
+          <button type="button" class="modal-close" id="btnClosePanelModal">&times;</button>
+        </div>
+      </div>
+
+      <div class="modal-body modal-body-scrollable">
+        <!-- Navigation Tabs -->
+        <div class="admin-tabs-nav">
+          <button type="button" class="admin-tab-btn active" data-tab="tabPegawai">
+            <span>👥 Kelola Data Pegawai</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tabSignatures">
+            <span>✍️ Urutan &amp; Tanda Tangan</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tabQuickOps">
+            <span>⚡ Simulasi &amp; Reset</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: KELOLA DATA PEGAWAI -->
+        <div class="admin-tab-pane active" id="tabPegawai">
+          <div class="admin-form-box">
+            <div class="admin-form-box-title">➕ Tambah Pegawai Baru ke Database (Supabase)</div>
+            <form id="formAddPegawai" autocomplete="off">
+              <div class="admin-grid-2">
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Nama Lengkap Beserta Gelar <span style="color: #ef4444;">*</span></label>
+                  <input type="text" id="addPegawaiNama" class="form-input" placeholder="Contoh: Dr. Budi Santoso, M.Si." required>
+                </div>
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Nomor Induk Pegawai (NIP)</label>
+                  <input type="text" id="addPegawaiNip" class="form-input" placeholder="Contoh: 19850101 201001 1 001 atau kosongkan">
+                </div>
+              </div>
+
+              <div class="admin-grid-2">
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Instansi</label>
+                  <input type="text" id="addPegawaiInstansi" class="form-input" placeholder="Balai Besar POM di Pangkal Pinang" value="Balai Besar POM di Pangkal Pinang">
+                </div>
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Jabatan</label>
+                  <input type="text" id="addPegawaiJabatan" class="form-input" placeholder="Contoh: Pengawas Farmasi dan Makanan Ahli Pertama">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm" id="btnSubmitAddPegawai">
+                <span>💾 Simpan Pegawai Baru ke Supabase</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Pegawai List Controls -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-weight: 700; color: #002b5b; font-size: 0.92rem;">
+              Daftar Pegawai Terdaftar (<span id="countPegawaiTotal">0</span> Orang)
+            </div>
+            <input type="text" id="searchPegawaiAdmin" class="form-input" placeholder="🔍 Cari nama/jabatan..." style="width: 240px; padding: 6px 10px; font-size: 0.82rem;">
+          </div>
+
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width: 45px; text-align: center;">No</th>
+                  <th>Nama Pegawai</th>
+                  <th>NIP</th>
+                  <th>Instansi</th>
+                  <th>Jabatan</th>
+                  <th style="width: 70px; text-align: center;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPegawaiList">
+                <tr><td colspan="6" style="text-align: center; color: #64748b; padding: 20px;">Memuat data pegawai...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: KELOLA URUTAN & TANDA TANGAN -->
+        <div class="admin-tab-pane" id="tabSignatures">
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; color: #166534; font-size: 0.9rem;">
+                Total Tanda Tangan Masuk: <span id="countSignaturesAdmin">0</span>
+              </div>
+              <div style="font-size: 0.78rem; color: #15803d; margin-top: 2px;">
+                Gunakan tombol panah ▲ / ▼ untuk memindahkan urutan posisi tanda tangan di piagam.
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="btnSaveReorder">
+              <span>💾 Simpan Urutan ke Supabase</span>
             </button>
           </div>
 
-          <div style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 14px;">
-            <div style="font-weight: 700; color: #991b1b; margin-bottom: 4px;">Reset Seluruh Piagam</div>
-            <div style="font-size: 0.8rem; color: #7f1d1d; margin-bottom: 10px;">Menghapus semua tanda tangan untuk
-              memulai acara resmi dari awal (kosong).</div>
-            <button type="button" class="btn btn-danger btn-sm" id="btnResetAll" style="width: 100%;">
-              🗑️ Reset Data Piagam
-            </button>
+          <div class="reorder-list-box" id="reorderListBox">
+            <div style="text-align: center; color: #64748b; padding: 24px;">Memuat daftar tanda tangan...</div>
+          </div>
+        </div>
+
+        <!-- TAB 3: OPERASI CEPAT (SIMULASI / RESET) -->
+        <div class="admin-tab-pane" id="tabQuickOps">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+              <div style="font-weight: 700; color: #002147; margin-bottom: 4px;">⚡ Muat Ulang Data Simulasi (Gladi Bersih)</div>
+              <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 12px;">
+                Memuat contoh tanda tangan resmi Kepala Balai, Kabag TU, dan 4 staf pegawai untuk simulasi tampilan piagam.
+              </div>
+              <button type="button" class="btn btn-navy btn-sm" id="btnSeedDemo">
+                <span>⚡ Muat Data Simulasi</span>
+              </button>
+            </div>
+
+            <div style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 16px;">
+              <div style="font-weight: 700; color: #991b1b; margin-bottom: 4px;">🗑️ Reset Seluruh Piagam (Kosongkan)</div>
+              <div style="font-size: 0.8rem; color: #7f1d1d; margin-bottom: 12px;">
+                Menghapus semua tanda tangan baik di dashboard maupun di database Supabase untuk memulai acara resmi dari awal.
+              </div>
+              <button type="button" class="btn btn-danger btn-sm" id="btnResetAll">
+                <span>🗑️ Reset Semua Tanda Tangan</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
