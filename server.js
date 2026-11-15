@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const QRCode = require('qrcode');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +20,24 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'signatures.json');
+
+// Supabase configuration (Persistent Database)
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || '';
+
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY) {
+  try {
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: false }
+    });
+    console.log('[Supabase] Database client initialized successfully.');
+  } catch (err) {
+    console.error('[Supabase] Failed to initialize Supabase client:', err.message);
+  }
+} else {
+  console.log('[Storage] Supabase env not set. Using local signatures.json storage mode.');
+}
 
 // Middleware
 app.use(cors());
@@ -70,6 +89,80 @@ function saveSignatures(data) {
 
 // In-memory cache
 let signaturesData = loadSignatures();
+
+// Helper to sync latest data from Supabase
+async function syncSignaturesFromSupabase() {
+  if (!supabase) return signaturesData;
+  try {
+    const { data, error } = await supabase
+      .from('signatures')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('[Supabase] Error fetching signatures:', error.message);
+      return signaturesData;
+    }
+
+    let kepala = null;
+    let kabag_tu = null;
+    const pegawai = [];
+    const history = [];
+
+    if (Array.isArray(data)) {
+      for (const row of data) {
+        const item = {
+          id: row.id,
+          name: row.name,
+          nip: row.nip || '-',
+          jabatan: row.jabatan || '',
+          roleType: row.role_type || 'PEGAWAI',
+          signatureDataUrl: row.signature_data_url,
+          createdAt: row.created_at,
+          timestampFormatted: row.timestamp_formatted || ''
+        };
+        history.push(item);
+
+        if (item.roleType === 'KEPALA') {
+          kepala = item;
+        } else if (item.roleType === 'KABAG_TU') {
+          kabag_tu = item;
+        } else {
+          const existingIdx = pegawai.findIndex(
+            p => p.name.trim().toLowerCase() === item.name.trim().toLowerCase()
+          );
+          if (existingIdx !== -1) {
+            pegawai[existingIdx] = item;
+          } else {
+            pegawai.push(item);
+          }
+        }
+      }
+    }
+
+    signaturesData = {
+      kepala,
+      kabag_tu,
+      pegawai,
+      history
+    };
+
+    // Mirror to local JSON as fallback
+    saveSignatures(signaturesData);
+    return signaturesData;
+  } catch (err) {
+    console.error('[Supabase] Unexpected error syncing data:', err);
+    return signaturesData;
+  }
+}
+
+// Initial sync on server boot
+if (supabase) {
+  syncSignaturesFromSupabase().then(() => {
+    const count = (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + signaturesData.pegawai.length;
+    console.log(`[Supabase] Initial sync complete. Loaded ${count} signatures.`);
+  });
+}
 
 // Helper to determine network IP
 function getLocalNetworkIP() {
@@ -215,8 +308,12 @@ app.get('/api/qr-image', async (req, res) => {
 });
 
 // 5. API - GET all signatures
-app.get('/api/signatures', (req, res) => {
-  signaturesData = loadSignatures();
+app.get('/api/signatures', async (req, res) => {
+  if (supabase) {
+    await syncSignaturesFromSupabase();
+  } else {
+    signaturesData = loadSignatures();
+  }
   const totalCount = (signaturesData.kepala ? 1 : 0) +
                      (signaturesData.kabag_tu ? 1 : 0) +
                      signaturesData.pegawai.length;
@@ -233,13 +330,14 @@ app.get('/api/signatures', (req, res) => {
       kepalaSigned: !!signaturesData.kepala,
       kabagTuSigned: !!signaturesData.kabag_tu,
       pegawaiCount: signaturesData.pegawai.length,
+      storageMode: supabase ? 'supabase' : 'local_json',
       updatedAt: new Date().toISOString()
     }
   });
 });
 
 // 6. API - POST submit new signature
-app.post('/api/signatures', (req, res) => {
+app.post('/api/signatures', async (req, res) => {
   try {
     const { name, nip, jabatan, signatureDataUrl } = req.body;
 
@@ -278,7 +376,7 @@ app.post('/api/signatures', (req, res) => {
       timestampFormatted: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     };
 
-    // Store based on roleType
+    // Store in-memory based on roleType
     if (roleType === 'KEPALA') {
       signaturesData.kepala = newRecord;
     } else if (roleType === 'KABAG_TU') {
@@ -298,8 +396,40 @@ app.post('/api/signatures', (req, res) => {
     // Keep in full audit history
     signaturesData.history.push(newRecord);
 
-    // Save to file
+    // Save to local JSON backup
     saveSignatures(signaturesData);
+
+    // Save to Supabase (if connected)
+    if (supabase) {
+      try {
+        if (roleType === 'KEPALA') {
+          await supabase.from('signatures').delete().eq('role_type', 'KEPALA');
+        } else if (roleType === 'KABAG_TU') {
+          await supabase.from('signatures').delete().eq('role_type', 'KABAG_TU');
+        } else {
+          await supabase.from('signatures').delete().ilike('name', trimmedName);
+        }
+
+        const { error: insertErr } = await supabase.from('signatures').insert({
+          id: newRecord.id,
+          name: newRecord.name,
+          nip: newRecord.nip,
+          jabatan: newRecord.jabatan,
+          role_type: newRecord.roleType,
+          signature_data_url: newRecord.signatureDataUrl,
+          created_at: newRecord.createdAt,
+          timestamp_formatted: newRecord.timestampFormatted
+        });
+
+        if (insertErr) {
+          console.error('[Supabase] Gagal menyimpan data ke tabel signatures:', insertErr.message);
+        } else {
+          console.log(`[Supabase] Sukses menyimpan tanda tangan: ${newRecord.name} (${newRecord.roleType})`);
+        }
+      } catch (dbErr) {
+        console.error('[Supabase] Exception saat menyimpan data:', dbErr.message);
+      }
+    }
 
     // Calculate metadata
     const totalCount = (signaturesData.kepala ? 1 : 0) +
@@ -336,7 +466,7 @@ app.post('/api/signatures', (req, res) => {
 });
 
 // 7. API - Delete single signature (Admin / Correction)
-app.delete('/api/signatures/:id', (req, res) => {
+app.delete('/api/signatures/:id', async (req, res) => {
   const { id } = req.params;
   let deleted = false;
 
@@ -356,6 +486,16 @@ app.delete('/api/signatures/:id', (req, res) => {
 
   if (deleted) {
     saveSignatures(signaturesData);
+
+    if (supabase) {
+      try {
+        await supabase.from('signatures').delete().eq('id', id);
+        console.log(`[Supabase] Tanda tangan id ${id} berhasil dihapus dari cloud.`);
+      } catch (dbErr) {
+        console.error('[Supabase] Exception saat hapus id:', dbErr.message);
+      }
+    }
+
     io.emit('signature_deleted', {
       deletedId: id,
       state: {
@@ -371,15 +511,25 @@ app.delete('/api/signatures/:id', (req, res) => {
 });
 
 // 8. API - Reset all signatures (for new event)
-app.post('/api/reset', (req, res) => {
+app.post('/api/reset', async (req, res) => {
   signaturesData = getInitialData();
   saveSignatures(signaturesData);
+
+  if (supabase) {
+    try {
+      await supabase.from('signatures').delete().neq('id', '___dummy_never_match___');
+      console.log('[Supabase] Seluruh data tanda tangan di cloud berhasil direset.');
+    } catch (dbErr) {
+      console.error('[Supabase] Exception saat reset tabel:', dbErr.message);
+    }
+  }
+
   io.emit('data_reset', { success: true });
   res.json({ success: true, message: 'Seluruh tanda tangan telah direset.' });
 });
 
 // 9. API - Seed Realistic Sample Data (for Demo & Practice)
-app.post('/api/seed', (req, res) => {
+app.post('/api/seed', async (req, res) => {
   function makeSvgSig(pathD, strokeColor = '#002b5b') {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80"><path d="${pathD}" fill="none" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
@@ -459,6 +609,25 @@ app.post('/api/seed', (req, res) => {
 
   saveSignatures(signaturesData);
 
+  if (supabase) {
+    try {
+      await supabase.from('signatures').delete().neq('id', '___dummy_never_match___');
+      const allRows = [sampleKepala, sampleKabagTU, ...samplePegawai].map(item => ({
+        id: item.id,
+        name: item.name,
+        nip: item.nip,
+        jabatan: item.jabatan,
+        role_type: item.roleType,
+        signature_data_url: item.signatureDataUrl,
+        created_at: item.createdAt,
+        timestamp_formatted: item.timestampFormatted
+      }));
+      await supabase.from('signatures').insert(allRows);
+    } catch (dbErr) {
+      console.error('[Supabase] Exception saat seeding Supabase:', dbErr.message);
+    }
+  }
+
   const payload = {
     state: {
       kepala: signaturesData.kepala,
@@ -484,8 +653,12 @@ app.post('/api/seed', (req, res) => {
 });
 
 // Socket.IO events
-io.on('connection', (socket) => {
-  signaturesData = loadSignatures();
+io.on('connection', async (socket) => {
+  if (supabase) {
+    await syncSignaturesFromSupabase();
+  } else {
+    signaturesData = loadSignatures();
+  }
   // Send current state immediately on connect
   socket.emit('initial_data', {
     kepala: signaturesData.kepala,
