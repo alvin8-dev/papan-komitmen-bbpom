@@ -241,35 +241,41 @@
 
   <!-- Superuser Login Modal -->
   <div class="modal-overlay" id="adminLoginModal">
-    <div class="modal-card" style="max-width: 420px;">
-      <div class="modal-header">
-        <div class="modal-title">
+    <div class="modal-card" style="max-width: 440px; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 43, 91, 0.35);">
+      <div class="modal-header" style="background: linear-gradient(135deg, #002b5b 0%, #001f42 100%); padding: 18px 22px;">
+        <div class="modal-title" style="font-size: 1.15rem; color: #facc15; font-weight: 700; display: flex; align-items: center; gap: 10px;">
           <span>🔐 Login Superuser</span>
         </div>
         <button type="button" class="modal-close" id="btnCloseLoginModal">&times;</button>
       </div>
-      <div class="modal-body">
-        <p style="color: #475569; font-size: 0.88rem; margin-bottom: 16px;">
-          Masukkan kredensial pengelola untuk mengelola pegawai, tanda tangan, dan urutan piagam.
+      <div class="modal-body" style="padding: 24px;">
+        <p style="color: #64748b; font-size: 0.88rem; line-height: 1.5; margin-bottom: 20px;">
+          Masukkan kredensial pengelola untuk mengelola pegawai, urutan tanda tangan, dan pengaturan piagam.
         </p>
 
         <form id="formAdminLogin" autocomplete="off">
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #002b5b; margin-bottom: 4px;">Username</label>
-            <input type="text" id="inputAdminUser" class="form-input" placeholder="Masukkan Username" required autofocus>
+          <div class="admin-field-group">
+            <label class="admin-field-label">
+              <span>👤 Username</span>
+              <span class="badge-required">*</span>
+            </label>
+            <input type="text" id="inputAdminUser" class="form-input" placeholder="Masukkan Username Superuser" required autofocus>
           </div>
 
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #002b5b; margin-bottom: 4px;">Password</label>
+          <div class="admin-field-group" style="margin-bottom: 20px;">
+            <label class="admin-field-label">
+              <span>🔑 Password</span>
+              <span class="badge-required">*</span>
+            </label>
             <input type="password" id="inputAdminPass" class="form-input" placeholder="Masukkan Password" required>
           </div>
 
-          <div id="loginErrorAlert" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 14px;">
+          <div id="loginErrorAlert" style="display: none; background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 0.84rem; font-weight: 500; margin-bottom: 16px;">
             Username atau password salah!
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;">
-            <span>Masuk ke Panel Superuser</span>
+          <button type="submit" class="btn-admin-submit" style="width: 100%;">
+            <span>🔓 Masuk ke Panel Superuser</span>
           </button>
         </form>
       </div>
@@ -309,42 +315,59 @@
         <!-- TAB 1: KELOLA DATA PEGAWAI -->
         <div class="admin-tab-pane active" id="tabPegawai">
           <div class="admin-form-box">
-            <div class="admin-form-box-title">➕ Tambah Pegawai Baru ke Database (Supabase)</div>
+            <div class="admin-form-box-title">
+              <span>➕ Tambah Pegawai Baru ke Database (Supabase)</span>
+            </div>
             <form id="formAddPegawai" autocomplete="off">
               <div class="admin-grid-2">
-                <div>
-                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Nama Lengkap Beserta Gelar <span style="color: #ef4444;">*</span></label>
+                <div class="admin-field-group">
+                  <label class="admin-field-label">
+                    <span>Nama Lengkap Beserta Gelar</span>
+                    <span class="badge-required">*</span>
+                  </label>
                   <input type="text" id="addPegawaiNama" class="form-input" placeholder="Contoh: Dr. Budi Santoso, M.Si." required>
                 </div>
-                <div>
-                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Nomor Induk Pegawai (NIP)</label>
-                  <input type="text" id="addPegawaiNip" class="form-input" placeholder="Contoh: 19850101 201001 1 001 atau kosongkan">
+                <div class="admin-field-group">
+                  <label class="admin-field-label">
+                    <span>Nomor Induk Pegawai (NIP)</span>
+                    <span class="badge-optional">Boleh Kosong</span>
+                  </label>
+                  <input type="text" id="addPegawaiNip" class="form-input" placeholder="Contoh: 19850101 201001 1 001 atau -">
                 </div>
               </div>
 
               <div class="admin-grid-2">
-                <div>
-                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Instansi</label>
+                <div class="admin-field-group">
+                  <label class="admin-field-label">
+                    <span>Instansi</span>
+                    <span class="badge-optional">Boleh Kosong</span>
+                  </label>
                   <input type="text" id="addPegawaiInstansi" class="form-input" placeholder="Balai Besar POM di Pangkal Pinang" value="Balai Besar POM di Pangkal Pinang">
                 </div>
-                <div>
-                  <label style="font-size: 0.78rem; font-weight: 600; color: #334155;">Jabatan</label>
+                <div class="admin-field-group">
+                  <label class="admin-field-label">
+                    <span>Jabatan</span>
+                    <span class="badge-optional">Boleh Kosong</span>
+                  </label>
                   <input type="text" id="addPegawaiJabatan" class="form-input" placeholder="Contoh: Pengawas Farmasi dan Makanan Ahli Pertama">
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-primary btn-sm" id="btnSubmitAddPegawai">
+              <button type="submit" class="btn-admin-submit" id="btnSubmitAddPegawai">
                 <span>💾 Simpan Pegawai Baru ke Supabase</span>
               </button>
             </form>
           </div>
 
           <!-- Pegawai List Controls -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div style="font-weight: 700; color: #002b5b; font-size: 0.92rem;">
-              Daftar Pegawai Terdaftar (<span id="countPegawaiTotal">0</span> Orang)
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; flex-wrap: wrap;">
+            <div style="font-weight: 700; color: #002b5b; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+              <span>Daftar Pegawai Terdaftar</span>
+              <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;" id="countPegawaiTotal">0</span>
             </div>
-            <input type="text" id="searchPegawaiAdmin" class="form-input" placeholder="🔍 Cari nama/jabatan..." style="width: 240px; padding: 6px 10px; font-size: 0.82rem;">
+            <div style="position: relative; width: 280px; max-width: 100%;">
+              <input type="text" id="searchPegawaiAdmin" class="form-input" placeholder="🔍 Cari nama/NIP/jabatan..." style="padding: 9px 12px; font-size: 0.84rem;">
+            </div>
           </div>
 
           <div class="admin-table-container">
