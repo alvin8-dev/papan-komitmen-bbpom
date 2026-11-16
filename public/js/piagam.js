@@ -93,9 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const DEFAULT_KEPALA_NIP = '19791212 200604 1 005';
   const DEFAULT_KABAG_NAME = 'Mardianto, S.Farm., Apt.';
   const DEFAULT_KABAG_NIP = '19830326 200812 1 001';
+  const leadershipGrid = document.getElementById('leadershipGrid');
 
   // 2. Render Leader Cards (Kepala & Kabag TU)
   function renderLeader(element, data, defaultTitle, expectedName = '', expectedNip = '') {
+    if (!element) return;
     if (data && data.signatureDataUrl) {
       element.classList.add('signed');
       element.innerHTML = `
@@ -104,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="${data.signatureDataUrl}" class="leader-sig-img" alt="Tanda Tangan ${escapeHtml(data.name)}">
         </div>
         <div class="leader-name">${escapeHtml(data.name)}</div>
+        <div class="leader-name-divider"></div>
         <div class="leader-nip">${data.nip && data.nip !== '-' ? 'NIP. ' + escapeHtml(data.nip) : '-'}</div>
       `;
     } else {
@@ -120,9 +123,63 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         <div class="leader-name">${expectedName ? escapeHtml(expectedName) : '( ................................................................ )'}</div>
+        <div class="leader-name-divider"></div>
         <div class="leader-nip">${expectedNip ? 'NIP. ' + escapeHtml(expectedNip) : 'NIP. ........................................................'}</div>
       `;
     }
+  }
+
+  // Render Pimpinan & Para Saksi dynamically in 1 baris yang sama
+  function renderLeadershipAndWitnesses(kepala, kabag_tu, saksiList = []) {
+    const grid = leadershipGrid || document.getElementById('leadershipGrid');
+    if (!grid) return;
+
+    const list = Array.isArray(saksiList) ? saksiList : [];
+    const totalCards = 2 + list.length;
+
+    // Apply dynamic density classes so cards fit seamlessly in 1 single row
+    grid.classList.remove('leaders-dense-4', 'leaders-dense-7', 'leaders-dense-12');
+    if (totalCards >= 8) {
+      grid.classList.add('leaders-dense-12');
+    } else if (totalCards >= 5) {
+      grid.classList.add('leaders-dense-7');
+    } else if (totalCards >= 3) {
+      grid.classList.add('leaders-dense-4');
+    }
+
+    // 1. Render Kepala Balai (posisi paling kiri)
+    renderLeader(kepalaCard, kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
+
+    // 2. Render Kabag TU (posisi sebelah kanan Kepala Balai)
+    renderLeader(kabagTuCard, kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
+
+    // 3. Remove existing dynamic saksi cards from the row
+    grid.querySelectorAll('.dynamic-saksi-card').forEach(el => el.remove());
+
+    // 4. Render each Saksi to the right of Kabag TU in the same single row
+    list.forEach((s, idx) => {
+      const card = document.createElement('div');
+      card.className = 'leader-card leader-card-saksi dynamic-saksi-card signed';
+
+      const roleTitle = (s.jabatan && s.jabatan.trim() && s.jabatan.toLowerCase() !== 'saksi' && s.jabatan !== '-')
+        ? `SAKSI (${s.jabatan.toUpperCase()})`
+        : `SAKSI ${list.length > 1 ? (idx + 1) : ''}`;
+
+      const nipContent = (s.nip && s.nip !== '-')
+        ? `NIP. ${escapeHtml(s.nip)}`
+        : (s.jabatan && s.jabatan.toLowerCase() !== 'saksi' && s.jabatan !== '-' ? escapeHtml(s.jabatan) : '-');
+
+      card.innerHTML = `
+        <div class="leader-badge-role">${escapeHtml(roleTitle)}</div>
+        <div class="leader-sig-box">
+          <img src="${s.signatureDataUrl}" class="leader-sig-img" alt="TTD ${escapeHtml(s.name)}" loading="lazy">
+        </div>
+        <div class="leader-name">${escapeHtml(s.name)}</div>
+        <div class="leader-name-divider"></div>
+        <div class="leader-nip">${nipContent}</div>
+      `;
+      grid.appendChild(card);
+    });
   }
 
   // 3. Render Employee Grid
@@ -203,39 +260,35 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('initial_data', (payload) => {
-    renderLeader(kepalaCard, payload.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
-    renderLeader(kabagTuCard, payload.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
+    renderLeadershipAndWitnesses(payload.kepala, payload.kabag_tu, payload.saksi || []);
     renderEmployees(payload.pegawai);
     updateCounters(payload.meta);
   });
 
   socket.on('new_signature', (payload) => {
     const { record, state, meta } = payload;
-    const isLeader = record.roleType === 'KEPALA' || record.roleType === 'KABAG_TU';
+    const isLeader = record.roleType === 'KEPALA' || record.roleType === 'KABAG_TU' || record.roleType === 'SAKSI';
 
     // Show toast
-    showToast(record.name, record.jabatan, isLeader);
+    showToast(record.name, record.jabatan || record.roleType, isLeader);
 
     // Update views
-    renderLeader(kepalaCard, state.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
-    renderLeader(kabagTuCard, state.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
+    renderLeadershipAndWitnesses(state.kepala, state.kabag_tu, state.saksi || []);
     renderEmployees(state.pegawai, record.id);
     updateCounters(meta);
   });
 
   socket.on('signature_deleted', (payload) => {
-    renderLeader(kepalaCard, payload.state.kepala, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
-    renderLeader(kabagTuCard, payload.state.kabag_tu, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
+    renderLeadershipAndWitnesses(payload.state.kepala, payload.state.kabag_tu, payload.state.saksi || []);
     renderEmployees(payload.state.pegawai);
     updateCounters({
-      total: (payload.state.kepala ? 1 : 0) + (payload.state.kabag_tu ? 1 : 0) + payload.state.pegawai.length,
+      total: (payload.state.kepala ? 1 : 0) + (payload.state.kabag_tu ? 1 : 0) + (payload.state.saksi ? payload.state.saksi.length : 0) + payload.state.pegawai.length,
       pegawaiCount: payload.state.pegawai.length
     });
   });
 
   socket.on('data_reset', () => {
-    renderLeader(kepalaCard, null, 'KEPALA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KEPALA_NAME, DEFAULT_KEPALA_NIP);
-    renderLeader(kabagTuCard, null, 'KABAG TATA USAHA BALAI BESAR POM DI PANGKAL PINANG', DEFAULT_KABAG_NAME, DEFAULT_KABAG_NIP);
+    renderLeadershipAndWitnesses(null, null, []);
     renderEmployees([]);
     updateCounters({ total: 0, pegawaiCount: 0 });
   });
@@ -851,12 +904,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = json.data || {};
 
       adminSignaturesList = Array.isArray(data.pegawai) ? [...data.pegawai] : [];
+      const saksiList = Array.isArray(data.saksi) ? data.saksi : [];
       if (countSignaturesAdmin) {
-        const total = (data.kepala ? 1 : 0) + (data.kabag_tu ? 1 : 0) + adminSignaturesList.length;
-        countSignaturesAdmin.textContent = `${total} Peserta (${adminSignaturesList.length} Pegawai)`;
+        const total = (data.kepala ? 1 : 0) + (data.kabag_tu ? 1 : 0) + saksiList.length + adminSignaturesList.length;
+        countSignaturesAdmin.textContent = `${total} Peserta (${adminSignaturesList.length} Pegawai, ${saksiList.length} Saksi)`;
       }
 
-      renderReorderList(adminSignaturesList, data.kepala, data.kabag_tu);
+      renderReorderList(adminSignaturesList, data.kepala, data.kabag_tu, saksiList);
     } catch (err) {
       console.error('Error fetching admin signatures:', err);
       if (reorderListBox) {
@@ -865,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function renderReorderList(pegawaiList, kepala, kabag_tu) {
+  function renderReorderList(pegawaiList, kepala, kabag_tu, saksiList = []) {
     if (!reorderListBox) return;
 
     let html = '';
@@ -905,6 +959,27 @@ document.addEventListener('DOMContentLoaded', () => {
           </button>
         </div>
       `;
+    }
+
+    // Show Witnesses (Saksi) in Leadership & Witnesses Row
+    if (Array.isArray(saksiList) && saksiList.length > 0) {
+      saksiList.forEach((s, sIdx) => {
+        html += `
+          <div class="reorder-item-row" style="background: #f0fdf4; border-color: #bbf7d0;">
+            <div class="reorder-item-left">
+              <span class="reorder-badge-num" style="background: #dcfce7; color: #166534;">🤝 ${sIdx + 1}</span>
+              <div>
+                <div class="reorder-name-text">${s.name}</div>
+                <div class="reorder-sub-text">Saksi: Baris Pimpinan & Para Saksi ${s.jabatan ? `(${s.jabatan})` : ''}</div>
+              </div>
+              ${s.signatureDataUrl ? `<img src="${s.signatureDataUrl}" class="reorder-sig-preview" alt="TTD">` : ''}
+            </div>
+            <button type="button" class="btn-admin-del btn-del-sig" data-id="${s.id}" data-name="${s.name}">
+              Hapus
+            </button>
+          </div>
+        `;
+      });
     }
 
     if (pegawaiList.length === 0) {

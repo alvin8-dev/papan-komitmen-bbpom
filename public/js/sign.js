@@ -483,7 +483,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
 
     } else if (pegawai.roleType === 'SAKSI' || (pegawai.keterangan && pegawai.keterangan.toLowerCase().includes('saksi'))) {
-      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
+      if (dispRoleBadge) {
+        dispRoleBadge.textContent = 'SAKSI';
+        dispRoleBadge.className = 'detail-role-badge role-saksi';
+      }
+      if (dispNama) dispNama.textContent = pegawai.nama;
+      if (dispNip) dispNip.textContent = (pegawai.nip && pegawai.nip !== '-') ? `NIP. ${pegawai.nip}` : '-';
+      if (dispJabatan) dispJabatan.textContent = pegawai.jabatan || 'Saksi';
+
+      if (dispLeaderBox) {
+        dispLeaderBox.style.display = 'flex';
+        if (dispLeaderText) dispLeaderText.textContent = 'Posisi tanda tangan: Baris Pimpinan & Para Saksi (Sebelah Kanan Kabag TU)';
+      }
+
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
+
       finalNama.value = pegawai.nama;
       finalNip.value = (pegawai.nip && pegawai.nip !== '-') ? pegawai.nip : '-';
       finalJabatan.value = pegawai.jabatan || 'Saksi';
@@ -578,6 +592,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSubmit.innerHTML = `<span class="spinner"></span> <span>Menyimpan Komitmen...</span>`;
 
     try {
+      const submitRoleType = (selectedPegawaiData && (selectedPegawaiData.roleType === 'SAKSI' || (selectedPegawaiData.keterangan && selectedPegawaiData.keterangan.toLowerCase().includes('saksi'))))
+        ? 'SAKSI'
+        : (selectedPegawaiData ? selectedPegawaiData.roleType : undefined);
+
       const response = await fetch('/api/signatures', {
         method: 'POST',
         headers: {
@@ -587,6 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
           name: submitName,
           nip: submitNip,
           jabatan: submitJabatan,
+          roleType: submitRoleType,
           signatureDataUrl
         })
       });

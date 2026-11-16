@@ -56,6 +56,7 @@ function getInitialData() {
   return {
     kepala: null,
     kabag_tu: null,
+    saksi: [],
     pegawai: [],
     history: []
   };
@@ -69,6 +70,7 @@ function loadSignatures() {
       return {
         kepala: parsed.kepala || null,
         kabag_tu: parsed.kabag_tu || null,
+        saksi: Array.isArray(parsed.saksi) ? parsed.saksi : [],
         pegawai: Array.isArray(parsed.pegawai) ? parsed.pegawai : [],
         history: Array.isArray(parsed.history) ? parsed.history : []
       };
@@ -210,6 +212,7 @@ async function syncSignaturesFromSupabase() {
       const localRows = [];
       if (signaturesData.kepala) localRows.push(signaturesData.kepala);
       if (signaturesData.kabag_tu) localRows.push(signaturesData.kabag_tu);
+      if (Array.isArray(signaturesData.saksi)) localRows.push(...signaturesData.saksi);
       if (Array.isArray(signaturesData.pegawai)) localRows.push(...signaturesData.pegawai);
 
       if (localRows.length > 0) {
@@ -237,6 +240,7 @@ async function syncSignaturesFromSupabase() {
 
     let kepala = null;
     let kabag_tu = null;
+    const saksi = [];
     const pegawai = [];
     const history = [];
 
@@ -255,10 +259,23 @@ async function syncSignaturesFromSupabase() {
         };
         history.push(item);
 
+        const pegRecord = pegawaiData.find(p => (p.nama || '').trim().toLowerCase() === item.name.trim().toLowerCase());
+        const isSaksi = item.roleType === 'SAKSI' || (pegRecord && (pegRecord.roleType === 'SAKSI' || (pegRecord.keterangan && pegRecord.keterangan.toLowerCase().includes('saksi'))));
+
         if (item.roleType === 'KEPALA') {
           kepala = item;
         } else if (item.roleType === 'KABAG_TU') {
           kabag_tu = item;
+        } else if (isSaksi) {
+          item.roleType = 'SAKSI';
+          const existingIdx = saksi.findIndex(
+            p => p.name.trim().toLowerCase() === item.name.trim().toLowerCase()
+          );
+          if (existingIdx !== -1) {
+            saksi[existingIdx] = item;
+          } else {
+            saksi.push(item);
+          }
         } else {
           const existingIdx = pegawai.findIndex(
             p => p.name.trim().toLowerCase() === item.name.trim().toLowerCase()
@@ -271,6 +288,11 @@ async function syncSignaturesFromSupabase() {
         }
       }
 
+      saksi.sort((a, b) => {
+        if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+        return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+      });
+
       // Respect sortOrder if defined
       pegawai.sort((a, b) => {
         if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
@@ -280,6 +302,7 @@ async function syncSignaturesFromSupabase() {
       signaturesData = {
         kepala,
         kabag_tu,
+        saksi,
         pegawai,
         history
       };
@@ -348,6 +371,11 @@ function determineRoleType(jabatan = '', name = '') {
 
   if (isKabagTU) {
     return 'KABAG_TU';
+  }
+
+  // Saksi check
+  if (cleanJabatan.includes('saksi') || cleanName.includes('saksi')) {
+    return 'SAKSI';
   }
 
   return 'PEGAWAI';
@@ -631,7 +659,34 @@ app.put('/api/admin/pegawai/:id', async (req, res) => {
       }
     }
 
-    // C. Cek Daftar Pegawai / Saksi yang sudah menandatangani
+    // C. Cek Daftar Saksi yang sudah menandatangani
+    if (Array.isArray(signaturesData.saksi)) {
+      for (const sig of signaturesData.saksi) {
+        if (
+          (sig.id && (sig.id === oldPegawai.id || sig.id === pegawaiData[idx].id)) ||
+          (sig.name && sig.name.trim().toLowerCase() === oldNamaLower)
+        ) {
+          sig.name = trimmedNama;
+          sig.nip = trimmedNip;
+          sig.jabatan = trimmedJabatan;
+          signatureUpdated = true;
+
+          if (supabase) {
+            try {
+              await supabase.from('signatures').update({
+                name: trimmedNama,
+                nip: trimmedNip,
+                jabatan: trimmedJabatan
+              }).eq('id', sig.id);
+            } catch (e) {
+              console.warn('[Supabase] Warning update signatures saksi item:', e.message);
+            }
+          }
+        }
+      }
+    }
+
+    // D. Cek Daftar Pegawai yang sudah menandatangani
     if (Array.isArray(signaturesData.pegawai)) {
       for (const sig of signaturesData.pegawai) {
         if (
@@ -658,17 +713,57 @@ app.put('/api/admin/pegawai/:id', async (req, res) => {
       }
     }
 
+    // E. Handle peralihan role (misal dari Pegawai ke Saksi atau sebaliknya)
+    if (roleType === 'SAKSI' && Array.isArray(signaturesData.pegawai)) {
+      const pIdx = signaturesData.pegawai.findIndex(
+        p => (p.id && (p.id === oldPegawai.id || p.id === pegawaiData[idx].id)) ||
+             (p.name && p.name.trim().toLowerCase() === oldNamaLower)
+      );
+      if (pIdx !== -1) {
+        const moved = signaturesData.pegawai.splice(pIdx, 1)[0];
+        moved.roleType = 'SAKSI';
+        moved.name = trimmedNama;
+        moved.nip = trimmedNip;
+        moved.jabatan = trimmedJabatan;
+        if (!Array.isArray(signaturesData.saksi)) signaturesData.saksi = [];
+        signaturesData.saksi.push(moved);
+        signatureUpdated = true;
+        if (supabase) {
+          supabase.from('signatures').update({ role_type: 'SAKSI', name: trimmedNama, nip: trimmedNip, jabatan: trimmedJabatan }).eq('id', moved.id).then();
+        }
+      }
+    } else if (roleType === 'PEGAWAI' && Array.isArray(signaturesData.saksi)) {
+      const sIdx = signaturesData.saksi.findIndex(
+        s => (s.id && (s.id === oldPegawai.id || s.id === pegawaiData[idx].id)) ||
+             (s.name && s.name.trim().toLowerCase() === oldNamaLower)
+      );
+      if (sIdx !== -1) {
+        const moved = signaturesData.saksi.splice(sIdx, 1)[0];
+        moved.roleType = 'PEGAWAI';
+        moved.name = trimmedNama;
+        moved.nip = trimmedNip;
+        moved.jabatan = trimmedJabatan;
+        signaturesData.pegawai.push(moved);
+        signatureUpdated = true;
+        if (supabase) {
+          supabase.from('signatures').update({ role_type: 'PEGAWAI', name: trimmedNama, nip: trimmedNip, jabatan: trimmedJabatan }).eq('id', moved.id).then();
+        }
+      }
+    }
+
     // Jika tanda tangan pada piagam ter-update, simpan & broadcast pembaruan ke seluruh layar secara instan
     if (signatureUpdated) {
       saveSignatures(signaturesData);
       io.emit('initial_data', {
         kepala: signaturesData.kepala,
         kabag_tu: signaturesData.kabag_tu,
+        saksi: signaturesData.saksi || [],
         pegawai: signaturesData.pegawai,
         meta: {
-          total: (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + signaturesData.pegawai.length,
+          total: (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + (signaturesData.saksi ? signaturesData.saksi.length : 0) + signaturesData.pegawai.length,
           kepalaSigned: !!signaturesData.kepala,
           kabagTuSigned: !!signaturesData.kabag_tu,
+          saksiCount: (signaturesData.saksi ? signaturesData.saksi.length : 0),
           pegawaiCount: signaturesData.pegawai.length
         }
       });
@@ -891,6 +986,7 @@ app.get('/api/signatures', async (req, res) => {
   }
   const totalCount = (signaturesData.kepala ? 1 : 0) +
                      (signaturesData.kabag_tu ? 1 : 0) +
+                     (signaturesData.saksi ? signaturesData.saksi.length : 0) +
                      signaturesData.pegawai.length;
 
   res.json({
@@ -898,12 +994,14 @@ app.get('/api/signatures', async (req, res) => {
     data: {
       kepala: signaturesData.kepala,
       kabag_tu: signaturesData.kabag_tu,
+      saksi: signaturesData.saksi || [],
       pegawai: signaturesData.pegawai
     },
     meta: {
       total: totalCount,
       kepalaSigned: !!signaturesData.kepala,
       kabagTuSigned: !!signaturesData.kabag_tu,
+      saksiCount: (signaturesData.saksi ? signaturesData.saksi.length : 0),
       pegawaiCount: signaturesData.pegawai.length,
       storageMode: supabase ? 'supabase' : 'local_json',
       updatedAt: new Date().toISOString()
@@ -926,7 +1024,18 @@ app.post('/api/signatures', async (req, res) => {
     const trimmedName = name.trim();
     let trimmedNip = (nip || '').trim();
     let trimmedJabatan = (jabatan || '').trim();
-    const roleType = determineRoleType(trimmedJabatan, trimmedName);
+
+    // Check roleType from payload or lookup from pegawaiData / determineRoleType
+    let roleType = req.body.roleType;
+    if (!roleType) {
+      const pegRecord = pegawaiData.find(p => (p.nama || '').trim().toLowerCase() === trimmedName.toLowerCase());
+      if (pegRecord) {
+        roleType = pegRecord.roleType || (pegRecord.keterangan && pegRecord.keterangan.toLowerCase().includes('saksi') ? 'SAKSI' : null);
+      }
+      if (!roleType) {
+        roleType = determineRoleType(trimmedJabatan, trimmedName);
+      }
+    }
 
     // Auto-fill official NIP & Jabatan for Leadership if omitted
     if (roleType === 'KEPALA') {
@@ -935,6 +1044,9 @@ app.post('/api/signatures', async (req, res) => {
     } else if (roleType === 'KABAG_TU') {
       trimmedNip = trimmedNip && trimmedNip !== '-' ? trimmedNip : '19830326 200812 1 001';
       trimmedJabatan = trimmedJabatan && trimmedJabatan !== '-' ? trimmedJabatan : 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
+    } else if (roleType === 'SAKSI') {
+      trimmedNip = trimmedNip || '-';
+      trimmedJabatan = trimmedJabatan || 'Saksi';
     } else {
       trimmedNip = trimmedNip || '-';
       trimmedJabatan = trimmedJabatan || '';
@@ -956,6 +1068,16 @@ app.post('/api/signatures', async (req, res) => {
       signaturesData.kepala = newRecord;
     } else if (roleType === 'KABAG_TU') {
       signaturesData.kabag_tu = newRecord;
+    } else if (roleType === 'SAKSI') {
+      if (!Array.isArray(signaturesData.saksi)) signaturesData.saksi = [];
+      const existingIdx = signaturesData.saksi.findIndex(
+        p => p.name.trim().toLowerCase() === trimmedName.toLowerCase()
+      );
+      if (existingIdx !== -1) {
+        signaturesData.saksi[existingIdx] = newRecord;
+      } else {
+        signaturesData.saksi.push(newRecord);
+      }
     } else {
       // If employee with same name already signed, update their signature; otherwise push new
       const existingIdx = signaturesData.pegawai.findIndex(
@@ -1009,6 +1131,7 @@ app.post('/api/signatures', async (req, res) => {
     // Calculate metadata
     const totalCount = (signaturesData.kepala ? 1 : 0) +
                        (signaturesData.kabag_tu ? 1 : 0) +
+                       (signaturesData.saksi ? signaturesData.saksi.length : 0) +
                        signaturesData.pegawai.length;
 
     const payload = {
@@ -1016,12 +1139,14 @@ app.post('/api/signatures', async (req, res) => {
       state: {
         kepala: signaturesData.kepala,
         kabag_tu: signaturesData.kabag_tu,
+        saksi: signaturesData.saksi || [],
         pegawai: signaturesData.pegawai
       },
       meta: {
         total: totalCount,
         kepalaSigned: !!signaturesData.kepala,
         kabagTuSigned: !!signaturesData.kabag_tu,
+        saksiCount: (signaturesData.saksi ? signaturesData.saksi.length : 0),
         pegawaiCount: signaturesData.pegawai.length
       }
     };
@@ -1051,6 +1176,12 @@ app.delete('/api/signatures/:id', async (req, res) => {
   } else if (signaturesData.kabag_tu && signaturesData.kabag_tu.id === id) {
     signaturesData.kabag_tu = null;
     deleted = true;
+  } else if (Array.isArray(signaturesData.saksi) && signaturesData.saksi.some(s => s.id === id)) {
+    const sIdx = signaturesData.saksi.findIndex(s => s.id === id);
+    if (sIdx !== -1) {
+      signaturesData.saksi.splice(sIdx, 1);
+      deleted = true;
+    }
   } else {
     const idx = signaturesData.pegawai.findIndex(p => p.id === id);
     if (idx !== -1) {
@@ -1076,6 +1207,7 @@ app.delete('/api/signatures/:id', async (req, res) => {
       state: {
         kepala: signaturesData.kepala,
         kabag_tu: signaturesData.kabag_tu,
+        saksi: signaturesData.saksi || [],
         pegawai: signaturesData.pegawai
       }
     });
@@ -1238,11 +1370,13 @@ io.on('connection', async (socket) => {
   socket.emit('initial_data', {
     kepala: signaturesData.kepala,
     kabag_tu: signaturesData.kabag_tu,
+    saksi: signaturesData.saksi || [],
     pegawai: signaturesData.pegawai,
     meta: {
-      total: (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + signaturesData.pegawai.length,
+      total: (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + (signaturesData.saksi ? signaturesData.saksi.length : 0) + signaturesData.pegawai.length,
       kepalaSigned: !!signaturesData.kepala,
       kabagTuSigned: !!signaturesData.kabag_tu,
+      saksiCount: (signaturesData.saksi ? signaturesData.saksi.length : 0),
       pegawaiCount: signaturesData.pegawai.length
     }
   });

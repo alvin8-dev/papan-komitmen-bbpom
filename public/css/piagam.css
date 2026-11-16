@@ -316,12 +316,18 @@
 }
 
 .leadership-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  transition: gap 0.3s ease;
 }
 
 .leader-card {
+  flex: 1 1 0;
+  min-width: 0;
   background: #ffffff;
   border: 1.5px solid #d5c392;
   border-top: 4px solid var(--bpom-gold);
@@ -340,6 +346,15 @@
   border-color: #c59b27;
   background: linear-gradient(180deg, #ffffff 0%, #fdfcf7 100%);
   box-shadow: 0 6px 18px rgba(197, 155, 39, 0.12);
+}
+
+.leader-card-saksi {
+  border-top-color: #0d4b8a;
+}
+
+.leader-card-saksi.signed {
+  border-color: #0d4b8a;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 100%);
 }
 
 .leader-badge-role {
@@ -395,21 +410,35 @@
 }
 
 .leader-name {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif-header);
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--bpom-navy-dark);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  text-decoration: none;
   margin-top: 4px;
+  line-height: 1.25;
+  letter-spacing: 0.3px;
+  word-break: break-word;
+}
+
+/* Garis tegas resmi di antara Nama dan NIP */
+.leader-name-divider {
+  width: 80%;
+  max-width: 220px;
+  height: 1.5px;
+  background: var(--bpom-navy-dark);
+  margin: 5px auto 4px;
+  border-radius: 1px;
 }
 
 .leader-nip {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 600;
-  color: #475569;
-  margin-top: 2px;
+  color: #334155;
+  margin-top: 1px;
+  letter-spacing: 0.3px;
+  word-break: break-word;
 }
 
 .leader-signed-time {
@@ -417,6 +446,90 @@
   color: #059669;
   font-weight: 600;
   margin-top: 4px;
+}
+
+/* Dynamic Density Scaling for Single Row Layout (Pimpinan & Saksi) */
+.leadership-grid.leaders-dense-4 {
+  gap: 14px;
+}
+.leadership-grid.leaders-dense-4 .leader-card {
+  padding: 12px 14px;
+}
+.leadership-grid.leaders-dense-4 .leader-badge-role {
+  font-size: 0.74rem;
+  letter-spacing: 1px;
+}
+.leadership-grid.leaders-dense-4 .leader-sig-box {
+  height: 90px;
+}
+.leadership-grid.leaders-dense-4 .leader-sig-img {
+  max-height: 80px;
+}
+.leadership-grid.leaders-dense-4 .leader-name {
+  font-size: 0.92rem;
+}
+.leadership-grid.leaders-dense-4 .leader-nip {
+  font-size: 0.76rem;
+}
+
+.leadership-grid.leaders-dense-7 {
+  gap: 10px;
+}
+.leadership-grid.leaders-dense-7 .leader-card {
+  padding: 8px 10px;
+}
+.leadership-grid.leaders-dense-7 .leader-sig-box {
+  height: 72px;
+}
+.leadership-grid.leaders-dense-7 .leader-sig-img {
+  max-height: 65px;
+}
+.leadership-grid.leaders-dense-7 .leader-badge-role {
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  min-height: 2.2em;
+}
+.leadership-grid.leaders-dense-7 .leader-name {
+  font-size: 0.82rem;
+}
+.leadership-grid.leaders-dense-7 .leader-name-divider {
+  margin: 4px auto 3px;
+  width: 85%;
+}
+.leadership-grid.leaders-dense-7 .leader-nip {
+  font-size: 0.70rem;
+}
+
+.leadership-grid.leaders-dense-12 {
+  gap: 8px;
+}
+.leadership-grid.leaders-dense-12 .leader-card {
+  padding: 6px 8px;
+  border-top-width: 3px;
+}
+.leadership-grid.leaders-dense-12 .leader-sig-box {
+  height: 55px;
+}
+.leadership-grid.leaders-dense-12 .leader-sig-img {
+  max-height: 50px;
+}
+.leadership-grid.leaders-dense-12 .leader-badge-role {
+  font-size: 0.60rem;
+  letter-spacing: 0.3px;
+  min-height: 2.5em;
+  line-height: 1.2;
+}
+.leadership-grid.leaders-dense-12 .leader-name {
+  font-size: 0.74rem;
+  line-height: 1.15;
+}
+.leadership-grid.leaders-dense-12 .leader-name-divider {
+  width: 90%;
+  height: 1px;
+  margin: 3px auto 2px;
+}
+.leadership-grid.leaders-dense-12 .leader-nip {
+  font-size: 0.63rem;
 }
 
 /* ==========================================================================
@@ -868,7 +981,10 @@
   }
 
   .leadership-grid {
-    gap: 18px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 12px !important;
   }
 
   .leader-card {
@@ -1149,7 +1265,10 @@
 }
 
 .charter-sheet.a3-export-mode .leadership-grid {
-  gap: 16px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  gap: 10px !important;
 }
 
 .charter-sheet.a3-export-mode .leader-card {
