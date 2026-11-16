@@ -246,21 +246,22 @@ async function syncSignaturesFromSupabase() {
 
     if (Array.isArray(data) && data.length > 0) {
       for (const row of data) {
+        const pegRecord = pegawaiData.find(p => (p.nama || '').trim().toLowerCase() === row.name.trim().toLowerCase());
+        const isSaksi = row.role_type === 'SAKSI' || (pegRecord && (pegRecord.roleType === 'SAKSI' || (pegRecord.keterangan && pegRecord.keterangan.toLowerCase().includes('saksi'))));
+
         const item = {
           id: row.id,
           name: row.name,
           nip: row.nip || '-',
           jabatan: row.jabatan || '',
-          roleType: row.role_type || 'PEGAWAI',
+          instansi: row.instansi || (pegRecord ? pegRecord.instansi : '') || '',
+          roleType: isSaksi ? 'SAKSI' : (row.role_type || 'PEGAWAI'),
           signatureDataUrl: row.signature_data_url,
           sortOrder: typeof row.sort_order === 'number' ? row.sort_order : 99999,
           createdAt: row.created_at,
           timestampFormatted: row.timestamp_formatted || ''
         };
         history.push(item);
-
-        const pegRecord = pegawaiData.find(p => (p.nama || '').trim().toLowerCase() === item.name.trim().toLowerCase());
-        const isSaksi = item.roleType === 'SAKSI' || (pegRecord && (pegRecord.roleType === 'SAKSI' || (pegRecord.keterangan && pegRecord.keterangan.toLowerCase().includes('saksi'))));
 
         if (item.roleType === 'KEPALA') {
           kepala = item;
@@ -669,6 +670,7 @@ app.put('/api/admin/pegawai/:id', async (req, res) => {
           sig.name = trimmedNama;
           sig.nip = trimmedNip;
           sig.jabatan = trimmedJabatan;
+          sig.instansi = trimmedInstansi;
           signatureUpdated = true;
 
           if (supabase) {
@@ -696,6 +698,7 @@ app.put('/api/admin/pegawai/:id', async (req, res) => {
           sig.name = trimmedNama;
           sig.nip = trimmedNip;
           sig.jabatan = trimmedJabatan;
+          sig.instansi = trimmedInstansi;
           signatureUpdated = true;
 
           if (supabase) {
@@ -1012,7 +1015,7 @@ app.get('/api/signatures', async (req, res) => {
 // 6. API - POST submit new signature
 app.post('/api/signatures', async (req, res) => {
   try {
-    const { name, nip, jabatan, signatureDataUrl } = req.body;
+    const { name, nip, jabatan, instansi, signatureDataUrl } = req.body;
 
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, message: 'Nama lengkap beserta gelar wajib diisi.' });
@@ -1024,17 +1027,21 @@ app.post('/api/signatures', async (req, res) => {
     const trimmedName = name.trim();
     let trimmedNip = (nip || '').trim();
     let trimmedJabatan = (jabatan || '').trim();
+    let trimmedInstansi = (instansi || '').trim();
 
     // Check roleType from payload or lookup from pegawaiData / determineRoleType
     let roleType = req.body.roleType;
-    if (!roleType) {
-      const pegRecord = pegawaiData.find(p => (p.nama || '').trim().toLowerCase() === trimmedName.toLowerCase());
-      if (pegRecord) {
+    const pegRecord = pegawaiData.find(p => (p.nama || '').trim().toLowerCase() === trimmedName.toLowerCase());
+    if (pegRecord) {
+      if (!roleType) {
         roleType = pegRecord.roleType || (pegRecord.keterangan && pegRecord.keterangan.toLowerCase().includes('saksi') ? 'SAKSI' : null);
       }
-      if (!roleType) {
-        roleType = determineRoleType(trimmedJabatan, trimmedName);
+      if (!trimmedInstansi && pegRecord.instansi) {
+        trimmedInstansi = pegRecord.instansi.trim();
       }
+    }
+    if (!roleType) {
+      roleType = determineRoleType(trimmedJabatan, trimmedName);
     }
 
     // Auto-fill official NIP & Jabatan for Leadership if omitted
@@ -1057,6 +1064,7 @@ app.post('/api/signatures', async (req, res) => {
       name: trimmedName,
       nip: trimmedNip,
       jabatan: trimmedJabatan,
+      instansi: trimmedInstansi,
       roleType,
       signatureDataUrl,
       createdAt: new Date().toISOString(),

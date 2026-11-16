@@ -129,10 +129,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  let latestSignaturesState = null;
+
   // Render Pimpinan & Para Saksi dynamically in 1 baris yang sama
   function renderLeadershipAndWitnesses(kepala, kabag_tu, saksiList = []) {
     const grid = leadershipGrid || document.getElementById('leadershipGrid');
     if (!grid) return;
+
+    latestSignaturesState = { kepala, kabag_tu, saksi: saksiList };
 
     const list = Array.isArray(saksiList) ? saksiList : [];
     const totalCards = 2 + list.length;
@@ -161,9 +165,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('div');
       card.className = 'leader-card leader-card-saksi dynamic-saksi-card signed';
 
-      const roleTitle = (s.jabatan && s.jabatan.trim() && s.jabatan.toLowerCase() !== 'saksi' && s.jabatan !== '-')
-        ? `SAKSI (${s.jabatan.toUpperCase()})`
-        : `SAKSI ${list.length > 1 ? (idx + 1) : ''}`;
+      // Cari nama instansi dari data tanda tangan atau dari nominatif pegawai
+      let instansiName = (s.instansi || '').trim();
+      if (!instansiName && Array.isArray(adminPegawaiData)) {
+        const found = adminPegawaiData.find(p => (p.nama || '').trim().toLowerCase() === (s.name || '').trim().toLowerCase());
+        if (found && found.instansi) {
+          instansiName = found.instansi.trim();
+        }
+      }
+
+      // Ganti label saksi dengan nama instansinya
+      let roleTitle = '';
+      if (instansiName) {
+        roleTitle = instansiName.toUpperCase();
+      } else if (s.jabatan && s.jabatan.trim() && s.jabatan.toLowerCase() !== 'saksi' && s.jabatan !== '-') {
+        roleTitle = s.jabatan.toUpperCase();
+      } else {
+        roleTitle = `SAKSI ${list.length > 1 ? (idx + 1) : ''}`;
+      }
 
       const nipContent = (s.nip && s.nip !== '-')
         ? `NIP. ${escapeHtml(s.nip)}`
@@ -1135,9 +1154,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (adminPanelModal && adminPanelModal.classList.contains('active')) {
           renderPegawaiList(adminPegawaiData);
         }
+        if (latestSignaturesState) {
+          renderLeadershipAndWitnesses(latestSignaturesState.kepala, latestSignaturesState.kabag_tu, latestSignaturesState.saksi);
+        }
       }
     });
   }
+
+  // Pre-fetch nominatif pegawai for instant instansi resolution on witness cards
+  fetch('/api/pegawai')
+    .then(r => r.json())
+    .then(res => {
+      if (res && Array.isArray(res.data)) {
+        adminPegawaiData = res.data;
+        if (latestSignaturesState) {
+          renderLeadershipAndWitnesses(latestSignaturesState.kepala, latestSignaturesState.kabag_tu, latestSignaturesState.saksi);
+        }
+      }
+    })
+    .catch(() => {});
 
   // Load QR info once in background
   loadQrInfo();

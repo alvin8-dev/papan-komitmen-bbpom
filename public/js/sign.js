@@ -605,6 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
           name: submitName,
           nip: submitNip,
           jabatan: submitJabatan,
+          instansi: selectedPegawaiData ? selectedPegawaiData.instansi : undefined,
           roleType: submitRoleType,
           signatureDataUrl
         })
