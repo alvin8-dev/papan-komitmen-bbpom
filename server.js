@@ -162,14 +162,26 @@ async function syncPegawaiFromSupabase() {
         nip: p.nip || '-',
         instansi: p.instansi || 'Balai Besar POM di Pangkal Pinang',
         jabatan: p.jabatan || '',
-        keterangan: p.keterangan || 'Pegawai Balai Besar POM di Pangkal Pinang',
+        keterangan: p.keterangan || (
+          p.roleType === 'KEPALA' ? 'Kepala Balai Besar POM di Pangkal Pinang' :
+          p.roleType === 'KABAG_TU' ? 'Kabag Tata Usaha Balai Besar POM di Pangkal Pinang' :
+          p.roleType === 'SAKSI' ? 'Saksi' : 'Pegawai Balai Besar POM di Pangkal Pinang'
+        ),
         role_type: p.roleType || determineRoleType(p.jabatan, p.nama)
       }));
-      const { error: migErr } = await supabase.from('pegawai').insert(payload);
+
+      let { error: migErr } = await supabase.from('pegawai').upsert(payload, { onConflict: 'id' });
       if (migErr) {
-        console.warn('[Supabase] Gagal migrasi data pegawai ke cloud:', migErr.message);
+        console.warn('[Supabase] Gagal migrasi pegawai dengan keterangan, mencoba tanpa kolom keterangan:', migErr.message);
+        const payloadNoKet = payload.map(({ keterangan, ...rest }) => rest);
+        const { error: retryErr } = await supabase.from('pegawai').upsert(payloadNoKet, { onConflict: 'id' });
+        if (retryErr) {
+          console.error('[Supabase] Gagal total auto-migrasi pegawai:', retryErr.message);
+        } else {
+          console.log(`[Supabase] Sukses migrasi ${payloadNoKet.length} pegawai ke Supabase (skema standar)!`);
+        }
       } else {
-        console.log(`[Supabase] Sukses migrasi ${payload.length} pegawai ke Supabase!`);
+        console.log(`[Supabase] Sukses migrasi ${payload.length} pegawai ke Supabase (lengkap keterangan)!`);
       }
     }
     return pegawaiData;
@@ -456,7 +468,7 @@ app.post('/api/admin/pegawai', async (req, res) => {
 
     if (supabase) {
       try {
-        await supabase.from('pegawai').insert({
+        const newRecord = {
           id: newPegawai.id,
           no: newPegawai.no,
           nama: newPegawai.nama,
@@ -465,7 +477,16 @@ app.post('/api/admin/pegawai', async (req, res) => {
           jabatan: newPegawai.jabatan,
           keterangan: newPegawai.keterangan,
           role_type: newPegawai.roleType
-        });
+        };
+        let { error: insErr } = await supabase.from('pegawai').insert(newRecord);
+        if (insErr) {
+          console.warn('[Supabase] Warning insert pegawai baru, mencoba tanpa keterangan:', insErr.message);
+          delete newRecord.keterangan;
+          const { error: retryErr } = await supabase.from('pegawai').insert(newRecord);
+          if (retryErr) {
+            console.error('[Supabase] Gagal insert pegawai baru:', retryErr.message);
+          }
+        }
       } catch (dbErr) {
         console.warn('[Supabase] Warning saat simpan pegawai baru:', dbErr.message);
       }
@@ -498,6 +519,10 @@ app.put('/api/admin/pegawai/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Data pegawai tidak ditemukan.' });
     }
 
+    const oldPegawai = { ...pegawaiData[idx] };
+    const oldNama = oldPegawai.nama;
+    const oldNamaLower = (oldNama || '').trim().toLowerCase();
+
     const trimmedNama = nama.trim();
     const trimmedNip = (nip || '').trim() || '-';
     const trimmedInstansi = (instansi || '').trim() || 'Balai Besar POM di Pangkal Pinang';
@@ -527,27 +552,135 @@ app.put('/api/admin/pegawai/:id', async (req, res) => {
 
     savePegawai(pegawaiData);
 
+    // 1. Simpan ke database Supabase (tabel pegawai) dengan toleransi fallback skema
     if (supabase) {
       try {
-        await supabase.from('pegawai').update({
+        const updatePayload = {
+          id: pegawaiData[idx].id || `peg_${pegawaiData[idx].no}`,
+          no: pegawaiData[idx].no,
           nama: trimmedNama,
           nip: trimmedNip,
           instansi: trimmedInstansi,
           jabatan: trimmedJabatan,
           keterangan: cleanKeterangan,
           role_type: roleType
-        }).eq('id', pegawaiData[idx].id);
+        };
+
+        let { error: upErr } = await supabase.from('pegawai').upsert(updatePayload, { onConflict: 'id' });
+        if (upErr) {
+          console.warn('[Supabase] Warning saat update pegawai dengan keterangan:', upErr.message);
+          delete updatePayload.keterangan;
+          const { error: retryErr } = await supabase.from('pegawai').upsert(updatePayload, { onConflict: 'id' });
+          if (retryErr) {
+            console.error('[Supabase] Gagal total update pegawai di Supabase:', retryErr.message);
+          }
+        }
       } catch (dbErr) {
         console.warn('[Supabase] Warning saat update pegawai:', dbErr.message);
       }
+    }
+
+    // 2. Sinkronisasi jika pegawai ini sudah menandatangani piagam (tabel signatures & dashboard)
+    let signatureUpdated = false;
+
+    // A. Cek Kepala Balai
+    if (signaturesData.kepala && (
+      (signaturesData.kepala.id && (signaturesData.kepala.id === oldPegawai.id || signaturesData.kepala.id === pegawaiData[idx].id)) ||
+      (signaturesData.kepala.name && signaturesData.kepala.name.trim().toLowerCase() === oldNamaLower) ||
+      roleType === 'KEPALA' || oldPegawai.roleType === 'KEPALA'
+    )) {
+      signaturesData.kepala.name = trimmedNama;
+      signaturesData.kepala.nip = trimmedNip;
+      signaturesData.kepala.jabatan = trimmedJabatan;
+      signatureUpdated = true;
+
+      if (supabase) {
+        try {
+          await supabase.from('signatures').update({
+            name: trimmedNama,
+            nip: trimmedNip,
+            jabatan: trimmedJabatan
+          }).eq('id', signaturesData.kepala.id);
+        } catch (e) {
+          console.warn('[Supabase] Warning update signatures kepala:', e.message);
+        }
+      }
+    }
+
+    // B. Cek Kabag TU
+    if (signaturesData.kabag_tu && (
+      (signaturesData.kabag_tu.id && (signaturesData.kabag_tu.id === oldPegawai.id || signaturesData.kabag_tu.id === pegawaiData[idx].id)) ||
+      (signaturesData.kabag_tu.name && signaturesData.kabag_tu.name.trim().toLowerCase() === oldNamaLower) ||
+      roleType === 'KABAG_TU' || oldPegawai.roleType === 'KABAG_TU'
+    )) {
+      signaturesData.kabag_tu.name = trimmedNama;
+      signaturesData.kabag_tu.nip = trimmedNip;
+      signaturesData.kabag_tu.jabatan = trimmedJabatan;
+      signatureUpdated = true;
+
+      if (supabase) {
+        try {
+          await supabase.from('signatures').update({
+            name: trimmedNama,
+            nip: trimmedNip,
+            jabatan: trimmedJabatan
+          }).eq('id', signaturesData.kabag_tu.id);
+        } catch (e) {
+          console.warn('[Supabase] Warning update signatures kabag_tu:', e.message);
+        }
+      }
+    }
+
+    // C. Cek Daftar Pegawai / Saksi yang sudah menandatangani
+    if (Array.isArray(signaturesData.pegawai)) {
+      for (const sig of signaturesData.pegawai) {
+        if (
+          (sig.id && (sig.id === oldPegawai.id || sig.id === pegawaiData[idx].id)) ||
+          (sig.name && sig.name.trim().toLowerCase() === oldNamaLower)
+        ) {
+          sig.name = trimmedNama;
+          sig.nip = trimmedNip;
+          sig.jabatan = trimmedJabatan;
+          signatureUpdated = true;
+
+          if (supabase) {
+            try {
+              await supabase.from('signatures').update({
+                name: trimmedNama,
+                nip: trimmedNip,
+                jabatan: trimmedJabatan
+              }).eq('id', sig.id);
+            } catch (e) {
+              console.warn('[Supabase] Warning update signatures pegawai item:', e.message);
+            }
+          }
+        }
+      }
+    }
+
+    // Jika tanda tangan pada piagam ter-update, simpan & broadcast pembaruan ke seluruh layar secara instan
+    if (signatureUpdated) {
+      saveSignatures(signaturesData);
+      io.emit('initial_data', {
+        kepala: signaturesData.kepala,
+        kabag_tu: signaturesData.kabag_tu,
+        pegawai: signaturesData.pegawai,
+        meta: {
+          total: (signaturesData.kepala ? 1 : 0) + (signaturesData.kabag_tu ? 1 : 0) + signaturesData.pegawai.length,
+          kepalaSigned: !!signaturesData.kepala,
+          kabagTuSigned: !!signaturesData.kabag_tu,
+          pegawaiCount: signaturesData.pegawai.length
+        }
+      });
     }
 
     io.emit('pegawai_updated', { data: pegawaiData });
 
     return res.json({
       success: true,
-      message: `Data pegawai "${trimmedNama}" berhasil diperbarui.`,
-      data: pegawaiData[idx]
+      message: `Data pegawai "${trimmedNama}" berhasil diperbarui${signatureUpdated ? ' dan tampilan piagam disinkronkan' : ''}.`,
+      data: pegawaiData[idx],
+      signatureUpdated
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -696,20 +829,21 @@ app.get('/api/db-status', async (req, res) => {
     });
   }
   try {
-    const { data, error, count } = await supabase.from('signatures').select('*', { count: 'exact' });
-    if (error) {
-      return res.json({
-        connected: false,
-        keyPrefix: SUPABASE_KEY ? SUPABASE_KEY.substring(0, 15) : '',
-        keyLength: SUPABASE_KEY ? SUPABASE_KEY.length : 0,
-        error: { message: error.message, details: error.details, hint: error.hint, code: error.code }
-      });
-    }
+    const { data: sigData, error: sigError } = await supabase.from('signatures').select('*');
+    const { data: pegData, error: pegError } = await supabase.from('pegawai').select('*');
+
     return res.json({
       connected: true,
       keyPrefix: SUPABASE_KEY ? SUPABASE_KEY.substring(0, 15) : '',
-      count: data ? data.length : 0,
-      records: (data || []).map(r => ({ id: r.id, name: r.name, role: r.role_type }))
+      signatures: {
+        count: sigData ? sigData.length : 0,
+        error: sigError ? sigError.message : null,
+        records: (sigData || []).map(r => ({ id: r.id, name: r.name, role: r.role_type }))
+      },
+      pegawai: {
+        count: pegData ? pegData.length : 0,
+        error: pegError ? pegError.message : null
+      }
     });
   } catch (err) {
     return res.status(500).json({ connected: false, error: err.message, stack: err.stack });
