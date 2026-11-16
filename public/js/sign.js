@@ -335,6 +335,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (resSignatures && resSignatures.data) {
         if (resSignatures.data.kepala) existingSignatures.push(resSignatures.data.kepala);
         if (resSignatures.data.kabag_tu) existingSignatures.push(resSignatures.data.kabag_tu);
+        if (Array.isArray(resSignatures.data.saksi)) {
+          existingSignatures.push(...resSignatures.data.saksi);
+        }
         if (Array.isArray(resSignatures.data.pegawai)) {
           existingSignatures.push(...resSignatures.data.pegawai);
         }
@@ -351,9 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function isPegawaiSigned(nama) {
     if (!nama) return false;
-    const clean = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const clean = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
     const target = clean(nama);
-    return existingSignatures.some(sig => clean(sig.name) === target);
+    return existingSignatures.some(sig => {
+      const sigName = sig.name || sig.nama;
+      return sigName && clean(sigName) === target;
+    });
   }
 
   function renderPegawaiDropdown() {
@@ -483,20 +489,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
 
     } else if (pegawai.roleType === 'SAKSI' || (pegawai.keterangan && pegawai.keterangan.toLowerCase().includes('saksi'))) {
-      if (dispRoleBadge) {
-        dispRoleBadge.textContent = 'SAKSI';
-        dispRoleBadge.className = 'detail-role-badge role-saksi';
-      }
-      if (dispNama) dispNama.textContent = pegawai.nama;
-      if (dispNip) dispNip.textContent = (pegawai.nip && pegawai.nip !== '-') ? `NIP. ${pegawai.nip}` : '-';
-      if (dispJabatan) dispJabatan.textContent = pegawai.jabatan || 'Saksi';
-
-      if (dispLeaderBox) {
-        dispLeaderBox.style.display = 'flex';
-        if (dispLeaderText) dispLeaderText.textContent = 'Posisi tanda tangan: Baris Pimpinan & Para Saksi (Sebelah Kanan Kabag TU)';
-      }
-
-      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
+      // Saksi: Di halaman awal cukup munculkan nama saja di dropdown, sembunyikan kartu detail NIP/jabatan
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
 
       finalNama.value = pegawai.nama;
       finalNip.value = (pegawai.nip && pegawai.nip !== '-') ? pegawai.nip : '-';
@@ -646,6 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res && res.data) {
               if (res.data.kepala) list.push(res.data.kepala);
               if (res.data.kabag_tu) list.push(res.data.kabag_tu);
+              if (Array.isArray(res.data.saksi)) list.push(...res.data.saksi);
               if (Array.isArray(res.data.pegawai)) list.push(...res.data.pegawai);
             } else if (Array.isArray(res)) {
               list.push(...res);
