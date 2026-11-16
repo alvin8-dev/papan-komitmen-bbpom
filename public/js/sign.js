@@ -445,60 +445,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const alreadySigned = isPegawaiSigned(pegawai.nama);
     if (alertAlreadySigned) alertAlreadySigned.style.display = alreadySigned ? 'flex' : 'none';
 
-    // Show NIP & Jabatan card ONLY for Kepala Balai and Kabag TU
+    // Seluruh peserta (Kepala Balai, Kabag TU, Saksi, dan Pegawai):
+    // Cukup tampilkan nama saja di dropdown, sembunyikan kartu detail NIP dan Jabatan
+    if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
+
     if (pegawai.roleType === 'KEPALA') {
-      // Alex Sander
-      if (dispRoleBadge) {
-        dispRoleBadge.textContent = 'KEPALA BALAI';
-        dispRoleBadge.className = 'detail-role-badge badge-pimpinan';
-      }
-      if (dispNama) dispNama.textContent = pegawai.nama;
-      if (dispNip) dispNip.textContent = pegawai.nip || '19791212 200604 1 005';
-      if (dispJabatan) dispJabatan.textContent = pegawai.jabatan || 'Kepala Balai Besar POM di Pangkal Pinang';
-
-      if (dispLeaderBox) {
-        dispLeaderBox.style.display = 'flex';
-        if (dispLeaderText) dispLeaderText.textContent = 'Posisi tanda tangan: Pimpinan Utama (Kiri Atas Piagam)';
-      }
-
       finalNama.value = pegawai.nama;
-      finalNip.value = '19791212 200604 1 005';
-      finalJabatan.value = 'Kepala Balai Besar POM di Pangkal Pinang';
-
-      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
+      finalNip.value = pegawai.nip || '19791212 200604 1 005';
+      finalJabatan.value = pegawai.jabatan || 'Kepala Balai Besar POM di Pangkal Pinang';
 
     } else if (pegawai.roleType === 'KABAG_TU') {
-      // Mardianto
-      if (dispRoleBadge) {
-        dispRoleBadge.textContent = 'KABAG TATA USAHA';
-        dispRoleBadge.className = 'detail-role-badge badge-kabag';
-      }
-      if (dispNama) dispNama.textContent = pegawai.nama;
-      if (dispNip) dispNip.textContent = pegawai.nip || '19830326 200812 1 001';
-      if (dispJabatan) dispJabatan.textContent = pegawai.jabatan || 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
-
-      if (dispLeaderBox) {
-        dispLeaderBox.style.display = 'flex';
-        if (dispLeaderText) dispLeaderText.textContent = 'Posisi tanda tangan: Sebelah Kanan Kepala Balai (Kanan Atas)';
-      }
-
       finalNama.value = pegawai.nama;
-      finalNip.value = '19830326 200812 1 001';
-      finalJabatan.value = 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
-
-      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
+      finalNip.value = pegawai.nip || '19830326 200812 1 001';
+      finalJabatan.value = pegawai.jabatan || 'Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang';
 
     } else if (pegawai.roleType === 'SAKSI' || (pegawai.keterangan && pegawai.keterangan.toLowerCase().includes('saksi'))) {
-      // Saksi: Di halaman awal cukup munculkan nama saja di dropdown, sembunyikan kartu detail NIP/jabatan
-      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
-
       finalNama.value = pegawai.nama;
       finalNip.value = (pegawai.nip && pegawai.nip !== '-') ? pegawai.nip : '-';
       finalJabatan.value = pegawai.jabatan || 'Saksi';
     } else {
-      // Segenap Pegawai: TIDAK menampilkan box NIP dan TIDAK menampilkan/diberi keterangan jabatan
-      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
-
       finalNama.value = pegawai.nama;
       finalNip.value = '-';
       finalJabatan.value = '';
