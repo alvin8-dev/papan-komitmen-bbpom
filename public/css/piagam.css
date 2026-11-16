@@ -348,15 +348,6 @@
   box-shadow: 0 6px 18px rgba(197, 155, 39, 0.12);
 }
 
-.leader-card-saksi {
-  border-top-color: #0d4b8a;
-}
-
-.leader-card-saksi.signed {
-  border-color: #0d4b8a;
-  background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 100%);
-}
-
 .leader-badge-role {
   font-family: var(--font-serif-header);
   font-size: 0.82rem;
