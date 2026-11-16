@@ -353,6 +353,19 @@
                 </div>
               </div>
 
+              <div class="admin-field-group">
+                <label class="admin-field-label">
+                  <span>Keterangan / Kategori</span>
+                  <span class="badge-required">*</span>
+                </label>
+                <select id="addPegawaiKeterangan" class="form-select">
+                  <option value="Pegawai Balai Besar POM di Pangkal Pinang" selected>Pegawai Balai Besar POM di Pangkal Pinang</option>
+                  <option value="Kepala Balai Besar POM di Pangkal Pinang">Kepala Balai Besar POM di Pangkal Pinang</option>
+                  <option value="Kabag Tata Usaha Balai Besar POM di Pangkal Pinang">Kabag Tata Usaha Balai Besar POM di Pangkal Pinang</option>
+                  <option value="Saksi">Saksi</option>
+                </select>
+              </div>
+
               <button type="submit" class="btn-admin-submit" id="btnSubmitAddPegawai">
                 <span>💾 Simpan Pegawai Baru ke Supabase</span>
               </button>
@@ -379,11 +392,12 @@
                   <th>NIP</th>
                   <th>Instansi</th>
                   <th>Jabatan</th>
-                  <th style="width: 70px; text-align: center;">Aksi</th>
+                  <th>Keterangan</th>
+                  <th style="width: 130px; text-align: center;">Aksi</th>
                 </tr>
               </thead>
               <tbody id="tbodyPegawaiList">
-                <tr><td colspan="6" style="text-align: center; color: #64748b; padding: 20px;">Memuat data pegawai...</td></tr>
+                <tr><td colspan="7" style="text-align: center; color: #64748b; padding: 20px;">Memuat data pegawai...</td></tr>
               </tbody>
             </table>
           </div>
@@ -434,6 +448,78 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Data Pegawai -->
+  <div class="modal-overlay" id="modalEditPegawai">
+    <div class="modal-card" style="max-width: 540px; border-radius: 14px; overflow: hidden; box-shadow: 0 25px 50px rgba(0, 43, 91, 0.4);">
+      <div class="modal-header" style="background: linear-gradient(135deg, #002b5b 0%, #001f42 100%); padding: 16px 22px;">
+        <div class="modal-title" style="font-size: 1.1rem; color: #facc15; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          <span>✏️ Edit Data Pegawai</span>
+        </div>
+        <button type="button" class="modal-close" id="btnCloseEditPegawaiModal">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 22px 24px;">
+        <form id="formEditPegawai" autocomplete="off">
+          <input type="hidden" id="editPegawaiId">
+
+          <div class="admin-field-group">
+            <label class="admin-field-label">
+              <span>Nama Lengkap Beserta Gelar</span>
+              <span class="badge-required">*</span>
+            </label>
+            <input type="text" id="editPegawaiNama" class="form-input" required>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="admin-field-group">
+              <label class="admin-field-label">
+                <span>Nomor Induk Pegawai (NIP)</span>
+                <span class="badge-optional">Boleh Kosong</span>
+              </label>
+              <input type="text" id="editPegawaiNip" class="form-input">
+            </div>
+            <div class="admin-field-group">
+              <label class="admin-field-label">
+                <span>Instansi</span>
+                <span class="badge-optional">Boleh Kosong</span>
+              </label>
+              <input type="text" id="editPegawaiInstansi" class="form-input">
+            </div>
+          </div>
+
+          <div class="admin-field-group">
+            <label class="admin-field-label">
+              <span>Jabatan</span>
+              <span class="badge-optional">Boleh Kosong</span>
+            </label>
+            <input type="text" id="editPegawaiJabatan" class="form-input">
+          </div>
+
+          <div class="admin-field-group">
+            <label class="admin-field-label">
+              <span>Keterangan / Kategori</span>
+              <span class="badge-required">*</span>
+            </label>
+            <select id="editPegawaiKeterangan" class="form-select">
+              <option value="Pegawai Balai Besar POM di Pangkal Pinang">Pegawai Balai Besar POM di Pangkal Pinang</option>
+              <option value="Kepala Balai Besar POM di Pangkal Pinang">Kepala Balai Besar POM di Pangkal Pinang</option>
+              <option value="Kabag Tata Usaha Balai Besar POM di Pangkal Pinang">Kabag Tata Usaha Balai Besar POM di Pangkal Pinang</option>
+              <option value="Saksi">Saksi</option>
+            </select>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 20px;">
+            <button type="button" class="btn btn-outline btn-sm" id="btnCancelEditPegawai" style="padding: 9px 18px;">
+              Batal
+            </button>
+            <button type="submit" class="btn-admin-submit" style="margin-top: 0; padding: 10px 22px;">
+              <span>💾 Simpan Perubahan</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

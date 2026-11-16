@@ -1626,6 +1626,24 @@ body.is-fullscreen .charter-screen-wrapper {
   background: #f8fafc;
 }
 
+.btn-admin-edit {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  color: #1d4ed8;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  margin-right: 4px;
+}
+
+.btn-admin-edit:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+
 .btn-admin-del {
   background: #fee2e2;
   border: 1px solid #fca5a5;

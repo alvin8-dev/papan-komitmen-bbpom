@@ -6,7 +6,8 @@
     "jabatan": "Kepala Balai Besar POM di Pangkal Pinang",
     "roleType": "KEPALA",
     "id": "peg_1",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Kepala Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 2,
@@ -15,7 +16,8 @@
     "jabatan": "Kepala Bagian Tata Usaha Balai Besar POM di Pangkal Pinang",
     "roleType": "KABAG_TU",
     "id": "peg_2",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Kabag Tata Usaha Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 3,
@@ -24,7 +26,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_3",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 4,
@@ -33,7 +36,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_4",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 5,
@@ -42,7 +46,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_5",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 6,
@@ -51,7 +56,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_6",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 7,
@@ -60,7 +66,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_7",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 8,
@@ -69,7 +76,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_8",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 9,
@@ -78,7 +86,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_9",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 10,
@@ -87,7 +96,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_10",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 11,
@@ -96,7 +106,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_11",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 12,
@@ -105,7 +116,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_12",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 13,
@@ -114,7 +126,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_13",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 14,
@@ -123,7 +136,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_14",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 15,
@@ -132,7 +146,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_15",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 16,
@@ -141,7 +156,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_16",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 17,
@@ -150,7 +166,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_17",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 18,
@@ -159,7 +176,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_18",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 19,
@@ -168,7 +186,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_19",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 20,
@@ -177,7 +196,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_20",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 21,
@@ -186,7 +206,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_21",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 22,
@@ -195,7 +216,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_22",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 23,
@@ -204,7 +226,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_23",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 24,
@@ -213,7 +236,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_24",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 25,
@@ -222,7 +246,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_25",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 26,
@@ -231,7 +256,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_26",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 27,
@@ -240,7 +266,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_27",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 28,
@@ -249,7 +276,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_28",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 29,
@@ -258,7 +286,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_29",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 30,
@@ -267,7 +296,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_30",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 31,
@@ -276,7 +306,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_31",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 32,
@@ -285,7 +316,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_32",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 33,
@@ -294,7 +326,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_33",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 34,
@@ -303,7 +336,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_34",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 35,
@@ -312,7 +346,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_35",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 36,
@@ -321,7 +356,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_36",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 37,
@@ -330,7 +366,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_37",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 38,
@@ -339,7 +376,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_38",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 39,
@@ -348,7 +386,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_39",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 40,
@@ -357,7 +396,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_40",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 41,
@@ -366,7 +406,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_41",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 42,
@@ -375,7 +416,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_42",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 43,
@@ -384,7 +426,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_43",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 44,
@@ -393,7 +436,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_44",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 45,
@@ -402,7 +446,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_45",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 46,
@@ -411,7 +456,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_46",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 47,
@@ -420,7 +466,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_47",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 48,
@@ -429,7 +476,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_48",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 49,
@@ -438,7 +486,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_49",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 50,
@@ -447,7 +496,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_50",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 51,
@@ -456,7 +506,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_51",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 52,
@@ -465,7 +516,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_52",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 53,
@@ -474,7 +526,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_53",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 54,
@@ -483,7 +536,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_54",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 55,
@@ -492,7 +546,8 @@
     "jabatan": "",
     "roleType": "PEGAWAI",
     "id": "peg_55",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 56,
@@ -501,7 +556,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_56",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 57,
@@ -510,7 +566,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_57",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 58,
@@ -519,7 +576,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_58",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 59,
@@ -528,7 +586,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_59",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 60,
@@ -537,7 +596,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_60",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 61,
@@ -546,7 +606,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_61",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 62,
@@ -555,7 +616,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_62",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 63,
@@ -564,7 +626,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_63",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 64,
@@ -573,7 +636,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_64",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 65,
@@ -582,7 +646,8 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_65",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   },
   {
     "no": 66,
@@ -591,6 +656,7 @@
     "jabatan": "",
     "roleType": "PPNPN",
     "id": "peg_66",
-    "instansi": "Balai Besar POM di Pangkal Pinang"
+    "instansi": "Balai Besar POM di Pangkal Pinang",
+    "keterangan": "Pegawai Balai Besar POM di Pangkal Pinang"
   }
 ]

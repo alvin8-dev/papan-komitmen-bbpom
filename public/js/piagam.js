@@ -481,9 +481,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const addPegawaiNip = document.getElementById('addPegawaiNip');
   const addPegawaiInstansi = document.getElementById('addPegawaiInstansi');
   const addPegawaiJabatan = document.getElementById('addPegawaiJabatan');
+  const addPegawaiKeterangan = document.getElementById('addPegawaiKeterangan');
   const tbodyPegawaiList = document.getElementById('tbodyPegawaiList');
   const countPegawaiTotal = document.getElementById('countPegawaiTotal');
   const searchPegawaiAdmin = document.getElementById('searchPegawaiAdmin');
+
+  // Edit Pegawai Modal elements
+  const modalEditPegawai = document.getElementById('modalEditPegawai');
+  const btnCloseEditPegawaiModal = document.getElementById('btnCloseEditPegawaiModal');
+  const btnCancelEditPegawai = document.getElementById('btnCancelEditPegawai');
+  const formEditPegawai = document.getElementById('formEditPegawai');
+  const editPegawaiId = document.getElementById('editPegawaiId');
+  const editPegawaiNama = document.getElementById('editPegawaiNama');
+  const editPegawaiNip = document.getElementById('editPegawaiNip');
+  const editPegawaiInstansi = document.getElementById('editPegawaiInstansi');
+  const editPegawaiJabatan = document.getElementById('editPegawaiJabatan');
+  const editPegawaiKeterangan = document.getElementById('editPegawaiKeterangan');
 
   // Signatures reorder elements
   const countSignaturesAdmin = document.getElementById('countSignaturesAdmin');
@@ -611,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('Error fetching admin pegawai:', err);
       if (tbodyPegawaiList) {
-        tbodyPegawaiList.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat daftar pegawai.</td></tr>`;
+        tbodyPegawaiList.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat daftar pegawai.</td></tr>`;
       }
     }
   }
@@ -621,27 +634,75 @@ document.addEventListener('DOMContentLoaded', () => {
     if (countPegawaiTotal) countPegawaiTotal.textContent = list.length;
 
     if (list.length === 0) {
-      tbodyPegawaiList.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 20px;">Tidak ada pegawai ditemukan.</td></tr>`;
+      tbodyPegawaiList.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 20px;">Tidak ada pegawai ditemukan.</td></tr>`;
       return;
     }
 
-    tbodyPegawaiList.innerHTML = list.map((p, idx) => `
-      <tr>
-        <td style="text-align: center; font-weight: 600; color: #64748b;">${p.no || idx + 1}</td>
-        <td>
-          <div style="font-weight: 600; color: #002b5b;">${p.nama}</div>
-          ${p.roleType === 'KEPALA' || p.roleType === 'KABAG_TU' ? `<span style="font-size: 0.7rem; background: #e0f2fe; color: #0369a1; padding: 1px 6px; border-radius: 4px; font-weight: 700;">${p.roleType}</span>` : ''}
-        </td>
-        <td style="font-family: monospace; font-size: 0.78rem;">${p.nip || '-'}</td>
-        <td style="font-size: 0.78rem; color: #475569;">${p.instansi || '-'}</td>
-        <td style="font-size: 0.78rem; color: #475569;">${p.jabatan || '-'}</td>
-        <td style="text-align: center;">
-          <button type="button" class="btn-admin-del" data-id="${p.id || p.no}" data-nama="${p.nama}">
-            Hapus
-          </button>
-        </td>
-      </tr>
-    `).join('');
+    tbodyPegawaiList.innerHTML = list.map((p, idx) => {
+      let ketBadge = '';
+      const ket = p.keterangan || (
+        p.roleType === 'KEPALA' ? 'Kepala Balai Besar POM di Pangkal Pinang' :
+        p.roleType === 'KABAG_TU' ? 'Kabag Tata Usaha Balai Besar POM di Pangkal Pinang' :
+        p.roleType === 'SAKSI' ? 'Saksi' : 'Pegawai Balai Besar POM di Pangkal Pinang'
+      );
+
+      if (ket.includes('Kepala Balai') || p.roleType === 'KEPALA') {
+        ketBadge = `<span style="font-size: 0.72rem; background: #fef3c7; color: #92400e; padding: 2px 7px; border-radius: 4px; font-weight: 700;">Kepala Balai</span>`;
+      } else if (ket.includes('Kabag') || p.roleType === 'KABAG_TU') {
+        ketBadge = `<span style="font-size: 0.72rem; background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 4px; font-weight: 700;">Kabag TU</span>`;
+      } else if (ket.toLowerCase().includes('saksi') || p.roleType === 'SAKSI') {
+        ketBadge = `<span style="font-size: 0.72rem; background: #f3e8ff; color: #7e22ce; padding: 2px 7px; border-radius: 4px; font-weight: 700;">🤝 Saksi</span>`;
+      } else {
+        ketBadge = `<span style="font-size: 0.72rem; background: #f1f5f9; color: #475569; padding: 2px 7px; border-radius: 4px; font-weight: 500;">Pegawai</span>`;
+      }
+
+      return `
+        <tr>
+          <td style="text-align: center; font-weight: 600; color: #64748b;">${p.no || idx + 1}</td>
+          <td>
+            <div style="font-weight: 600; color: #002b5b;">${p.nama}</div>
+          </td>
+          <td style="font-family: monospace; font-size: 0.78rem;">${p.nip || '-'}</td>
+          <td style="font-size: 0.78rem; color: #475569;">${p.instansi || '-'}</td>
+          <td style="font-size: 0.78rem; color: #475569;">${p.jabatan || '-'}</td>
+          <td>${ketBadge}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <button type="button" class="btn-admin-edit" data-id="${p.id || p.no}">
+              ✏️ Edit
+            </button>
+            <button type="button" class="btn-admin-del" data-id="${p.id || p.no}" data-nama="${p.nama}">
+              🗑️ Hapus
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Attach edit listeners
+    tbodyPegawaiList.querySelectorAll('.btn-admin-edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const found = adminPegawaiData.find(x => x.id === id || String(x.no) === id);
+        if (found && modalEditPegawai) {
+          editPegawaiId.value = found.id || found.no;
+          editPegawaiNama.value = found.nama || '';
+          editPegawaiNip.value = (found.nip && found.nip !== '-') ? found.nip : '';
+          editPegawaiInstansi.value = found.instansi || 'Balai Besar POM di Pangkal Pinang';
+          editPegawaiJabatan.value = found.jabatan || '';
+          
+          const defaultKet = found.keterangan || (
+            found.roleType === 'KEPALA' ? 'Kepala Balai Besar POM di Pangkal Pinang' :
+            found.roleType === 'KABAG_TU' ? 'Kabag Tata Usaha Balai Besar POM di Pangkal Pinang' :
+            found.roleType === 'SAKSI' ? 'Saksi' : 'Pegawai Balai Besar POM di Pangkal Pinang'
+          );
+          if (editPegawaiKeterangan) {
+            editPegawaiKeterangan.value = defaultKet;
+          }
+
+          modalEditPegawai.classList.add('active');
+        }
+      });
+    });
 
     // Attach delete listeners
     tbodyPegawaiList.querySelectorAll('.btn-admin-del').forEach(btn => {
@@ -666,6 +727,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Edit Pegawai Modal Close Handlers
+  if (btnCloseEditPegawaiModal) {
+    btnCloseEditPegawaiModal.addEventListener('click', () => {
+      modalEditPegawai.classList.remove('active');
+    });
+  }
+
+  if (btnCancelEditPegawai) {
+    btnCancelEditPegawai.addEventListener('click', () => {
+      modalEditPegawai.classList.remove('active');
+    });
+  }
+
+  if (modalEditPegawai) {
+    modalEditPegawai.addEventListener('click', (e) => {
+      if (e.target === modalEditPegawai) {
+        modalEditPegawai.classList.remove('active');
+      }
+    });
+  }
+
+  // Edit Pegawai Form Submit
+  if (formEditPegawai) {
+    formEditPegawai.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = editPegawaiId.value;
+      const nama = editPegawaiNama.value.trim();
+      const nip = editPegawaiNip.value.trim();
+      const instansi = editPegawaiInstansi.value.trim();
+      const jabatan = editPegawaiJabatan.value.trim();
+      const keterangan = editPegawaiKeterangan ? editPegawaiKeterangan.value : '';
+
+      if (!nama) {
+        alert('Nama lengkap pegawai wajib diisi.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/admin/pegawai/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nama, nip, instansi, jabatan, keterangan })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          modalEditPegawai.classList.remove('active');
+          showToast('Data Berhasil Diperbarui', nama);
+          loadAdminPegawai();
+        } else {
+          alert(data.message || 'Gagal memperbarui pegawai.');
+        }
+      } catch (err) {
+        alert('Gagal menghubungi server.');
+      }
+    });
+  }
+
   // Pegawai search filter
   if (searchPegawaiAdmin) {
     searchPegawaiAdmin.addEventListener('input', () => {
@@ -678,7 +797,8 @@ document.addEventListener('DOMContentLoaded', () => {
         (p.nama || '').toLowerCase().includes(q) ||
         (p.nip || '').toLowerCase().includes(q) ||
         (p.jabatan || '').toLowerCase().includes(q) ||
-        (p.instansi || '').toLowerCase().includes(q)
+        (p.instansi || '').toLowerCase().includes(q) ||
+        (p.keterangan || '').toLowerCase().includes(q)
       );
       renderPegawaiList(filtered);
     });
@@ -692,6 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const nip = addPegawaiNip.value.trim();
       const instansi = addPegawaiInstansi.value.trim();
       const jabatan = addPegawaiJabatan.value.trim();
+      const keterangan = addPegawaiKeterangan ? addPegawaiKeterangan.value : 'Pegawai Balai Besar POM di Pangkal Pinang';
 
       if (!nama) {
         alert('Nama lengkap pegawai wajib diisi.');
@@ -702,7 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('/api/admin/pegawai', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nama, nip, instansi, jabatan })
+          body: JSON.stringify({ nama, nip, instansi, jabatan, keterangan })
         });
         const data = await res.json();
 
@@ -711,6 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
           addPegawaiNama.value = '';
           addPegawaiNip.value = '';
           addPegawaiJabatan.value = '';
+          if (addPegawaiKeterangan) addPegawaiKeterangan.value = 'Pegawai Balai Besar POM di Pangkal Pinang';
           loadAdminPegawai();
         } else {
           alert(data.message || 'Gagal menambahkan pegawai.');

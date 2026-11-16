@@ -368,9 +368,10 @@ document.addEventListener('DOMContentLoaded', () => {
     defaultOption.selected = !prevSelectedNo;
     selectPegawai.appendChild(defaultOption);
 
-    // Split into Leadership and Staff
+    // Split into Leadership, Witnesses (Saksi), and Staff
     const leaders = pegawaiList.filter(p => p.roleType === 'KEPALA' || p.roleType === 'KABAG_TU');
-    const staff = pegawaiList.filter(p => p.roleType !== 'KEPALA' && p.roleType !== 'KABAG_TU');
+    const witnesses = pegawaiList.filter(p => p.roleType === 'SAKSI' || (p.keterangan && p.keterangan.toLowerCase().includes('saksi')));
+    const staff = pegawaiList.filter(p => p.roleType !== 'KEPALA' && p.roleType !== 'KABAG_TU' && p.roleType !== 'SAKSI' && !(p.keterangan && p.keterangan.toLowerCase().includes('saksi')));
 
     if (leaders.length > 0) {
       const optGroupLeaders = document.createElement('optgroup');
@@ -385,6 +386,20 @@ document.addEventListener('DOMContentLoaded', () => {
         optGroupLeaders.appendChild(opt);
       });
       selectPegawai.appendChild(optGroupLeaders);
+    }
+
+    if (witnesses.length > 0) {
+      const optGroupWitnesses = document.createElement('optgroup');
+      optGroupWitnesses.label = '🤝 SAKSI';
+      witnesses.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.no;
+        const signedMark = isPegawaiSigned(p.nama) ? '✓ [Sudah TTD] ' : '';
+        opt.textContent = `${signedMark}${p.nama} (Saksi)`;
+        if (prevSelectedNo === p.no) opt.selected = true;
+        optGroupWitnesses.appendChild(opt);
+      });
+      selectPegawai.appendChild(optGroupWitnesses);
     }
 
     if (staff.length > 0) {
@@ -467,6 +482,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'block';
 
+    } else if (pegawai.roleType === 'SAKSI' || (pegawai.keterangan && pegawai.keterangan.toLowerCase().includes('saksi'))) {
+      if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';
+      finalNama.value = pegawai.nama;
+      finalNip.value = (pegawai.nip && pegawai.nip !== '-') ? pegawai.nip : '-';
+      finalJabatan.value = pegawai.jabatan || 'Saksi';
     } else {
       // Segenap Pegawai: TIDAK menampilkan box NIP dan TIDAK menampilkan/diberi keterangan jabatan
       if (pegawaiDetailCard) pegawaiDetailCard.style.display = 'none';

@@ -141,6 +141,11 @@ async function syncPegawaiFromSupabase() {
         nip: item.nip || '-',
         instansi: item.instansi || 'Balai Besar POM di Pangkal Pinang',
         jabatan: item.jabatan || '',
+        keterangan: item.keterangan || (
+          item.role_type === 'KEPALA' ? 'Kepala Balai Besar POM di Pangkal Pinang' :
+          item.role_type === 'KABAG_TU' ? 'Kabag Tata Usaha Balai Besar POM di Pangkal Pinang' :
+          item.role_type === 'SAKSI' ? 'Saksi' : 'Pegawai Balai Besar POM di Pangkal Pinang'
+        ),
         roleType: item.role_type || determineRoleType(item.jabatan, item.nama)
       }));
       savePegawai(pegawaiData);
@@ -157,6 +162,7 @@ async function syncPegawaiFromSupabase() {
         nip: p.nip || '-',
         instansi: p.instansi || 'Balai Besar POM di Pangkal Pinang',
         jabatan: p.jabatan || '',
+        keterangan: p.keterangan || 'Pegawai Balai Besar POM di Pangkal Pinang',
         role_type: p.roleType || determineRoleType(p.jabatan, p.nama)
       }));
       const { error: migErr } = await supabase.from('pegawai').insert(payload);
@@ -411,7 +417,7 @@ app.post('/api/admin/login', (req, res) => {
 // Admin - Add new pegawai
 app.post('/api/admin/pegawai', async (req, res) => {
   try {
-    const { nama, nip, instansi, jabatan } = req.body;
+    const { nama, nip, instansi, jabatan, keterangan } = req.body;
     if (!nama || !nama.trim()) {
       return res.status(400).json({ success: false, message: 'Nama pegawai wajib diisi.' });
     }
@@ -420,7 +426,18 @@ app.post('/api/admin/pegawai', async (req, res) => {
     const trimmedNip = (nip || '').trim() || '-';
     const trimmedInstansi = (instansi || '').trim() || 'Balai Besar POM di Pangkal Pinang';
     const trimmedJabatan = (jabatan || '').trim();
-    const roleType = determineRoleType(trimmedJabatan, trimmedNama);
+    const cleanKeterangan = (keterangan || '').trim() || 'Pegawai Balai Besar POM di Pangkal Pinang';
+
+    let roleType = 'PEGAWAI';
+    if (cleanKeterangan.includes('Kepala Balai')) {
+      roleType = 'KEPALA';
+    } else if (cleanKeterangan.includes('Kabag')) {
+      roleType = 'KABAG_TU';
+    } else if (cleanKeterangan.toLowerCase().includes('saksi')) {
+      roleType = 'SAKSI';
+    } else {
+      roleType = determineRoleType(trimmedJabatan, trimmedNama);
+    }
 
     const maxNo = pegawaiData.reduce((max, p) => Math.max(max, p.no || 0), 0);
     const newPegawai = {
@@ -430,6 +447,7 @@ app.post('/api/admin/pegawai', async (req, res) => {
       nip: trimmedNip,
       instansi: trimmedInstansi,
       jabatan: trimmedJabatan,
+      keterangan: cleanKeterangan,
       roleType
     };
 
@@ -445,6 +463,7 @@ app.post('/api/admin/pegawai', async (req, res) => {
           nip: newPegawai.nip,
           instansi: newPegawai.instansi,
           jabatan: newPegawai.jabatan,
+          keterangan: newPegawai.keterangan,
           role_type: newPegawai.roleType
         });
       } catch (dbErr) {
@@ -458,6 +477,77 @@ app.post('/api/admin/pegawai', async (req, res) => {
       success: true,
       message: `Pegawai "${newPegawai.nama}" berhasil ditambahkan.`,
       data: newPegawai
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Admin - Edit / Update pegawai
+app.put('/api/admin/pegawai/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nama, nip, instansi, jabatan, keterangan } = req.body;
+
+    if (!nama || !nama.trim()) {
+      return res.status(400).json({ success: false, message: 'Nama lengkap wajib diisi.' });
+    }
+
+    const idx = pegawaiData.findIndex(p => p.id === id || String(p.no) === id);
+    if (idx === -1) {
+      return res.status(404).json({ success: false, message: 'Data pegawai tidak ditemukan.' });
+    }
+
+    const trimmedNama = nama.trim();
+    const trimmedNip = (nip || '').trim() || '-';
+    const trimmedInstansi = (instansi || '').trim() || 'Balai Besar POM di Pangkal Pinang';
+    const trimmedJabatan = (jabatan || '').trim();
+    const cleanKeterangan = (keterangan || '').trim() || 'Pegawai Balai Besar POM di Pangkal Pinang';
+
+    let roleType = 'PEGAWAI';
+    if (cleanKeterangan.includes('Kepala Balai')) {
+      roleType = 'KEPALA';
+    } else if (cleanKeterangan.includes('Kabag')) {
+      roleType = 'KABAG_TU';
+    } else if (cleanKeterangan.toLowerCase().includes('saksi')) {
+      roleType = 'SAKSI';
+    } else {
+      roleType = determineRoleType(trimmedJabatan, trimmedNama);
+    }
+
+    pegawaiData[idx] = {
+      ...pegawaiData[idx],
+      nama: trimmedNama,
+      nip: trimmedNip,
+      instansi: trimmedInstansi,
+      jabatan: trimmedJabatan,
+      keterangan: cleanKeterangan,
+      roleType
+    };
+
+    savePegawai(pegawaiData);
+
+    if (supabase) {
+      try {
+        await supabase.from('pegawai').update({
+          nama: trimmedNama,
+          nip: trimmedNip,
+          instansi: trimmedInstansi,
+          jabatan: trimmedJabatan,
+          keterangan: cleanKeterangan,
+          role_type: roleType
+        }).eq('id', pegawaiData[idx].id);
+      } catch (dbErr) {
+        console.warn('[Supabase] Warning saat update pegawai:', dbErr.message);
+      }
+    }
+
+    io.emit('pegawai_updated', { data: pegawaiData });
+
+    return res.json({
+      success: true,
+      message: `Data pegawai "${trimmedNama}" berhasil diperbarui.`,
+      data: pegawaiData[idx]
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
