@@ -884,6 +884,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast('Pegawai Berhasil Ditambahkan', nama);
           addPegawaiNama.value = '';
           addPegawaiNip.value = '';
+          addPegawaiInstansi.value = '';
           addPegawaiJabatan.value = '';
           if (addPegawaiKeterangan) addPegawaiKeterangan.value = 'Pegawai Balai Besar POM di Pangkal Pinang';
           loadAdminPegawai();
